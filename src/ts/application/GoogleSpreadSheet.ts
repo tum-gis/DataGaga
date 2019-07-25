@@ -1,4 +1,4 @@
-class GoogleSpreadSheetDataSource extends SQLDataSource {
+class GoogleSpreadSheet extends SQLDataSource {
     countFromResult(res: QueryResult): number {
         // TODO
         return null;
