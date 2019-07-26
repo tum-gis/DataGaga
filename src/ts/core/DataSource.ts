@@ -1,3 +1,9 @@
+// In TypeScript if abstract class B implements interface A,
+// it must either implement functions from A or declare them as abstract.
+// https://github.com/Microsoft/TypeScript/issues/4670
+// Alternatively we can do this:
+interface DataSource extends ReadableDataSource, WritableDataSource {}
+
 abstract class DataSource implements ReadableDataSource, WritableDataSource {
     private _capabilities: DataSourceCapabilitiy[];
     private _name: string;
@@ -45,15 +51,4 @@ abstract class DataSource implements ReadableDataSource, WritableDataSource {
         this._uri = value;
     }
 
-    abstract countFromResult(res: QueryResult): number;
-    abstract deleteDataRecordUsingId(id: string): boolean;
-    abstract fetchIdsFromResult(res: QueryResult): string[];
-    abstract insertDataRecord(record: DataRecord): boolean;
-    abstract queryUsingIds(ids: string[]): QueryResult;
-    abstract queryUsingNames(names: string[], limit: number): QueryResult;
-    abstract queryUsingSql(sql: string, limit: number): QueryResult;
-    abstract queryUsingTypes(types: string[], limit: number): QueryResult;
-    abstract sumFromResultByColIndex(res: QueryResult, colIndex: number): number;
-    abstract sumFromResultByName(res: QueryResult, name: string): number;
-    abstract updateDataRecordUsingId(id: string, newRecord: DataRecord): boolean;
 }
