@@ -3,4 +3,3 @@ var DataRecord = /** @class */ (function () {
     }
     return DataRecord;
 }());
-//# sourceMappingURL=DataRecord.js.map

@@ -5,4 +5,3 @@ var DataSourceCapabilitiy;
     DataSourceCapabilitiy[DataSourceCapabilitiy["UPDATE"] = 2] = "UPDATE";
     DataSourceCapabilitiy[DataSourceCapabilitiy["DELETE"] = 3] = "DELETE";
 })(DataSourceCapabilitiy || (DataSourceCapabilitiy = {}));
-//# sourceMappingURL=DataSourceCapability.js.map

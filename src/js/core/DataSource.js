@@ -1,16 +1,16 @@
+// In TypeScript if abstract class B implements interface A,
+// it must either implement functions from A or declare them as abstract.
+// https://github.com/Microsoft/TypeScript/issues/4670
+// Alternatively we can do this:
+// interface DataSource extends ReadableDataSource, WritableDataSource {}
 var DataSource = /** @class */ (function () {
-    function DataSource() {
+    function DataSource(options) {
+        this._name = options.name;
+        this._provider = options.provider;
+        this._type = options.type;
+        this._uri = options.uri;
+        this._capabilities = options.capabilities;
     }
-    Object.defineProperty(DataSource.prototype, "capabilities", {
-        get: function () {
-            return this._capabilities;
-        },
-        set: function (value) {
-            this._capabilities = value;
-        },
-        enumerable: true,
-        configurable: true
-    });
     Object.defineProperty(DataSource.prototype, "name", {
         get: function () {
             return this._name;
@@ -51,6 +51,15 @@ var DataSource = /** @class */ (function () {
         enumerable: true,
         configurable: true
     });
+    Object.defineProperty(DataSource.prototype, "capabilities", {
+        get: function () {
+            return this._capabilities;
+        },
+        set: function (value) {
+            this._capabilities = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
     return DataSource;
 }());
-//# sourceMappingURL=DataSource.js.map

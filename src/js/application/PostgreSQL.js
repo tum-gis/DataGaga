@@ -1,3 +1,4 @@
+// import * as request from "request-promise-native";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -13,12 +14,23 @@ var __extends = (this && this.__extends) || (function () {
 })();
 var PostgreSQL = /** @class */ (function (_super) {
     __extends(PostgreSQL, _super);
-    function PostgreSQL() {
-        return _super !== null && _super.apply(this, arguments) || this;
+    function PostgreSQL(options) {
+        return _super.call(this, options) || this;
     }
+    PostgreSQL.prototype.responseToKvp = function (response) {
+        // response is just a text -> parse to JSON
+        var responseJson = JSON.parse(response);
+        var result = {};
+        for (var i = 0; i < responseJson.length; i++) {
+            var ele = responseJson[i];
+            for (var key in ele) {
+                result[key] = ele[key];
+            }
+        }
+        return result;
+    };
     PostgreSQL.prototype.countFromResult = function (res) {
-        // TODO
-        return null;
+        return res.getSize();
     };
     PostgreSQL.prototype.deleteDataRecordUsingId = function (id) {
         // TODO
@@ -40,9 +52,18 @@ var PostgreSQL = /** @class */ (function (_super) {
         // TODO
         return null;
     };
-    PostgreSQL.prototype.queryUsingSql = function (sql, limit) {
-        // TODO
-        return null;
+    PostgreSQL.prototype.queryUsingSql = function (sql, limit, callback) {
+        var baseUrl = this._uri;
+        var queryString = '';
+        var xmlHttp = new XMLHttpRequest();
+        xmlHttp.onreadystatechange = function () {
+            if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
+                var queryResult = xmlHttp.responseText;
+                callback(queryResult);
+            }
+        };
+        xmlHttp.open("GET", baseUrl + queryString, true); // true for asynchronous
+        xmlHttp.send(null);
     };
     PostgreSQL.prototype.queryUsingTypes = function (types, limit) {
         // TODO
@@ -62,4 +83,3 @@ var PostgreSQL = /** @class */ (function (_super) {
     };
     return PostgreSQL;
 }(SQLDataSource));
-//# sourceMappingURL=PostgreSQL.js.map

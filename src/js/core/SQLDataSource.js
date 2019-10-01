@@ -13,9 +13,8 @@ var __extends = (this && this.__extends) || (function () {
 })();
 var SQLDataSource = /** @class */ (function (_super) {
     __extends(SQLDataSource, _super);
-    function SQLDataSource() {
-        return _super !== null && _super.apply(this, arguments) || this;
+    function SQLDataSource(options) {
+        return _super.call(this, options) || this;
     }
     return SQLDataSource;
 }(DataSource));
-//# sourceMappingURL=SQLDataSource.js.map
