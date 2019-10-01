@@ -1,0 +1,32 @@
+{
+  "name": "mashup-data-source-service",
+  "version": "1.0.0",
+  "description": "A uniform JavaScript API for processing multiple data sources",
+  "main": "index.js",
+  "dependencies": {
+    "@types/gapi": "0.0.39",
+    "request": "^2.88.0",
+    "request-promise-native": "^1.0.7",
+    "uniq": "^1.0.1"
+  },
+  "devDependencies": {
+    "@types/jest": "^24.0.18",
+    "@types/node": "^12.7.5",
+    "@types/request-promise-native": "^1.0.16",
+    "jest": "^24.9.0",
+    "ts-jest": "^24.1.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tum-gis/mashup-data-source-service.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tum-gis/mashup-data-source-service/issues"
+  },
+  "homepage": "https://github.com/tum-gis/mashup-data-source-service#readme"
+}
