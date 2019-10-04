@@ -30,8 +30,30 @@ class GoogleSheets extends SQLDataSource {
         this._gapi = gapi;
     }
 
-    responseToKvp(response: any): any {
-        let result = {};
+    responseToKvp(response: any): Map<string, string> {
+        let result = new Map<string, string>();
+        const rows = response.table.rows;
+        const cols = response.table.cols;
+
+        if (rows[0] && rows[0].c) {
+            // Structure of the JSON response from Google Visualization API
+            // https://developers.google.com/chart/interactive/docs/reference#dataparam
+            // Ignore the first column (containing ID) --> start i with 1 instead of 0
+            for (let i = 1; i < rows[0].c.length; i++) {
+                // Consider only the first two rows for keys and values respectively
+                const key = cols[i].label;
+                const value = rows[0].c[i] ? rows[0].c[i].v : undefined;
+                result[key] = value;
+            }
+        }
+
+        return result;
+    }
+
+    // This function is implemented for handling response from Google Sheets API
+    responseToKvp_OLD(response: any): Map<string, string> {
+        // TODO refactor
+        let result = new Map<string, string>();
 
         // momentarily consider all sheets of this spreadsheet
         // TODO look at this._ranges and find the declared sheets and ranges
@@ -80,7 +102,33 @@ class GoogleSheets extends SQLDataSource {
         return null;
     }
 
-    queryUsingSql(sql: string, limit: number, callback: (queryResult: string) => any): void {
+    queryUsingId(id: string, callback: (queryResult: string) => any, limit?: number): void {
+        this.queryUsingSql("SELECT * WHERE A='" + id + "'", callback, !limit ? Number.MAX_VALUE : limit);
+    }
+
+    queryUsingSql(sql: string, callback: (queryResult: string) => any, limit?: number): void {
+        // TODO handle limit
+        const baseUrl = "https://docs.google.com/spreadsheets/d/";
+
+        var xmlHttp = new XMLHttpRequest();
+        xmlHttp.onreadystatechange = function () {
+            if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
+                var queryResult = xmlHttp.responseText;
+                // The response is in JSON but contains the following string:
+                // "/*O_o*/google.visualization.Query.setResponse({status:ok, ...})"
+                // https://developers.google.com/chart/interactive/docs/dev/implementing_data_source#jsondatatable
+                // The Google Visualization API is used here for querying data from Google Spreadsheets
+                // https://developers.google.com/chart/interactive/docs/querylanguage#setting-the-query-in-the-data-source-url
+                callback(JSON.parse(queryResult.replace("/*O_o*/", "").replace(/(google\.visualization\.Query\.setResponse\(|\);$)/g, "")));
+            }
+        }
+        xmlHttp.open("GET", baseUrl + this._spreadsheetId + "/gviz/tq?tq=" + encodeURI(sql), true); // true for asynchronous
+        xmlHttp.send(null);
+    }
+
+    // This function is implemented using gapi
+    queryUsingSql_OLD(sql: string, limit: number, callback: (queryResult: string) => any): void {
+        // TODO refactor
         // TODO handle sql query and limit
 
         const scope = this;
@@ -112,28 +160,62 @@ class GoogleSheets extends SQLDataSource {
                     }
                 }
 
-                function handleSignInClick(event) {
-                    scope._gapi.auth2.getAuthInstance().signIn();
-                }
-
-                function handleSignOutClick(event) {
-                    scope._gapi.auth2.getAuthInstance().signOut();
-                }
-
                 function makeApiCall() {
                     const params = {
                         // The spreadsheet to request.
-                        spreadsheetId: scope._spreadsheetId,
+                        "spreadsheetId": scope._spreadsheetId,
+
+                        "requests": [
+                            {
+                                "addFilterView": {
+                                    "filter": {
+                                        // "filterViewId": 1234567890,
+                                        "title": "A Filter",
+                                        "range": {
+                                            "sheetId": 0,
+                                            "startRowIndex": 0,
+                                            //"endRowIndex": 5,
+                                            "startColumnIndex": 0,
+                                            //"endColumnIndex": 2
+                                        },
+                                        // "namedRangeId": string,
+                                        // 'sortSpecs': [{
+                                        //     'dimensionIndex': 3,
+                                        //     'sortOrder': 'ASCENDING'
+                                        // }],
+                                        "criteria": {
+                                            0: {
+                                                "condition": {
+                                                    "type": "TEXT_EQ",
+                                                    "values": [
+                                                        {
+                                                            "userEnteredValue": "A"
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        ],
+                        "includeSpreadsheetInResponse": true,
+                        // "responseRanges": ["'Sheet1'!A1:C5"],
+                        "responseIncludeGridData": true
+
+
+
 
                         // The ranges to retrieve from the spreadsheet.
-                        ranges: scope._ranges,  // TODO: Update placeholder value.
+                        // "ranges": scope._ranges,
+
 
                         // True if grid data should be returned.
                         // This parameter is ignored if a field mask was set in the request.
-                        includeGridData: true
+                        // includeGridData: true
                     };
 
-                    const request = scope._gapi.client.sheets.spreadsheets.get(params);
+                    const request = scope._gapi.client.sheets.spreadsheets.batchUpdate(params);
                     request.then(function (response) {
                         callback(response.result);
                     }, function (reason) {
@@ -142,6 +224,16 @@ class GoogleSheets extends SQLDataSource {
                 }
             }
         }
+    }
+
+    handleSignInClick(event) {
+        // TODO consider for OAuth
+        this._gapi.auth2.getAuthInstance().signIn();
+    }
+
+    handleSignOutClick(event) {
+        // TODO consider for OAuth
+        this._gapi.auth2.getAuthInstance().signOut();
     }
 
     queryUsingTypes(types: string[], limit: number): QueryResult {

@@ -1,11 +1,13 @@
 interface ReadableDataSource {
     fetchIdsFromResult(res: QueryResult): string[];
 
+    queryUsingId(id: string, callback: (queryResult: string) => any, limit?: number): void;
+
     queryUsingIds(ids: string[]): QueryResult;
 
     queryUsingNames(names: string[], limit: number): QueryResult;
 
-    queryUsingSql(sql: string, limit: number, callback: (queryResult: String) => any): void;
+    queryUsingSql(sql: string, callback: (queryResult: string) => any, limit?: number): void;
 
     queryUsingTypes(types: string[], limit: number): QueryResult;
 

@@ -12,17 +12,18 @@ abstract class DataSource implements ReadableDataSource, WritableDataSource {
     protected _capabilities: DataSourceCapabilitiy[];
 
     constructor(options) {
-        this._name = options.name;
-        this._provider = options.provider;
-        this._type = options.type;
-        this._uri = options.uri;
-        this._capabilities = options.capabilities;
+        this._name = !options.name ? "Data Source" : options.name;
+        this._provider = !options.provider ? "Data Provider" : options.provider;
+        this._type = !options.type ? "Data Type" : options.type;
+        this._uri = !options.uri ? "" : options.uri;
+        this._capabilities = !options.capabilities ? undefined : options.capabilities;
     }
 
     /**
-     * Convert the query response from data source to KVP structure used in the 3DCityDB-Web-Map-Client.
-     * Note that the response should only have two columns (one for the keys and one for values).
-     * Columns starting from 3th shall be ignored.
+     * Convert the query response from data source to KVP structure.
+     * Note that the response should only have two rows (one for the keys/headers and one for values).
+     * Rows starting from 3th should not exist and/or shall be ignored.
+     * Also note that the first column must contain the primary keys/IDs.
      *
      * KVP structure:
      * {
@@ -33,7 +34,7 @@ abstract class DataSource implements ReadableDataSource, WritableDataSource {
      * @param response from data source
      * @return object in KVP structure
      */
-    abstract responseToKvp(response: any): any;
+    abstract responseToKvp(response: any): Map<string, string>;
 
     get name(): string {
         return this._name;
@@ -83,11 +84,13 @@ abstract class DataSource implements ReadableDataSource, WritableDataSource {
 
     abstract insertDataRecord(record: DataRecord);
 
+    abstract queryUsingId(id: string, callback: (queryResult: string) => any, limit?: number);
+
     abstract queryUsingIds(ids: string[]);
 
     abstract queryUsingNames(names: string[], limit: number);
 
-    abstract queryUsingSql(sql: string, limit: number, callback: (queryResult: string) => any);
+    abstract queryUsingSql(sql: string, callback: (queryResult: string) => any, limit?: number);
 
     abstract queryUsingTypes(types: string[], limit: number);
 

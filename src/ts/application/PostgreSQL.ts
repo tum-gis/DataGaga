@@ -5,10 +5,11 @@ class PostgreSQL extends SQLDataSource {
         super(options);
     }
 
-    responseToKvp(response: any): any {
+    responseToKvp(response: any): Map<string, string> {
+        // TODO test with PostgREST
         // response is just a text -> parse to JSON
         const responseJson = JSON.parse(response);
-        let result = {};
+        let result = new Map<string, string>();;
 
         for (let i = 0; i < responseJson.length; i++) {
             const ele = responseJson[i];
@@ -49,9 +50,14 @@ class PostgreSQL extends SQLDataSource {
         return null;
     }
 
-    queryUsingSql(sql: string, limit: number, callback: (queryResult: string) => any): void {
+    queryUsingId(id: string, callback: (queryResult: string) => any, limit?:number): void {
+        // TODO handle sql
+        this.queryUsingSql("", callback,!limit ? Number.MAX_VALUE : limit);
+    }
+
+    queryUsingSql(sql: string, callback: (queryResult: string) => any, limit?: number): void {
+        // TODO handle limit
         const baseUrl = this._uri;
-        const queryString = '';
 
         var xmlHttp = new XMLHttpRequest();
         xmlHttp.onreadystatechange = function () {
@@ -60,7 +66,7 @@ class PostgreSQL extends SQLDataSource {
                 callback(queryResult);
             }
         }
-        xmlHttp.open("GET", baseUrl + queryString, true); // true for asynchronous
+        xmlHttp.open("GET", baseUrl + sql, true); // true for asynchronous
         xmlHttp.send(null);
     }
 
