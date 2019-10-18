@@ -4,24 +4,24 @@ enum DataSourceTypes {
 }
 
 class DataSourceController {
-
     private _datasource: DataSource;
     private _options: any;
 
     constructor(selectedDataSource: string, options: any) {
-        this._options = options;
+        let scope = this;
+        scope._options = options;
         if (selectedDataSource == DataSourceTypes.GoogleSheets) {
-            this._datasource = new GoogleSheets(this._options);
+            scope._datasource = new GoogleSheets(scope._options);
         } else if (selectedDataSource == DataSourceTypes.PostgreSQL) {
-            this._datasource = new PostgreSQL(this._options);
+            scope._datasource = new PostgreSQL(scope._options);
         }
     }
 
-    fetchData(sql: string, callback: (queryResult: string) => any, limit?: number): Map<string, string> {
-        const result = this._datasource.queryUsingSql(sql, callback, limit);
-        const resultKvp = this._datasource.responseToKvp(result);
-
-        return resultKvp;
+    fetchData(id: string, callback: (queryResultKvp: Map<string, string>) => any, limit?: number) {
+        let scope = this;
+        scope._datasource.queryUsingId(id, function (result) {
+            callback(scope._datasource.responseToKvp(result));
+        }, limit);
     }
 
     get datasource(): DataSource {
@@ -32,4 +32,11 @@ class DataSourceController {
         this._datasource = value;
     }
 
+    get options(): any {
+        return this._options;
+    }
+
+    set options(value: any) {
+        this._options = value;
+    }
 }

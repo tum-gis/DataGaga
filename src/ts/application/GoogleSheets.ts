@@ -19,7 +19,7 @@ class GoogleSheets extends SQLDataSource {
 
     constructor(options, gapi?) {
         super(options);
-        this._spreadsheetId = options.spreadsheetId;
+        this._spreadsheetId = options.uri.replace(/.+?(spreadsheets\/d\/)/, "").replace(/(?=\/edit).+/, "");
         // take the entire first sheet using default name 'Sheet1' if no range is provided
         // more information on the A1 notation:
         // https://developers.google.com/sheets/api/guides/concepts#a1_notation
