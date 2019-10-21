@@ -51,8 +51,8 @@ class PostgreSQL extends SQLDataSource {
     }
 
     queryUsingId(id: string, callback: (queryResult: string) => any, limit?:number): void {
-        // TODO handle sql
-        this.queryUsingSql("", callback,!limit ? Number.MAX_VALUE : limit);
+        // TODO use column number instead of column name (such as gmlid here)
+        this.queryUsingSql("?gmlid=eq." + id, callback,!limit ? Number.MAX_VALUE : limit);
     }
 
     queryUsingSql(sql: string, callback: (queryResult: string) => any, limit?: number): void {
