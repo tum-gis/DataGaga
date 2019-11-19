@@ -39,11 +39,25 @@ class GoogleSheets extends SQLDataSource {
             // Structure of the JSON response from Google Visualization API
             // https://developers.google.com/chart/interactive/docs/reference#dataparam
             // Ignore the first column (containing ID) --> start i with 1 instead of 0
-            for (let i = 1; i < rows[0].c.length; i++) {
-                // Consider only the first two rows for keys and values respectively
-                const key = cols[i].label;
-                const value = rows[0].c[i] ? rows[0].c[i].v : undefined;
-                result[key] = value;
+            if (this.tableType == TableTypes.Horizontal) {
+                for (let i = 1; i < rows[0].c.length; i++) {
+                    const key = cols[i].label;
+                    const value = rows[0].c[i] ? rows[0].c[i].v : undefined;
+                    result[key] = value;
+                }
+            } else {
+                // one attribute per row
+                // only store id once
+                // (because the vertical table has multiple lines of the same id)
+                // assuming id is in the first column
+                // result[this.idColName] = rows[0].c[0].v;
+
+                for (let i = 1; i < rows.length; i++) {
+                    // TODO generic implemetation for fields id (c[0]) attribute (c[1]) and value (c[2])
+                    const key = rows[i].c[1].v;
+                    const value = rows[i].c[2].v;
+                    result[key] = value;
+                }
             }
         }
 

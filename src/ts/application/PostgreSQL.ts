@@ -9,12 +9,26 @@ class PostgreSQL extends SQLDataSource {
         // TODO test with PostgREST
         // response is just a text -> parse to JSON
         const responseJson = JSON.parse(response);
-        let result = new Map<string, string>();;
+        let result = new Map<string, string>();
 
-        for (let i = 0; i < responseJson.length; i++) {
-            const ele = responseJson[i];
-            for (let key in ele) {
-                result[key] = ele[key];
+        if (this.tableType == TableTypes.Horizontal) {
+            // all attributes per object are stored in one row
+            for (let i = 0; i < responseJson.length; i++) {
+                const ele = responseJson[i];
+                for (let key in ele) {
+                    result[key] = ele[key];
+                }
+            }
+        } else {
+            // one attribute per row
+            // only store id once
+            // (because the vertical table has multiple lines of the same id)
+            // result[this.idColName] = responseJson[0][this.idColName];
+
+            for (let i = 0; i < responseJson.length; i++) {
+                const ele = responseJson[i];
+                // TODO generic implementation for attribute and value
+                result[ele.attribute] = ele.value;
             }
         }
 

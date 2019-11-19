@@ -3,33 +3,38 @@ enum DataSourceTypes {
     PostgreSQL = "PostgreSQL"
 }
 
-class DataSourceController {
-    private _datasource: DataSource;
-    private _options: any;
+enum TableTypes {
+    Horizontal = "Horizontal",
+    Vertical = "Vertical"
+}
 
+class DataSourceController {
+    private _dataSource: DataSource;
+
+    private _options: any;
     constructor(selectedDataSource: string, options: any) {
         let scope = this;
         scope._options = options;
         if (selectedDataSource == DataSourceTypes.GoogleSheets) {
-            scope._datasource = new GoogleSheets(scope._options);
+            scope._dataSource = new GoogleSheets(scope._options);
         } else if (selectedDataSource == DataSourceTypes.PostgreSQL) {
-            scope._datasource = new PostgreSQL(scope._options);
+            scope._dataSource = new PostgreSQL(scope._options);
         }
     }
 
     fetchData(id: string, callback: (queryResultKvp: Map<string, string>) => any, limit?: number) {
         let scope = this;
-        scope._datasource.queryUsingId(id, function (result) {
-            callback(scope._datasource.responseToKvp(result));
+        scope._dataSource.queryUsingId(id, function (result) {
+            callback(scope._dataSource.responseToKvp(result));
         }, limit);
     }
 
-    get datasource(): DataSource {
-        return this._datasource;
+    get dataSource(): DataSource {
+        return this._dataSource;
     }
 
-    set datasource(value: DataSource) {
-        this._datasource = value;
+    set dataSource(value: DataSource) {
+        this._dataSource = value;
     }
 
     get options(): any {
@@ -39,4 +44,5 @@ class DataSourceController {
     set options(value: any) {
         this._options = value;
     }
+
 }
