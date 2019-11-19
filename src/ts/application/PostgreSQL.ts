@@ -3,6 +3,7 @@
 class PostgreSQL extends SQLDataSource {
     constructor(options) {
         super(options);
+        this._idColName = !options.idColName ? "gmlid" : options.idColName;
     }
 
     responseToKvp(response: any): Map<string, string> {
@@ -64,9 +65,9 @@ class PostgreSQL extends SQLDataSource {
         return null;
     }
 
-    queryUsingId(id: string, callback: (queryResult: string) => any, limit?:number): void {
+    queryUsingId(id: string, callback: (queryResult: string) => any, limit?: number): void {
         // TODO use column number instead of column name (such as gmlid here)
-        this.queryUsingSql("?gmlid=eq." + id, callback,!limit ? Number.MAX_VALUE : limit);
+        this.queryUsingSql("?" + this.idColName + "=eq." + id, callback, !limit ? Number.MAX_VALUE : limit);
     }
 
     queryUsingSql(sql: string, callback: (queryResult: string) => any, limit?: number): void {

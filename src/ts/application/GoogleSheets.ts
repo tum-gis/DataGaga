@@ -28,6 +28,7 @@ class GoogleSheets extends SQLDataSource {
         this._clientId = !options.clientId ? '' : options.clientId;
         this._scope = !options.scope ? 'https://www.googleapis.com/auth/spreadsheets' : options.scope;
         this._gapi = gapi;
+        this._idColName = !options.idColName ? "A" : options.idColName;
     }
 
     responseToKvp(response: any): Map<string, string> {
