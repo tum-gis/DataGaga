@@ -10,6 +10,8 @@ abstract class DataSource implements ReadableDataSource, WritableDataSource {
     protected _type: string;
     protected _uri: string;
     protected _capabilities: DataSourceCapabilitiy[];
+    protected _tableType: TableTypes;
+    protected _idColName: string; // Default: PostgreSQL: gmlid, Spreadsheets: A
 
     constructor(options) {
         this._name = !options.name ? "Data Source" : options.name;
@@ -17,6 +19,7 @@ abstract class DataSource implements ReadableDataSource, WritableDataSource {
         this._type = !options.type ? "Data Type" : options.type;
         this._uri = !options.uri ? "" : options.uri;
         this._capabilities = !options.capabilities ? undefined : options.capabilities;
+        this._tableType = !options.tableType ? TableTypes.Horizontal : options.tableType;
     }
 
     /**
@@ -74,6 +77,22 @@ abstract class DataSource implements ReadableDataSource, WritableDataSource {
 
     set capabilities(value: DataSourceCapabilitiy[]) {
         this._capabilities = value;
+    }
+
+    get tableType(): TableTypes {
+        return this._tableType;
+    }
+
+    set tableType(value: TableTypes) {
+        this._tableType = value;
+    }
+
+    get idColName(): string {
+        return this._idColName;
+    }
+
+    set idColName(value: string) {
+        this._idColName = value;
     }
 
     abstract countFromResult(res: QueryResult): number;
