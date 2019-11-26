@@ -12,3 +12,6 @@
 * The name of the ID column can be defined generically in the JSON object `options` used in the constructor of `DataSource` (see [`5fc514c`](https://github.com/tum-gis/mashup-data-source-service/commit/5fc514c4c27c62d766681856fbbee96c898697e2)), namely:
     + For Google Spreadsheets: the property `options.idColName` should be `A` as the first column of the table, `B` as the second, etc.
     + For PostgreSQL/PostgREST: the property `options.idColName` should be e.g. `gmlid`, `id`, etc. which is the real column name
+    
+* The SQL code [3DCityDB_PostgREST_VIEW.sql](tools/sql/3DCityDB_PostgREST_VIEW.sql) can extract all thematic and generic attributes of city objects in a vertical VIEW,
+where the attributes are exported in the same order as defined in the CityGML schemata, and generic attributes are sorted in ascending alphabetical order.
