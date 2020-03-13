@@ -7,6 +7,7 @@ class GoogleSheets extends SQLDataSource {
     private _apiKey: string;
     // OAuth
     private _clientId: string;
+    private _signInController: any;
     // Authorize using one of the following scopes:
     // 'https://www.googleapis.com/auth/drive'
     // 'https://www.googleapis.com/auth/drive.file'
@@ -17,7 +18,7 @@ class GoogleSheets extends SQLDataSource {
 
     private _gapi: any;
 
-    constructor(options, gapi?) {
+    constructor(options, signInController, gapi?) {
         super(options);
         this._spreadsheetId = options.uri.replace(/.+?(spreadsheets\/d\/)/, "").replace(/(?=\/edit).+/, "");
         // take the entire first sheet using default name 'Sheet1' if no range is provided
@@ -29,6 +30,7 @@ class GoogleSheets extends SQLDataSource {
         this._scope = !options.scope ? 'https://www.googleapis.com/auth/spreadsheets' : options.scope;
         this._gapi = gapi;
         this._idColName = !options.idColName ? "A" : options.idColName;
+        this._signInController = signInController;
     }
 
     responseToKvp(response: any): Map<string, string> {
@@ -138,6 +140,7 @@ class GoogleSheets extends SQLDataSource {
             }
         }
         xmlHttp.open("GET", baseUrl + this._spreadsheetId + "/gviz/tq?tq=" + encodeURI(sql), true); // true for asynchronous
+        xmlHttp.setRequestHeader('Authorization', 'Bearer ' + this._signInController.accessToken);
         xmlHttp.send(null);
     }
 
@@ -317,5 +320,13 @@ class GoogleSheets extends SQLDataSource {
 
     set gapi(value) {
         this._gapi = value;
+    }
+
+    get signInController() {
+        return this._signInController;
+    }
+
+    set signInController(value: any) {
+        this._signInController = value;
     }
 }
