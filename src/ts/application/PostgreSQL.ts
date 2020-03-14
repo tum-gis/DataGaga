@@ -1,8 +1,8 @@
 // import * as request from "request-promise-native";
 
 class PostgreSQL extends SQLDataSource {
-    constructor(options) {
-        super(options);
+    constructor(signInController, options) {
+        super(signInController, options);
         this._idColName = !options.idColName ? "gmlid" : options.idColName;
     }
 

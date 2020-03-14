@@ -1,6 +1,6 @@
 abstract class SQLDataSource extends DataSource {
-    constructor(options) {
-        super(options);
+    protected constructor(signInController, options) {
+        super(signInController, options);
     }
 
 }

@@ -12,13 +12,13 @@ class DataSourceController {
     private _dataSource: DataSource;
 
     private _options: any;
-    constructor(selectedDataSource: string, options: any) {
+    constructor(selectedDataSource: string, signInController: any, options: any) {
         let scope = this;
         scope._options = options;
         if (selectedDataSource == DataSourceTypes.GoogleSheets) {
-            scope._dataSource = new GoogleSheets(scope._options);
+            scope._dataSource = new GoogleSheets(signInController, scope._options);
         } else if (selectedDataSource == DataSourceTypes.PostgreSQL) {
-            scope._dataSource = new PostgreSQL(scope._options);
+            scope._dataSource = new PostgreSQL(signInController, scope._options);
         }
     }
 

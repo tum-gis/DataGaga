@@ -7,7 +7,6 @@ class GoogleSheets extends SQLDataSource {
     private _apiKey: string;
     // OAuth
     private _clientId: string;
-    private _signInController: any;
     // Authorize using one of the following scopes:
     // 'https://www.googleapis.com/auth/drive'
     // 'https://www.googleapis.com/auth/drive.file'
@@ -18,8 +17,8 @@ class GoogleSheets extends SQLDataSource {
 
     private _gapi: any;
 
-    constructor(options, signInController, gapi?) {
-        super(options);
+    constructor(signInController, options, gapi?) {
+        super(signInController, options);
         this._spreadsheetId = options.uri.replace(/.+?(spreadsheets\/d\/)/, "").replace(/(?=\/edit).+/, "");
         // take the entire first sheet using default name 'Sheet1' if no range is provided
         // more information on the A1 notation:
@@ -138,7 +137,7 @@ class GoogleSheets extends SQLDataSource {
                 // https://developers.google.com/chart/interactive/docs/querylanguage#setting-the-query-in-the-data-source-url
                 callback(JSON.parse(queryResult.replace("/*O_o*/", "").replace(/(google\.visualization\.Query\.setResponse\(|\);$)/g, "")));
             }
-        }
+        };
         xmlHttp.open("GET", baseUrl + this._spreadsheetId + "/gviz/tq?tq=" + encodeURI(sql), true); // true for asynchronous
         xmlHttp.setRequestHeader('Authorization', 'Bearer ' + this._signInController.accessToken);
         xmlHttp.send(null);
