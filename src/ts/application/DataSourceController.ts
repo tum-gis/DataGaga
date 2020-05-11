@@ -1,11 +1,16 @@
 enum DataSourceTypes {
     GoogleSheets = "GoogleSheets",
-    PostgreSQL = "PostgreSQL"
+    PostgreSQL = "PostgreSQL",
+    KML = "KML"
 }
 
 enum TableTypes {
     Horizontal = "Horizontal",
     Vertical = "Vertical"
+}
+
+enum ThirdPartyHandler {
+    Cesium = "Cesium"
 }
 
 class DataSourceController {
@@ -19,6 +24,8 @@ class DataSourceController {
             scope._dataSource = new GoogleSheets(signInController, scope._options);
         } else if (selectedDataSource == DataSourceTypes.PostgreSQL) {
             scope._dataSource = new PostgreSQL(signInController, scope._options);
+        } else if (selectedDataSource == DataSourceTypes.KML) {
+            scope._dataSource = new KMLDataSource(signInController, scope._options);
         }
     }
 
