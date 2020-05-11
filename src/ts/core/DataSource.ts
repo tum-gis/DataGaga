@@ -12,6 +12,9 @@ abstract class DataSource implements ReadableDataSource, WritableDataSource {
     protected _capabilities: DataSourceCapabilitiy[];
     protected _tableType: TableTypes;
     protected _idColName: string; // Default: PostgreSQL: gmlid, Spreadsheets: A
+    // an available 3rd-party handler, such as Cesium
+    // if this is given, the framework will prioritize its implementation
+    protected _thirdPartyHandler: any;
     protected _signInController: any;
 
     protected constructor(signInController, options) {
@@ -21,6 +24,7 @@ abstract class DataSource implements ReadableDataSource, WritableDataSource {
         this._uri = !options.uri ? "" : options.uri;
         this._capabilities = !options.capabilities ? undefined : options.capabilities;
         this._tableType = !options.tableType ? TableTypes.Horizontal : options.tableType;
+        this._thirdPartyHandler = !options.thirdPartyHandler ? undefined : options.thirdPartyHandler;
         this._signInController = signInController;
     }
 
@@ -95,6 +99,14 @@ abstract class DataSource implements ReadableDataSource, WritableDataSource {
 
     set idColName(value: string) {
         this._idColName = value;
+    }
+
+    get thirdPartyHandler(): any {
+        return this._thirdPartyHandler;
+    }
+
+    set thirdPartyHandler(value: any) {
+        this._thirdPartyHandler = value;
     }
 
     get signInController(): any {
