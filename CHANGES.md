@@ -5,6 +5,10 @@
 
 ##### NEW
 
+* Added support for KML datasource (see [`d9ade25`](https://github.com/tum-gis/mashup-data-source-service/commit/d9ade25adb200f586f72a2e1a93ec73a36bf9b03)).
+
+* Added option for adding 3rd-party handler (such as Cesium) to use their implementation for retrieving some data (see [`d9ade25`](https://github.com/tum-gis/mashup-data-source-service/commit/d9ade25adb200f586f72a2e1a93ec73a36bf9b03)).
+
 * Added support for both vertical and horizontal tables (see [`638ec36`](https://github.com/tum-gis/mashup-data-source-service/commit/638ec36161b5d4bb5673636c2e4290854e63c0f9)), where:
     + Horizontal: all object attributes are stored in columns of one single row, which means each ID occurs only once in the table
     + Vertical: each object attribute is stored in one row consisting of three columns `ID`, `Attribute` and `Value`, which means an ID may occur in multiple rows in the table
