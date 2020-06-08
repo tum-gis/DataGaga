@@ -146,7 +146,7 @@ class KMLDataSource extends XMLDataSource {
                 callback(simpleDataList);
             }
         };
-        xhttp.open("GET", this._layerUrl, true);
+        xhttp.open("GET", this._uri, true);
         xhttp.send();
     }
 

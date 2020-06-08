@@ -8,7 +8,6 @@ abstract class DataSource implements ReadableDataSource, WritableDataSource {
     protected _name: string;
     protected _provider: string;
     protected _type: string;
-    protected _layerUrl: string
     protected _uri: string;
     protected _capabilities: DataSourceCapabilitiy[];
     protected _tableType: TableTypes;
@@ -22,8 +21,7 @@ abstract class DataSource implements ReadableDataSource, WritableDataSource {
         this._name = !options.name ? "Data Source" : options.name;
         this._provider = !options.provider ? "Data Provider" : options.provider;
         this._type = !options.type ? "Data Type" : options.type;
-        this._layerUrl = !options.layerUrl ? "" : options.layerUrl;
-        this._uri = !options.uri ? options.layerUrl : options.uri;
+        this._uri = !options.uri ? "" : options.uri;
         this._capabilities = !options.capabilities ? undefined : options.capabilities;
         this._tableType = !options.tableType ? TableTypes.Horizontal : options.tableType;
         this._thirdPartyHandler = !options.thirdPartyHandler ? undefined : options.thirdPartyHandler;
@@ -69,14 +67,6 @@ abstract class DataSource implements ReadableDataSource, WritableDataSource {
 
     set type(value: string) {
         this._type = value;
-    }
-
-    get layerUrl(): string {
-        return this._layerUrl;
-    }
-
-    set layerUrl(value: string) {
-        this._layerUrl = value;
     }
 
     get uri(): string {
