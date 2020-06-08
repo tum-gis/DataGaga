@@ -147,7 +147,7 @@ class KMLDataSource extends XMLDataSource {
             }
         };
         // TODO enable proxy for other Data Sources?
-        xhttp.open("GET", this._proxyPrefix + this._uri, true);
+        xhttp.open("GET", (this._uri.indexOf(this._proxyPrefix) >= 0 ? "" : this._proxyPrefix) + this._uri, true);
         xhttp.send();
     }
 
