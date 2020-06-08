@@ -16,6 +16,7 @@ abstract class DataSource implements ReadableDataSource, WritableDataSource {
     // if this is given, the framework will prioritize its implementation
     protected _thirdPartyHandler: any;
     protected _signInController: any;
+    protected _proxyPrefix: string;
 
     protected constructor(signInController, options) {
         this._name = !options.name ? "Data Source" : options.name;
@@ -26,6 +27,7 @@ abstract class DataSource implements ReadableDataSource, WritableDataSource {
         this._tableType = !options.tableType ? TableTypes.Horizontal : options.tableType;
         this._thirdPartyHandler = !options.thirdPartyHandler ? undefined : options.thirdPartyHandler;
         this._signInController = signInController;
+        this._proxyPrefix = !options.proxyPrefix ? "" : options.proxyPrefix;
     }
 
     /**
@@ -115,6 +117,14 @@ abstract class DataSource implements ReadableDataSource, WritableDataSource {
 
     set signInController(value: any) {
         this._signInController = value;
+    }
+
+    get proxyPrefix(): string {
+        return this._proxyPrefix;
+    }
+
+    set proxyPrefix(value: string) {
+        this._proxyPrefix = value;
     }
 
     abstract countFromResult(res: QueryResult): number;
