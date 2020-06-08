@@ -65,12 +65,12 @@ class PostgreSQL extends SQLDataSource {
         return null;
     }
 
-    queryUsingId(id: string, callback: (queryResult: string) => any, limit?: number): void {
+    queryUsingId(id: string, callback: (queryResult: any) => any, limit?: number): void {
         // TODO use column number instead of column name (such as gmlid here)
         this.queryUsingSql("?" + this.idColName + "=eq." + id, callback, !limit ? Number.MAX_VALUE : limit);
     }
 
-    queryUsingSql(sql: string, callback: (queryResult: string) => any, limit?: number): void {
+    queryUsingSql(sql: string, callback: (queryResult: any) => any, limit?: number): void {
         // TODO handle limit
         const baseUrl = this._uri;
 

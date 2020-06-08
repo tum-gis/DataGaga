@@ -9,6 +9,7 @@ abstract class DataSource implements ReadableDataSource, WritableDataSource {
     protected _provider: string;
     protected _type: string;
     protected _uri: string;
+    protected _layerUrl: string
     protected _capabilities: DataSourceCapabilitiy[];
     protected _tableType: TableTypes;
     protected _idColName: string; // Default: PostgreSQL: gmlid, Spreadsheets: A
@@ -22,6 +23,7 @@ abstract class DataSource implements ReadableDataSource, WritableDataSource {
         this._provider = !options.provider ? "Data Provider" : options.provider;
         this._type = !options.type ? "Data Type" : options.type;
         this._uri = !options.uri ? "" : options.uri;
+        this._layerUrl = !options.layerUrl ? "" : options.layerUrl;
         this._capabilities = !options.capabilities ? undefined : options.capabilities;
         this._tableType = !options.tableType ? TableTypes.Horizontal : options.tableType;
         this._thirdPartyHandler = !options.thirdPartyHandler ? undefined : options.thirdPartyHandler;
@@ -77,6 +79,14 @@ abstract class DataSource implements ReadableDataSource, WritableDataSource {
         this._uri = value;
     }
 
+    get layerUrl(): string {
+        return this._layerUrl;
+    }
+
+    set layerUrl(value: string) {
+        this._layerUrl = value;
+    }
+
     get capabilities(): DataSourceCapabilitiy[] {
         return this._capabilities;
     }
@@ -125,13 +135,13 @@ abstract class DataSource implements ReadableDataSource, WritableDataSource {
 
     abstract insertDataRecord(record: DataRecord);
 
-    abstract queryUsingId(id: string, callback: (queryResult: string) => any, limit?: number);
+    abstract queryUsingId(id: string, callback: (queryResult: any) => any, limit?: number);
 
     abstract queryUsingIds(ids: string[]);
 
     abstract queryUsingNames(names: string[], limit: number);
 
-    abstract queryUsingSql(sql: string, callback: (queryResult: string) => any, limit?: number);
+    abstract queryUsingSql(sql: string, callback: (queryResult: any) => any, limit?: number);
 
     abstract queryUsingTypes(types: string[], limit: number);
 

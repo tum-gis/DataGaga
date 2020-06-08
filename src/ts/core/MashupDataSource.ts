@@ -59,7 +59,7 @@ abstract class MashupDataSource implements ReadableDataSource, WritableDataSourc
         return null;
     }
 
-    queryUsingId(id: string, callback: (queryResult: string) => any, limit?: number): void {
+    queryUsingId(id: string, callback: (queryResult: any) => any, limit?: number): void {
         // TODO
     }
 
@@ -73,7 +73,7 @@ abstract class MashupDataSource implements ReadableDataSource, WritableDataSourc
         return null;
     }
 
-    queryUsingSql(sql: string, callback: (queryResult: string) => any, limit?: number): void {
+    queryUsingSql(sql: string, callback: (queryResult: any) => any, limit?: number): void {
         // TODO
     }
 

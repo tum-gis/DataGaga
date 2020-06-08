@@ -118,11 +118,11 @@ class GoogleSheets extends SQLDataSource {
         return null;
     }
 
-    queryUsingId(id: string, callback: (queryResult: string) => any, limit?: number): void {
+    queryUsingId(id: string, callback: (queryResult: any) => any, limit?: number): void {
         this.queryUsingSql("SELECT * WHERE A='" + id + "'", callback, !limit ? Number.MAX_VALUE : limit);
     }
 
-    queryUsingSql(sql: string, callback: (queryResult: string) => any, limit?: number): void {
+    queryUsingSql(sql: string, callback: (queryResult: any) => any, limit?: number): void {
         // TODO handle limit
         const baseUrl = "https://docs.google.com/spreadsheets/d/";
 
@@ -144,7 +144,7 @@ class GoogleSheets extends SQLDataSource {
     }
 
     // This function is implemented using gapi
-    queryUsingSql_OLD(sql: string, limit: number, callback: (queryResult: string) => any): void {
+    queryUsingSql_OLD(sql: string, limit: number, callback: (queryResult: any) => any): void {
         // TODO refactor
         // TODO handle sql query and limit
 
