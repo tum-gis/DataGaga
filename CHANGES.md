@@ -7,7 +7,7 @@
 
 * Added support for KML datasource (see [`d9ade25`](https://github.com/tum-gis/mashup-data-source-service/commit/d9ade25adb200f586f72a2e1a93ec73a36bf9b03)).
 
-* Added support for parsing `ExtendedData` besides simple `Data` in KML (see [`fa5d2a2`](https://github.com/tum-gis/mashup-data-source-service/commit/fa5d2a248423576eec93b6e5714ce90327e6ab62)).
+* Added support for parsing `SchemaData` besides simple `Data` in KML (see [`fa5d2a2`](https://github.com/tum-gis/mashup-data-source-service/commit/fa5d2a248423576eec93b6e5714ce90327e6ab62)).
 
 * Added option for adding 3rd-party handler (such as Cesium) to use their implementation for retrieving some data (see [`d9ade25`](https://github.com/tum-gis/mashup-data-source-service/commit/d9ade25adb200f586f72a2e1a93ec73a36bf9b03)).
 
