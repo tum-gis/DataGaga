@@ -118,11 +118,11 @@ class GoogleSheets extends SQLDataSource {
         return null;
     }
 
-    queryUsingId(id: string, callback: (queryResult: any) => any, limit?: number): void {
-        this.queryUsingSql("SELECT * WHERE A='" + id + "'", callback, !limit ? Number.MAX_VALUE : limit);
+    queryUsingId(id: string, callback: (queryResult: any) => any, limit?: number, clickedObject?: any): void {
+        this.queryUsingSql("SELECT * WHERE A='" + id + "'", callback, !limit ? Number.MAX_VALUE : limit, clickedObject);
     }
 
-    queryUsingSql(sql: string, callback: (queryResult: any) => any, limit?: number): void {
+    queryUsingSql(sql: string, callback: (queryResult: any) => any, limit?: number, clickedObject?: any): void {
         // TODO handle limit
         const baseUrl = "https://docs.google.com/spreadsheets/d/";
 

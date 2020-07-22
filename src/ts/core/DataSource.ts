@@ -135,13 +135,13 @@ abstract class DataSource implements ReadableDataSource, WritableDataSource {
 
     abstract insertDataRecord(record: DataRecord);
 
-    abstract queryUsingId(id: string, callback: (queryResult: any) => any, limit?: number);
+    abstract queryUsingId(id: string, callback: (queryResult: any) => any, limit?: number, clickedObject?: any);
 
     abstract queryUsingIds(ids: string[]);
 
     abstract queryUsingNames(names: string[], limit: number);
 
-    abstract queryUsingSql(sql: string, callback: (queryResult: any) => any, limit?: number);
+    abstract queryUsingSql(sql: string, callback: (queryResult: any) => any, limit?: number, clickedObject?: any);
 
     abstract queryUsingTypes(types: string[], limit: number);
 

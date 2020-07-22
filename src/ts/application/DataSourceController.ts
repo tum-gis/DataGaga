@@ -29,11 +29,11 @@ class DataSourceController {
         }
     }
 
-    fetchData(id: string, callback: (queryResultKvp: Map<string, string>) => any, limit?: number) {
+    fetchData(id: string, callback: (queryResultKvp: Map<string, string>) => any, limit?: number, clickedObject?: any) {
         let scope = this;
         scope._dataSource.queryUsingId(id, function (result) {
             callback(scope._dataSource.responseToKvp(result));
-        }, limit);
+        }, limit, clickedObject);
     }
 
     get dataSource(): DataSource {

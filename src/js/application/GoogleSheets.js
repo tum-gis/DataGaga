@@ -103,10 +103,10 @@ var GoogleSheets = /** @class */ (function (_super) {
         // TODO
         return null;
     };
-    GoogleSheets.prototype.queryUsingId = function (id, callback, limit) {
-        this.queryUsingSql("SELECT * WHERE A='" + id + "'", callback, !limit ? Number.MAX_VALUE : limit);
+    GoogleSheets.prototype.queryUsingId = function (id, callback, limit, clickedObject) {
+        this.queryUsingSql("SELECT * WHERE A='" + id + "'", callback, !limit ? Number.MAX_VALUE : limit, clickedObject);
     };
-    GoogleSheets.prototype.queryUsingSql = function (sql, callback, limit) {
+    GoogleSheets.prototype.queryUsingSql = function (sql, callback, limit, clickedObject) {
         // TODO handle limit
         var baseUrl = "https://docs.google.com/spreadsheets/d/";
         var xmlHttp = new XMLHttpRequest();

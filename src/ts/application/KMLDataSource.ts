@@ -99,7 +99,7 @@ class KMLDataSource extends XMLDataSource {
         return null;
     }
 
-    queryUsingId(id: string, callback: (queryResult: any) => any, limit?: number): void {
+    queryUsingId(id: string, callback: (queryResult: any) => any, limit?: number, clickedObject?: any): void {
         if (this._thirdPartyHandler) {
             // prioritize the implementation of the provided 3rd-party handler
             switch (this._thirdPartyHandler.type) {
@@ -112,7 +112,7 @@ class KMLDataSource extends XMLDataSource {
                     if (typeof extendedData === "undefined"
                         || (Object.keys(extendedData).length === 0 && extendedData.constructor === Object)) {
                         // empty response -> use custom implementation
-                        this.queryUsingIdCustom(id, callback);
+                        this.queryUsingIdCustom(id, callback, limit, clickedObject);
                     } else {
                         callback(extendedData);
                     }
@@ -130,7 +130,7 @@ class KMLDataSource extends XMLDataSource {
         }
     }
 
-    private queryUsingIdCustom(id: string, callback: (queryResult: any) => any, limit?: number): void {
+    private queryUsingIdCustom(id: string, callback: (queryResult: any) => any, limit?: number, clickedObject?: any): void {
         this._useOwnKmlParser = true;
         // read KML file
         let xhttp = new XMLHttpRequest();
@@ -138,7 +138,21 @@ class KMLDataSource extends XMLDataSource {
             if (this.readyState == 4 && this.status == 200) {
                 let xmlParser = new DOMParser();
                 let xmlDoc = xmlParser.parseFromString(xhttp.responseText, "text/xml");
-                let placemark = xmlDoc.getElementById(id);
+                let placemark: Element = xmlDoc.getElementById(id);
+                if (placemark == null) {
+                    let placemarkNameSearch = clickedObject._name;
+                    // the placemarks in the KML file probably do not have IDs
+                    // search for its name values instead
+                    let placemarks = xmlDoc.getElementsByTagName("Placemark");
+                    for (let i = 0; i < placemarks.length; i++) {
+                        let iPlacemark = placemarks[i];
+                        let placemarkName = iPlacemark.getElementsByTagName("name")[0];
+                        if (placemarkName != null && placemarkName.textContent === placemarkNameSearch) {
+                            placemark = iPlacemark;
+                            break;
+                        }
+                    }
+                }
                 let extendedData = placemark.getElementsByTagName('ExtendedData')[0];
                 let schemaData = extendedData.getElementsByTagName('SchemaData')[0];
                 let simpleDataList = schemaData.getElementsByTagName('SimpleData');
@@ -151,7 +165,7 @@ class KMLDataSource extends XMLDataSource {
         xhttp.send();
     }
 
-    queryUsingSql(sql: string, callback: (queryResult: any) => any, limit?: number): void {
+    queryUsingSql(sql: string, callback: (queryResult: any) => any, limit?: number, clickedObject?: any): void {
         // TODO
         return;
     }
