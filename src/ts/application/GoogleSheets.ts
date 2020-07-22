@@ -139,7 +139,9 @@ class GoogleSheets extends SQLDataSource {
             }
         };
         xmlHttp.open("GET", baseUrl + this._spreadsheetId + "/gviz/tq?tq=" + encodeURI(sql), true); // true for asynchronous
-        xmlHttp.setRequestHeader('Authorization', 'Bearer ' + this._signInController.accessToken);
+        if (this._signInController != null) {
+            xmlHttp.setRequestHeader('Authorization', 'Bearer ' + this._signInController.accessToken);
+        }
         xmlHttp.send(null);
     }
 
