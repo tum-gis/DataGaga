@@ -2,13 +2,14 @@
 All data sources unite! 
 A uniform JavaScript API for processing multiple data sources across the web.
 
-**Note**: This project is under active development, so stay tuned!
+**Note**: **This project is under active development, so stay tuned!**
 
 ### What is it?
 Have you ever had too many web services and data sources all over the internet 
 and found it too cumbersome to save every single one of them?
 
-No worries no more! The Mashup Data Source Service is a library to manage and organize data sources on the web in one place. 
+No worries no more! The Mashup Data Source Service is a library to manage and organize the 
+data sources on the web in one place. 
 We define a general concept to support almost all popular data sources online. 
 Not only can such data sources be imported from different providers and places, 
 they can be combined as one single mashup data source for your convenience.
@@ -19,10 +20,12 @@ For example, you'd like to query your own tables hosted in the following service
 + PostgreSQL
 + Oracle
 
-Normally you would have to treat them separately in your code because they have different API syntax structures and protocols.
+Normally you would have to treat them separately in your code because 
+they have different API syntax structures and protocols.
 Using the Mashup Data Source Service: 
 + You only need to declare these data sources once;
-+ You can then query your data easily in one place regardless of the syntax and structure differences between the different APIs;
++ You can then query your data easily in one place regardless of the syntax 
+and structure differences between the different APIs;
 + You can even treat all of them as one single data source and query/display their data in one single call.
 
 ### Installation
@@ -47,16 +50,36 @@ Copy and import the JavaScript folder [js](src/js) or the TypeScript folder [ts]
     + ``provider`` ``(optional)``: the provider of your data source
     + ``uri`` ``(required)``: the URL to your data source
 
+    [comment]: <> (TODO Provide a more detailed documentation on the options.)
+
 1. Initialize data source:
     ```javascript
     // Google Spreadsheets
-    var googleSpreadsheets = new GoogleSheets(options);
+    var dataSource = new GoogleSheets(options);
     
     // Google Spreadsheets
-    var postgreSQL = new PostgreSQL(options);
+    var dataSource = new PostgreSQL(options);
     ```
+   
+   [comment]: <> (TODO Provide a more detailed documentation on the parameters of the constructors.)
 
-[comment]: <> (TODO Provide a more detailed documentation on the options.)
+1. Start querying:
+    ```javascript
+    dataSource.queryUsingId(id, function (result) {
+        callback(dataSource.responseToKvp(result));
+    }, limit);
+    ```
+    where:
+    + ``id`` ``required``: the ID of the object to be queried
+    + ``limit`` ``optional``: only fetches the first ``limit`` results from the data source
+    
+    Here we use the built-in function ```dataSource.responseToKvp(result)``` 
+    to transform the query results to Key-Value-Pairs.
+    You can then use these KVPs such as by employing the ``callback`` function (must be implemented by you).
+    
+    [comment]: <> (TODO Provide a more detailed documentation on the structure of the KVPs.)
+    
+    [comment]: <> (TODO Provide a more detailed documentation on functions responseToKVP and others.)
 
 [comment]: <> (TODO Provide a more detailed documentation on the getCapabilities.)
 
