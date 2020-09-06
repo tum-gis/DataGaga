@@ -40,7 +40,7 @@ var DataSourceController = /** @class */ (function () {
         set: function (value) {
             this._dataSource = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DataSourceController.prototype, "options", {
@@ -50,7 +50,7 @@ var DataSourceController = /** @class */ (function () {
         set: function (value) {
             this._options = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     return DataSourceController;

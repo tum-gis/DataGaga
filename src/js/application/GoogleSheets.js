@@ -16,6 +16,22 @@ var GoogleSheets = /** @class */ (function (_super) {
     __extends(GoogleSheets, _super);
     function GoogleSheets(signInController, options, gapi) {
         var _this = _super.call(this, signInController, options) || this;
+        // Initialize capabilities
+        var capabilitiesOptions = new DataSourceCapabilities({
+            webCapabilities: {
+                restAPI: true
+            },
+            dbTransactionCapabilities: {
+                read: true,
+                insert: true,
+                delete: true,
+                update: true
+            },
+            securityCapabilities: {
+                oauth: true
+            }
+        });
+        _this._capabilities = capabilitiesOptions;
         _this._spreadsheetId = options.uri.replace(/.+?(spreadsheets\/d\/)/, "").replace(/(?=\/edit).+/, "");
         // take the entire first sheet using default name 'Sheet1' if no range is provided
         // more information on the A1 notation:
@@ -244,7 +260,7 @@ var GoogleSheets = /** @class */ (function (_super) {
         set: function (value) {
             this._spreadsheetId = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(GoogleSheets.prototype, "ranges", {
@@ -254,7 +270,7 @@ var GoogleSheets = /** @class */ (function (_super) {
         set: function (value) {
             this._ranges = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(GoogleSheets.prototype, "apiKey", {
@@ -264,7 +280,7 @@ var GoogleSheets = /** @class */ (function (_super) {
         set: function (value) {
             this._apiKey = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(GoogleSheets.prototype, "clientId", {
@@ -274,7 +290,7 @@ var GoogleSheets = /** @class */ (function (_super) {
         set: function (value) {
             this._clientId = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(GoogleSheets.prototype, "scope", {
@@ -284,7 +300,7 @@ var GoogleSheets = /** @class */ (function (_super) {
         set: function (value) {
             this._scope = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(GoogleSheets.prototype, "gapi", {
@@ -294,7 +310,7 @@ var GoogleSheets = /** @class */ (function (_super) {
         set: function (value) {
             this._gapi = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(GoogleSheets.prototype, "signInController", {
@@ -304,7 +320,7 @@ var GoogleSheets = /** @class */ (function (_super) {
         set: function (value) {
             this._signInController = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     return GoogleSheets;

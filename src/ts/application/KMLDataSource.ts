@@ -3,6 +3,24 @@ class KMLDataSource extends XMLDataSource {
 
     constructor(signInController, options) {
         super(signInController, options);
+
+        // Initialize capabilities
+        let capabilitiesOptions: DataSourceCapabilities = new DataSourceCapabilities({
+            webCapabilities: {
+                restAPI: false
+            },
+            dbTransactionCapabilities: {
+                read: true,
+                insert: false,
+                delete: false,
+                update: false
+            },
+            securityCapabilities: {
+                oauth: false
+            }
+        });
+        this._capabilities = capabilitiesOptions;
+
         this._useOwnKmlParser = false;
     }
 

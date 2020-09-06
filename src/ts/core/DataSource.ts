@@ -9,7 +9,7 @@ abstract class DataSource implements ReadableDataSource, WritableDataSource {
     protected _provider: string;
     protected _type: string;
     protected _uri: string;
-    protected _capabilities: DataSourceCapabilitiy[];
+    protected _capabilities: DataSourceCapabilities;
     protected _tableType: TableTypes;
     protected _idColName: string; // Default: PostgreSQL: gmlid, Spreadsheets: A
     // an available 3rd-party handler, such as Cesium
@@ -79,11 +79,11 @@ abstract class DataSource implements ReadableDataSource, WritableDataSource {
         this._uri = value;
     }
 
-    get capabilities(): DataSourceCapabilitiy[] {
+    get capabilities(): DataSourceCapabilities {
         return this._capabilities;
     }
 
-    set capabilities(value: DataSourceCapabilitiy[]) {
+    set capabilities(value: DataSourceCapabilities) {
         this._capabilities = value;
     }
 

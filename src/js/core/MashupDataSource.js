@@ -8,7 +8,7 @@ var MashupDataSource = /** @class */ (function () {
         set: function (value) {
             this._mashupDataSources = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     MashupDataSource.prototype.getCapabilities = function () {

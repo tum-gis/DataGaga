@@ -9,12 +9,12 @@ abstract class MashupDataSource implements ReadableDataSource, WritableDataSourc
         this._mashupDataSources = value;
     }
 
-    public getCapabilities(): Array<DataSourceCapabilitiy[]> {
+    public getCapabilities(): DataSourceCapabilities {
         // TODO
         return null;
     }
 
-    public getMostCommonCapabilities(): DataSourceCapabilitiy[] {
+    public getMostCommonCapabilities(): DataSourceCapabilities {
         // TOTO
         return null;
     }

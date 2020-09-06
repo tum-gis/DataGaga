@@ -22,7 +22,7 @@ var DataSource = /** @class */ (function () {
         set: function (value) {
             this._name = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DataSource.prototype, "provider", {
@@ -32,7 +32,7 @@ var DataSource = /** @class */ (function () {
         set: function (value) {
             this._provider = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DataSource.prototype, "type", {
@@ -42,7 +42,7 @@ var DataSource = /** @class */ (function () {
         set: function (value) {
             this._type = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DataSource.prototype, "uri", {
@@ -52,7 +52,7 @@ var DataSource = /** @class */ (function () {
         set: function (value) {
             this._uri = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DataSource.prototype, "capabilities", {
@@ -62,7 +62,7 @@ var DataSource = /** @class */ (function () {
         set: function (value) {
             this._capabilities = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DataSource.prototype, "tableType", {
@@ -72,7 +72,7 @@ var DataSource = /** @class */ (function () {
         set: function (value) {
             this._tableType = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DataSource.prototype, "idColName", {
@@ -82,7 +82,7 @@ var DataSource = /** @class */ (function () {
         set: function (value) {
             this._idColName = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DataSource.prototype, "thirdPartyHandler", {
@@ -92,7 +92,7 @@ var DataSource = /** @class */ (function () {
         set: function (value) {
             this._thirdPartyHandler = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DataSource.prototype, "signInController", {
@@ -102,7 +102,7 @@ var DataSource = /** @class */ (function () {
         set: function (value) {
             this._signInController = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DataSource.prototype, "proxyPrefix", {
@@ -112,7 +112,7 @@ var DataSource = /** @class */ (function () {
         set: function (value) {
             this._proxyPrefix = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     return DataSource;

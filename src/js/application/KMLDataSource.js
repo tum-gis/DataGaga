@@ -15,6 +15,22 @@ var KMLDataSource = /** @class */ (function (_super) {
     __extends(KMLDataSource, _super);
     function KMLDataSource(signInController, options) {
         var _this = _super.call(this, signInController, options) || this;
+        // Initialize capabilities
+        var capabilitiesOptions = new DataSourceCapabilities({
+            webCapabilities: {
+                restAPI: false
+            },
+            dbTransactionCapabilities: {
+                read: true,
+                insert: false,
+                delete: false,
+                update: false
+            },
+            securityCapabilities: {
+                oauth: false
+            }
+        });
+        _this._capabilities = capabilitiesOptions;
         _this._useOwnKmlParser = false;
         return _this;
     }
@@ -191,7 +207,7 @@ var KMLDataSource = /** @class */ (function (_super) {
         set: function (value) {
             this._useOwnKmlParser = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     return KMLDataSource;

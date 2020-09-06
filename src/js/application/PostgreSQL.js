@@ -16,6 +16,22 @@ var PostgreSQL = /** @class */ (function (_super) {
     __extends(PostgreSQL, _super);
     function PostgreSQL(signInController, options) {
         var _this = _super.call(this, signInController, options) || this;
+        // Initialize capabilities
+        var capabilitiesOptions = new DataSourceCapabilities({
+            webCapabilities: {
+                restAPI: true
+            },
+            dbTransactionCapabilities: {
+                read: true,
+                insert: true,
+                delete: true,
+                update: true
+            },
+            securityCapabilities: {
+                oauth: true
+            }
+        });
+        _this._capabilities = capabilitiesOptions;
         _this._idColName = !options.idColName ? "gmlid" : options.idColName;
         return _this;
     }

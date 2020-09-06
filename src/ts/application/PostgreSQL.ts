@@ -3,6 +3,24 @@
 class PostgreSQL extends SQLDataSource {
     constructor(signInController, options) {
         super(signInController, options);
+
+        // Initialize capabilities
+        let capabilitiesOptions: DataSourceCapabilities = new DataSourceCapabilities({
+            webCapabilities: {
+                restAPI: true
+            },
+            dbTransactionCapabilities: {
+                read: true,
+                insert: true,
+                delete: true,
+                update: true
+            },
+            securityCapabilities: {
+                oauth: true
+            }
+        });
+        this._capabilities = capabilitiesOptions;
+
         this._idColName = !options.idColName ? "gmlid" : options.idColName;
     }
 

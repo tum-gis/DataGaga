@@ -19,6 +19,24 @@ class GoogleSheets extends SQLDataSource {
 
     constructor(signInController, options, gapi?) {
         super(signInController, options);
+
+        // Initialize capabilities
+        let capabilitiesOptions: DataSourceCapabilities = new DataSourceCapabilities({
+            webCapabilities: {
+                restAPI: true
+            },
+            dbTransactionCapabilities: {
+                read: true,
+                insert: true,
+                delete: true,
+                update: true
+            },
+            securityCapabilities: {
+                oauth: true
+            }
+        });
+        this._capabilities = capabilitiesOptions;
+
         this._spreadsheetId = options.uri.replace(/.+?(spreadsheets\/d\/)/, "").replace(/(?=\/edit).+/, "");
         // take the entire first sheet using default name 'Sheet1' if no range is provided
         // more information on the A1 notation:

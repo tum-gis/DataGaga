@@ -19,7 +19,7 @@ var QueryResult = /** @class */ (function () {
         set: function (value) {
             this._data = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     return QueryResult;
