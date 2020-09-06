@@ -1,3 +1,1 @@
-tplant --input ./src/**/*.ts --ouput ./modelling/UML.puml
-tplant --input ./src/**/*.ts --ouput ./modelling/UML.svg
-tplant --input ./src/**/*.ts --ouput ./modelling/UML.png
+tplant --input ./src/**/*.ts --output ./modelling/UML.svg
