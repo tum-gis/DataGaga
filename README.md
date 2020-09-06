@@ -58,6 +58,8 @@ Copy and import the JavaScript folder [js](src/js) or the TypeScript folder [ts]
 
 [comment]: <> (TODO Provide a more detailed documentation on the options.)
 
+[comment]: <> (TODO Provide a more detailed documentation on the getCapabilities.)
+
 ### How do I declare my own data sources?
 For your convenience, we already include Google Spreadsheets and PostgreSQL (more to come!) both in JavaScript and TypeScript.
 But if you know a popular data source that is not included, please let us know in the 
