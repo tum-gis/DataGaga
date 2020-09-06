@@ -80,6 +80,8 @@ Copy and import the JavaScript folder [js](src/js) or the TypeScript folder [ts]
     [comment]: <> (TODO Provide a more detailed documentation on the structure of the KVPs.)
     
     [comment]: <> (TODO Provide a more detailed documentation on functions responseToKVP and others.)
+    
+    [comment]: <> (TODO Provide a more detailed documentation on functions queryUsingId and others.)
 
 [comment]: <> (TODO Provide a more detailed documentation on the getCapabilities.)
 
