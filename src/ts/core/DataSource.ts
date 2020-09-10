@@ -4,7 +4,7 @@
 // Alternatively we can do this:
 // interface DataSource extends ReadableDataSource, WritableDataSource {}
 
-abstract class DataSource implements ReadableDataSource, WritableDataSource {
+abstract class DataSource implements ReadableDataSource, WritableDataSource, SecuredDataSource {
     protected _name: string;
     protected _provider: string;
     protected _type: string;
@@ -127,11 +127,11 @@ abstract class DataSource implements ReadableDataSource, WritableDataSource {
         this._proxyPrefix = value;
     }
 
-    abstract countFromResult(res: QueryResult): number;
+    abstract countFromResult(res: FetchResultSet): number;
 
     abstract deleteDataRecordUsingId(id: string);
 
-    abstract fetchIdsFromResult(res: QueryResult);
+    abstract fetchIdsFromResult(res: FetchResultSet);
 
     abstract insertDataRecord(record: DataRecord);
 
@@ -145,9 +145,9 @@ abstract class DataSource implements ReadableDataSource, WritableDataSource {
 
     abstract queryUsingTypes(types: string[], limit: number);
 
-    abstract sumFromResultByColIndex(res: QueryResult, colIndex: number);
+    abstract sumFromResultByColIndex(res: FetchResultSet, colIndex: number);
 
-    abstract sumFromResultByName(res: QueryResult, name: string);
+    abstract sumFromResultByName(res: FetchResultSet, name: string);
 
     abstract updateDataRecordUsingId(id: string, newRecord: DataRecord);
 

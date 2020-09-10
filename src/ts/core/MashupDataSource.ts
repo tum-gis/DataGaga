@@ -39,7 +39,7 @@ abstract class MashupDataSource implements ReadableDataSource, WritableDataSourc
         return null;
     }
 
-    countFromResult(res: QueryResult): number {
+    countFromResult(res: FetchResultSet): number {
         // TODO
         return null;
     }
@@ -49,7 +49,7 @@ abstract class MashupDataSource implements ReadableDataSource, WritableDataSourc
         return null;
     }
 
-    fetchIdsFromResult(res: QueryResult): string[] {
+    fetchIdsFromResult(res: FetchResultSet): string[] {
         // TODO
         return null;
     }
@@ -63,12 +63,12 @@ abstract class MashupDataSource implements ReadableDataSource, WritableDataSourc
         // TODO
     }
 
-    queryUsingIds(ids: string[]): QueryResult {
+    queryUsingIds(ids: string[]): FetchResultSet {
         // TODO
         return null;
     }
 
-    queryUsingNames(names: string[], limit: number): QueryResult {
+    queryUsingNames(names: string[], limit: number): FetchResultSet {
         // TODO
         return null;
     }
@@ -77,17 +77,17 @@ abstract class MashupDataSource implements ReadableDataSource, WritableDataSourc
         // TODO
     }
 
-    queryUsingTypes(types: string[], limit: number): QueryResult {
+    queryUsingTypes(types: string[], limit: number): FetchResultSet {
         // TODO
         return null;
     }
 
-    sumFromResultByColIndex(res: QueryResult, colIndex: number): number {
+    sumFromResultByColIndex(res: FetchResultSet, colIndex: number): number {
         // TODO
         return null;
     }
 
-    sumFromResultByName(res: QueryResult, name: string): number {
+    sumFromResultByName(res: FetchResultSet, name: string): number {
         // TODO
         return null;
     }

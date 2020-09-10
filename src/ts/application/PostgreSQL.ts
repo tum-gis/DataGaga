@@ -54,7 +54,7 @@ class PostgreSQL extends SQLDataSource {
         return result;
     }
 
-    countFromResult(res: QueryResult): number {
+    countFromResult(res: FetchResultSet): number {
         return res.getSize();
     }
 
@@ -63,7 +63,7 @@ class PostgreSQL extends SQLDataSource {
         return null;
     }
 
-    fetchIdsFromResult(res: QueryResult): string[] {
+    fetchIdsFromResult(res: FetchResultSet): string[] {
         // TODO
         return null;
     }
@@ -73,12 +73,12 @@ class PostgreSQL extends SQLDataSource {
         return null;
     }
 
-    queryUsingIds(ids: string[]): QueryResult {
+    queryUsingIds(ids: string[]): FetchResultSet {
         // TODO
         return null;
     }
 
-    queryUsingNames(names: string[], limit: number): QueryResult {
+    queryUsingNames(names: string[], limit: number): FetchResultSet {
         // TODO
         return null;
     }
@@ -103,17 +103,17 @@ class PostgreSQL extends SQLDataSource {
         xmlHttp.send(null);
     }
 
-    queryUsingTypes(types: string[], limit: number): QueryResult {
+    queryUsingTypes(types: string[], limit: number): FetchResultSet {
         // TODO
         return null;
     }
 
-    sumFromResultByColIndex(res: QueryResult, colIndex: number): number {
+    sumFromResultByColIndex(res: FetchResultSet, colIndex: number): number {
         // TODO
         return null;
     }
 
-    sumFromResultByName(res: QueryResult, name: string): number {
+    sumFromResultByName(res: FetchResultSet, name: string): number {
         // TODO
         return null;
     }
