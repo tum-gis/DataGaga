@@ -1,51 +1,65 @@
-// In TypeScript if abstract class B implements interface A,
+// In TypeScript if abstract class B implements definition A,
 // it must either implement functions from A or declare them as abstract.
 // https://github.com/Microsoft/TypeScript/issues/4670
 // Alternatively we can do this:
 // interface DataSource extends ReadableDataSource, WritableDataSource {}
 
 abstract class DataSource implements ReadableDataSource, WritableDataSource, SecuredDataSource {
+    /**
+     * An easy-to-rember name of the data source.
+     *
+     * @protected
+     */
     protected _name: string;
-    protected _provider: string;
-    protected _type: string;
-    protected _uri: string;
-    protected _capabilities: DataSourceCapabilities;
-    protected _tableType: TableTypes;
-    protected _idColName: string; // Default: PostgreSQL: gmlid, Spreadsheets: A
-    // an available 3rd-party handler, such as Cesium
-    // if this is given, the framework will prioritize its implementation
-    protected _thirdPartyHandler: any;
-    protected _signInController: any;
-    protected _proxyPrefix: string;
-
-    protected constructor(signInController, options) {
-        this._name = !options.name ? "Data Source" : options.name;
-        this._provider = !options.provider ? "Data Provider" : options.provider;
-        this._type = !options.type ? "Data Type" : options.type;
-        this._uri = !options.uri ? "" : options.uri;
-        this._capabilities = !options.capabilities ? undefined : options.capabilities;
-        this._tableType = !options.tableType ? TableTypes.Horizontal : options.tableType;
-        this._thirdPartyHandler = !options.thirdPartyHandler ? undefined : options.thirdPartyHandler;
-        this._signInController = signInController;
-        this._proxyPrefix = !options.proxyPrefix ? "" : options.proxyPrefix;
-    }
 
     /**
-     * Convert the query response from data source to KVP structure.
-     * Note that the response should only have two rows (one for the keys/headers and one for values).
-     * Rows starting from 3th should not exist and/or shall be ignored.
-     * Also note that the first column must contain the primary keys/IDs.
+     * The provider of this data source.
      *
-     * KVP structure:
-     * {
-     *     key1: value1,
-     *     key2: value2
-     * }
-     *
-     * @param response from data source
-     * @return object in KVP structure
+     * @protected
      */
-    abstract responseToKvp(response: any): Map<string, string>;
+    protected _provider: string;
+
+    /**
+     * The URI to the resource hosted on the web.
+     *
+     * @protected
+     */
+    protected _uri: string;
+
+    /**
+     * Capabilities of the service hosting this data source.
+     *
+     * @protected
+     */
+    protected _capabilities: DataSourceCapabilities;
+
+    /**
+     * The structural type of the data source.
+     * @protected
+     */
+    protected _dataStructureType: DataStructureType;
+
+    /**
+     * A prefix for loading via proxy.
+     *
+     * @protected
+     */
+    protected _proxyPrefix: string;
+
+    /**
+     * Constructor.
+     *
+     * @param options an object containing attributes defined in this class
+     * @protected
+     */
+    protected constructor(options) {
+        Util.initAttribute(this, "_name", options.name, "My data source name");
+        Util.initAttribute(this, "_provider", options.provider, "My data source provider");
+        Util.initAttribute(this, "_uri", options.uri, "");
+        Util.initAttribute(this, "_capabilities", options.capabilities, undefined);
+        Util.initAttribute(this, "_dataStructureType", options.dataStructureType, DataStructureType.HORIZONTAL);
+        Util.initAttribute(this, "_proxyPrefix", options.proxyPrefix, "");
+    }
 
     get name(): string {
         return this._name;
@@ -61,14 +75,6 @@ abstract class DataSource implements ReadableDataSource, WritableDataSource, Sec
 
     set provider(value: string) {
         this._provider = value;
-    }
-
-    get type(): string {
-        return this._type;
-    }
-
-    set type(value: string) {
-        this._type = value;
     }
 
     get uri(): string {
@@ -87,36 +93,12 @@ abstract class DataSource implements ReadableDataSource, WritableDataSource, Sec
         this._capabilities = value;
     }
 
-    get tableType(): TableTypes {
-        return this._tableType;
+    get dataStructureType(): DataStructureType {
+        return this._dataStructureType;
     }
 
-    set tableType(value: TableTypes) {
-        this._tableType = value;
-    }
-
-    get idColName(): string {
-        return this._idColName;
-    }
-
-    set idColName(value: string) {
-        this._idColName = value;
-    }
-
-    get thirdPartyHandler(): any {
-        return this._thirdPartyHandler;
-    }
-
-    set thirdPartyHandler(value: any) {
-        this._thirdPartyHandler = value;
-    }
-
-    get signInController(): any {
-        return this._signInController;
-    }
-
-    set signInController(value: any) {
-        this._signInController = value;
+    set dataStructureType(value: DataStructureType) {
+        this._dataStructureType = value;
     }
 
     get proxyPrefix(): string {
@@ -127,28 +109,39 @@ abstract class DataSource implements ReadableDataSource, WritableDataSource, Sec
         this._proxyPrefix = value;
     }
 
-    abstract countFromResult(res: FetchResultSet): number;
+    abstract transformToKVPArray(data: any): Array<KVP>;
 
-    abstract deleteDataRecordUsingId(id: string);
+    abstract fetchAttributeValuesFromId(id: string): Promise<FetchResultSet>;
 
-    abstract fetchIdsFromResult(res: FetchResultSet);
+    abstract fetchAttributeNamesFromId(id: string): Promise<string[]>;
 
-    abstract insertDataRecord(record: DataRecord);
+    abstract fetchIdsFromQBE(qbe: QBE, limit?: number): Promise<string[]>;
 
-    abstract queryUsingId(id: string, callback: (queryResult: any) => any, limit?: number, clickedObject?: any);
+    abstract aggregateByIds(ids: string[], aggregateOperator: AggregateOperator, attributeName?: string): Promise<number> | Promise<{ kvp: KVP }>;
 
-    abstract queryUsingIds(ids: string[]);
+    abstract aggregateByIds(ids: string[], aggregateOperator: AggregateOperator): Promise<{ kvp: KVP }>;
 
-    abstract queryUsingNames(names: string[], limit: number);
+    abstract aggregateByIds(ids: string[], aggregateOperator: AggregateOperator, attributeName: string): Promise<number>;
 
-    abstract queryUsingSql(sql: string, callback: (queryResult: any) => any, limit?: number, clickedObject?: any);
+    abstract updateAttributeValueOfId(id: string, attributeName: string, newValue: any): Promise<boolean>;
 
-    abstract queryUsingTypes(types: string[], limit: number);
+    abstract updateAttributeValuesUsingQBE(qbe: QBE, newAttributeValues: KVP): Promise<boolean>;
 
-    abstract sumFromResultByColIndex(res: FetchResultSet, colIndex: number);
+    abstract insertAttributeOfId(id: string, attributeName: string, attributeValue: any): Promise<boolean>;
 
-    abstract sumFromResultByName(res: FetchResultSet, name: string);
+    abstract insertAttributesUsingQBE(qbe: QBE, newAttributes: KVP): Promise<boolean>;
 
-    abstract updateDataRecordUsingId(id: string, newRecord: DataRecord);
+    abstract insertNewObject(kvp: KVP): Promise<boolean>;
 
+    abstract deleteObjectOfId(id: string): Promise<boolean>;
+
+    abstract deleteAttributeOfId(id: string, attributeName: string): Promise<boolean>;
+
+    abstract deleteAttributesUsingQBE(qbe: QBE, attributeNames: string[]): Promise<boolean>;
+
+    abstract deleteObjectsUsingQBE(qbe: QBE): Promise<boolean>;
+
+    abstract login(credentials: any): Promise<boolean>;
+
+    abstract logout(): Promise<boolean>;
 }

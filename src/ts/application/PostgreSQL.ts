@@ -1,8 +1,35 @@
-// import * as request from "request-promise-native";
-
+/**
+ * An implementation for the data source PostgREST.
+ */
 class PostgreSQL extends SQLDataSource {
-    constructor(signInController, options) {
-        super(signInController, options);
+
+    /**
+     * The name of the column containing the IDs of objects.
+     * Normally this is the first column of a table (e.g. gmlid).
+     *
+     * @private
+     */
+    private _idColName: string;
+
+    /**
+     * A constructor to instantiate a PostgreSQL object.
+     * This requires an object options with the following structure
+     *
+     *
+     * |    Attribute name      |   Data type               |   Default value           |
+     * |------------------------|---------------------------|---------------------------|
+     * |    name                |   string                  |   My data source name     |
+     * |    provider            |   string                  |   My data source provider |
+     * |    uri                 |   string                  |   **REQUIRED**            |
+     * |    capabilities        |   DataSourceCapabilities  |   **built-in**            |
+     * |    dataStructureType   |   DataStructureType       |   **REQUIRED**            |
+     * |    _proxyPrefix        |   string                  |                           |
+     *
+     * @param options an object containing the required information
+     *
+     */
+    constructor(options) {
+        super(options);
 
         // Initialize capabilities
         let capabilitiesOptions: DataSourceCapabilities = new DataSourceCapabilities({
@@ -21,31 +48,33 @@ class PostgreSQL extends SQLDataSource {
         });
         this._capabilities = capabilitiesOptions;
 
-        this._idColName = !options.idColName ? "gmlid" : options.idColName;
+        Util.initAttribute(this, "_idColName", options.idColName, "gmlid");
     }
 
-    responseToKvp(response: any): Map<string, string> {
-        // TODO test with PostgREST
-        // response is just a text -> parse to JSON
-        const responseJson = JSON.parse(response);
-        let result = new Map<string, string>();
 
-        if (this.tableType == TableTypes.Horizontal) {
+    transformToKVPArray(data: any): Array<KVP> {
+        // response is just a text -> parse to JSON
+        const dataJson = JSON.parse(data);
+        let result = Array<KVP>();
+
+        if (this._dataStructureType === DataStructureType.HORIZONTAL) {
             // all attributes per object are stored in one row
-            for (let i = 0; i < responseJson.length; i++) {
-                const ele = responseJson[i];
+            let kvps: KVP = {};
+            for (let i = 0; i < dataJson.length; i++) {
+                const ele = dataJson[i];
                 for (let key in ele) {
-                    result[key] = ele[key];
+                    kvps[key] = ele[key];
                 }
             }
+            result.push(kvps);
         } else {
             // one attribute per row
             // only store id once
             // (because the vertical table has multiple lines of the same id)
-            // result[this.idColName] = responseJson[0][this.idColName];
+            // result[this.idColName] = dataJson[0][this.idColName];
 
-            for (let i = 0; i < responseJson.length; i++) {
-                const ele = responseJson[i];
+            for (let i = 0; i < dataJson.length; i++) {
+                const ele = dataJson[i];
                 // TODO generic implementation for attribute and value
                 result[ele.attribute] = ele.value;
             }
@@ -54,34 +83,6 @@ class PostgreSQL extends SQLDataSource {
         return result;
     }
 
-    countFromResult(res: FetchResultSet): number {
-        return res.getSize();
-    }
-
-    deleteDataRecordUsingId(id: string): boolean {
-        // TODO
-        return null;
-    }
-
-    fetchIdsFromResult(res: FetchResultSet): string[] {
-        // TODO
-        return null;
-    }
-
-    insertDataRecord(record: DataRecord): boolean {
-        // TODO
-        return null;
-    }
-
-    queryUsingIds(ids: string[]): FetchResultSet {
-        // TODO
-        return null;
-    }
-
-    queryUsingNames(names: string[], limit: number): FetchResultSet {
-        // TODO
-        return null;
-    }
 
     queryUsingId(id: string, callback: (queryResult: any) => any, limit?: number, clickedObject?: any): void {
         // TODO use column number instead of column name (such as gmlid here)
@@ -103,24 +104,101 @@ class PostgreSQL extends SQLDataSource {
         xmlHttp.send(null);
     }
 
-    queryUsingTypes(types: string[], limit: number): FetchResultSet {
+    aggregateByIds(ids: string[], aggregateOperator: AggregateOperator, attributeName: string): Promise<number>;
+    aggregateByIds(ids: string[], aggregateOperator: AggregateOperator): Promise<{ kvp: KVP }>;
+    aggregateByIds(ids: string[], aggregateOperator: AggregateOperator, attributeName?: string): Promise<number> | Promise<{ kvp: KVP }> {
         // TODO
-        return null;
+        return Promise.resolve(0);
     }
 
-    sumFromResultByColIndex(res: FetchResultSet, colIndex: number): number {
+    deleteAttributeOfId(id: string, attributeName: string): Promise<boolean> {
         // TODO
-        return null;
+        return Promise.resolve(false);
     }
 
-    sumFromResultByName(res: FetchResultSet, name: string): number {
+    deleteAttributesUsingQBE(qbe: QBE, attributeNames: string[]): Promise<boolean> {
         // TODO
-        return null;
+        return Promise.resolve(false);
     }
 
-    updateDataRecordUsingId(id: string, newRecord: DataRecord): boolean {
+    deleteObjectOfId(id: string): Promise<boolean> {
         // TODO
-        return null;
+        return Promise.resolve(false);
     }
+
+    deleteObjectsUsingQBE(qbe: QBE): Promise<boolean> {
+        // TODO
+        return Promise.resolve(false);
+    }
+
+    fetchAttributeNamesFromId(id: string): Promise<string[]> {
+        // TODO
+        return Promise.resolve([]);
+    }
+
+    fetchAttributeValuesFromId(id: string): Promise<FetchResultSet> {
+        return new Promise(function (resolve, reject) {
+            var xmlHttp = new XMLHttpRequest();
+            xmlHttp.open("GET", this._uri + "?" + this._idColName + "=eq." + id, true);
+            xmlHttp.onreadystatechange = function () {
+                if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
+                    resolve(xmlHttp.responseText);
+                } else {
+                    reject({
+                        status: xmlHttp.status,
+                        statusText: xmlHttp.statusText
+                    });
+                }
+            }
+            xmlHttp.onerror = function () {
+                reject({
+                    status: xmlHttp.status,
+                    statusText: xmlHttp.statusText
+                });
+            };
+            xmlHttp.send(null);
+        });
+    }
+
+    fetchIdsFromQBE(qbe: QBE, limit?: number): Promise<string[]> {
+        // TODO
+        return Promise.resolve([]);
+    }
+
+    insertAttributeOfId(id: string, attributeName: string, attributeValue: any): Promise<boolean> {
+        // TODO
+        return Promise.resolve(false);
+    }
+
+    insertAttributesUsingQBE(qbe: QBE, newAttributes: KVP): Promise<boolean> {
+        // TODO
+        return Promise.resolve(false);
+    }
+
+    insertNewObject(kvp: KVP): Promise<boolean> {
+        // TODO
+        return Promise.resolve(false);
+    }
+
+    login(credentials: any): Promise<boolean> {
+        // TODO
+        return Promise.resolve(false);
+    }
+
+    logout(): Promise<boolean> {
+        // TODO
+        return Promise.resolve(false);
+    }
+
+    updateAttributeValueOfId(id: string, attributeName: string, newValue: any): Promise<boolean> {
+        // TODO
+        return Promise.resolve(false);
+    }
+
+    updateAttributeValuesUsingQBE(qbe: QBE, newAttributeValues: KVP): Promise<boolean> {
+        // TODO
+        return Promise.resolve(false);
+    }
+
 
 }

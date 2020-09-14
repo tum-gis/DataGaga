@@ -4,11 +4,6 @@ enum DataSourceTypes {
     KML = "KML"
 }
 
-enum TableTypes {
-    Horizontal = "Horizontal",
-    Vertical = "Vertical"
-}
-
 enum ThirdPartyHandler {
     Cesium = "Cesium"
 }

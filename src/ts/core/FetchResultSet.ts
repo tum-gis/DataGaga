@@ -11,8 +11,14 @@ class FetchResultSet {
      */
     private _data: { KVP }[];
 
-    constructor(data: { KVP }[]) {
-        this._data = data;
+    /**
+     * Instantiate a FetchResultSet object from data and a data source object.
+     *
+     * @param data
+     * @param sourceObject
+     */
+    constructor(data: any, sourceObject: DataSource) {
+        this._data = sourceObject.transformToKVPArray(data);
     }
 
     public getNrOfRows(): number {

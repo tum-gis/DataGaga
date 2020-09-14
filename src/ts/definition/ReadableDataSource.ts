@@ -52,5 +52,5 @@ interface ReadableDataSource {
      * @param aggregateOperator
      * @return a promise set of aggregated values of the given attribute over the given IDs
      */
-    aggregateByIds(ids: string[], aggregateOperator: AggregateOperator): Promise<{ KVP }>;
+    aggregateByIds(ids: string[], aggregateOperator: AggregateOperator): Promise<{ kvp: KVP }>;
 }
