@@ -1,4 +1,4 @@
-enum ComparisonOperator {
+const enum ComparisonOperator {
     EQ = "==",
     LT = "<",
     LEQ = "<=",

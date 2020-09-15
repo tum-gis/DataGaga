@@ -9,16 +9,25 @@ class FetchResultSet {
      *
      * @private
      */
-    private _data: { KVP }[];
+    private _data: Array<KVP>;
 
     /**
-     * Instantiate a FetchResultSet object from data and a data source object.
+     * Instantiate a FetchResultSet object from given data.
      *
      * @param data
-     * @param sourceObject
      */
-    constructor(data: any, sourceObject: DataSource) {
-        this._data = sourceObject.transformToKVPArray(data);
+    constructor(data: any) {
+        let tmpData = data;
+        // Convert to JSON in case of string
+        if (Util.isString(data)) {
+            data = JSON.parse(data);
+        }
+        // Structure of given data must be an array of KVPs
+        if (Util.isArrayOfKVPs(data)) {
+            this._data = data;
+        } else {
+            this._data = undefined;
+        }
     }
 
     public getNrOfRows(): number {
@@ -77,12 +86,11 @@ class FetchResultSet {
         return Object.keys(this._data[0]);
     }
 
-    get data(): { KVP }[] {
+    get data(): Array<KVP> {
         return this._data;
     }
 
-    set data(value: { KVP }[]) {
+    set data(value: Array<KVP>) {
         this._data = value;
     }
-
 }

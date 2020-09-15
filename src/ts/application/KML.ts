@@ -1,8 +1,9 @@
-class KMLDataSource extends XMLDataSource implements ReadableDataSource, WritableDataSource, SecuredDataSource {
+class KML extends XMLDataSource implements ReadableDataSource, WritableDataSource, ProxyDataSource {
     private _useOwnKmlParser: boolean;
+    private _thirdPartyHandler: any;
 
-    constructor(signInController, options) {
-        super(signInController, options);
+    constructor(options) {
+        super(options);
 
         // Initialize capabilities
         let capabilitiesOptions: DataSourceCapabilities = new DataSourceCapabilities({
@@ -24,6 +25,16 @@ class KMLDataSource extends XMLDataSource implements ReadableDataSource, Writabl
         this._useOwnKmlParser = false;
     }
 
+    _proxyPrefix: string;
+
+    get proxyPrefix(): string {
+        return this._proxyPrefix;
+    }
+
+    set proxyPrefix(value: string) {
+        this._proxyPrefix = value;
+    }
+
     responseToKvp(response: any): Map<string, string> {
         if (this._useOwnKmlParser) {
             return this.responseOwnToKvp(response);
@@ -31,8 +42,8 @@ class KMLDataSource extends XMLDataSource implements ReadableDataSource, Writabl
 
         if (this._thirdPartyHandler) {
             switch (this._thirdPartyHandler.type) {
-                case ThirdPartyHandler.Cesium: {
-                    // the handler is Cesium.KMLDataSource
+                case "Cesium": {
+                    // the handler is Cesium.KML
                     return this.responseCesiumToKvp(response);
                     break;
                 }
@@ -88,41 +99,12 @@ class KMLDataSource extends XMLDataSource implements ReadableDataSource, Writabl
         return result;
     }
 
-    countFromResult(res: FetchResultSet): number {
-        return res.getSize();
-    }
-
-    deleteDataRecordUsingId(id: string): boolean {
-        // TODO
-        return null;
-    }
-
-    fetchIdsFromResult(res: FetchResultSet): string[] {
-        // TODO
-        return null;
-    }
-
-    insertDataRecord(record: DataRecord): boolean {
-        // TODO
-        return null;
-    }
-
-    queryUsingIds(ids: string[]): FetchResultSet {
-        // TODO
-        return null;
-    }
-
-    queryUsingNames(names: string[], limit: number): FetchResultSet {
-        // TODO
-        return null;
-    }
-
     queryUsingId(id: string, callback: (queryResult: any) => any, limit?: number, clickedObject?: any): void {
         if (this._thirdPartyHandler) {
             // prioritize the implementation of the provided 3rd-party handler
             switch (this._thirdPartyHandler.type) {
-                case ThirdPartyHandler.Cesium: {
-                    // the handler is Cesium.KMLDataSource
+                case "Cesium": {
+                    // the handler is Cesium.KML
                     let entities = this._thirdPartyHandler.handler.entities;
                     let entity = entities.getById(id);
                     // entity is Cesium.KMLFeatureData
@@ -183,36 +165,65 @@ class KMLDataSource extends XMLDataSource implements ReadableDataSource, Writabl
         xhttp.send();
     }
 
-    queryUsingSql(sql: string, callback: (queryResult: any) => any, limit?: number, clickedObject?: any): void {
-        // TODO
-        return;
-    }
-
-    queryUsingTypes(types: string[], limit: number): FetchResultSet {
-        // TODO
-        return null;
-    }
-
-    sumFromResultByColIndex(res: FetchResultSet, colIndex: number): number {
-        // TODO
-        return null;
-    }
-
-    sumFromResultByName(res: FetchResultSet, name: string): number {
-        // TODO
-        return null;
-    }
-
-    updateDataRecordUsingId(id: string, newRecord: DataRecord): boolean {
-        // TODO
-        return null;
-    }
-
     get useOwnKmlParser(): boolean {
         return this._useOwnKmlParser;
     }
 
     set useOwnKmlParser(value: boolean) {
         this._useOwnKmlParser = value;
+    }
+
+    aggregateByIds(ids: string[], aggregateOperator: AggregateOperator, attributeName: string): Promise<number>;
+    aggregateByIds(ids: string[], aggregateOperator: AggregateOperator): Promise<{ kvp: KVP }>;
+    aggregateByIds(ids: string[], aggregateOperator: AggregateOperator, attributeName?: string): Promise<number> | Promise<{ kvp: KVP }> {
+        return Promise.resolve(undefined);
+    }
+
+    deleteAttributeOfId(id: string, attributeName: string): Promise<boolean> {
+        return Promise.resolve(false);
+    }
+
+    deleteAttributesUsingQBE(qbe: QBE, attributeNames: string[]): Promise<boolean> {
+        return Promise.resolve(false);
+    }
+
+    deleteObjectOfId(id: string): Promise<boolean> {
+        return Promise.resolve(false);
+    }
+
+    deleteObjectsUsingQBE(qbe: QBE): Promise<boolean> {
+        return Promise.resolve(false);
+    }
+
+    fetchAttributeNamesFromId(id: string): Promise<string[]> {
+        return Promise.resolve([]);
+    }
+
+    fetchAttributeValuesFromId(id: string): Promise<FetchResultSet> {
+        return Promise.resolve(undefined);
+    }
+
+    fetchIdsFromQBE(qbe: QBE, limit?: number): Promise<string[]> {
+        return Promise.resolve([]);
+    }
+
+    insertAttributeOfId(id: string, attributeName: string, attributeValue: any): Promise<boolean> {
+        return Promise.resolve(false);
+    }
+
+    insertAttributesUsingQBE(qbe: QBE, newAttributes: KVP): Promise<boolean> {
+        return Promise.resolve(false);
+    }
+
+    insertNewObject(kvp: KVP): Promise<boolean> {
+        return Promise.resolve(false);
+    }
+
+    updateAttributeValueOfId(id: string, attributeName: string, newValue: any): Promise<boolean> {
+        return Promise.resolve(false);
+    }
+
+    updateAttributeValuesUsingQBE(qbe: QBE, newAttributeValues: KVP): Promise<boolean> {
+        return Promise.resolve(false);
     }
 }

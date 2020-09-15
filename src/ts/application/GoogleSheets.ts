@@ -1,5 +1,3 @@
-// import * as request from "request-promise-native";
-
 class GoogleSheets extends SQLDataSource implements ReadableDataSource, WritableDataSource, SecuredDataSource {
     private _spreadsheetId: string;
     private _ranges: string[];
@@ -17,8 +15,13 @@ class GoogleSheets extends SQLDataSource implements ReadableDataSource, Writable
 
     private _gapi: any;
 
+    private _signInController: any;
+
+    private _idColName: string;
+
     constructor(signInController, options, gapi?) {
-        super(signInController, options);
+        super(options);
+        this._signInController = signInController;
 
         // Initialize capabilities
         let capabilitiesOptions: DataSourceCapabilities = new DataSourceCapabilities({
@@ -50,6 +53,25 @@ class GoogleSheets extends SQLDataSource implements ReadableDataSource, Writable
         this._signInController = signInController;
     }
 
+    fetchAttributeValuesFromId(id: string): Promise<FetchResultSet> {
+        throw new Error("Method not implemented.");
+    }
+
+    fetchAttributeNamesFromId(id: string): Promise<string[]> {
+        throw new Error("Method not implemented.");
+    }
+
+    fetchIdsFromQBE(qbe: QBE, limit?: number): Promise<string[]> {
+        throw new Error("Method not implemented.");
+    }
+
+    aggregateByIds(ids: string[], aggregateOperator: AggregateOperator, attributeName: string): Promise<number>;
+    aggregateByIds(ids: string[], aggregateOperator: AggregateOperator): Promise<{ kvp: KVP }>;
+    aggregateByIds(ids: string[], aggregateOperator: AggregateOperator, attributeName?: string): Promise<number> | Promise<{ kvp: KVP }> {
+        // TODO
+        return Promise.resolve(0);
+    }
+
     responseToKvp(response: any): Map<string, string> {
         let result = new Map<string, string>();
         const rows = response.table.rows;
@@ -59,7 +81,7 @@ class GoogleSheets extends SQLDataSource implements ReadableDataSource, Writable
             // Structure of the JSON response from Google Visualization API
             // https://developers.google.com/chart/interactive/docs/reference#dataparam
             // Ignore the first column (containing ID) --> start i with 1 instead of 0
-            if (this.tableType == TableTypes.Horizontal) {
+            if (this.dataStructureType == DataStructureType.HORIZONTAL) {
                 for (let i = 1; i < rows[0].c.length; i++) {
                     const key = cols[i].label;
                     const value = rows[0].c[i] ? rows[0].c[i].v : undefined;
@@ -105,35 +127,6 @@ class GoogleSheets extends SQLDataSource implements ReadableDataSource, Writable
         }
 
         return result;
-    }
-
-    countFromResult(res: FetchResultSet): number {
-        return res.getSize();
-    }
-
-    deleteDataRecordUsingId(id: string): boolean {
-        // TODO
-        return null;
-    }
-
-    fetchIdsFromResult(res: FetchResultSet): string[] {
-        // TODO
-        return null;
-    }
-
-    insertDataRecord(record: DataRecord): boolean {
-        // TODO
-        return null;
-    }
-
-    queryUsingIds(ids: string[]): FetchResultSet {
-        // TODO
-        return null;
-    }
-
-    queryUsingNames(names: string[], limit: number): FetchResultSet {
-        // TODO
-        return null;
     }
 
     queryUsingId(id: string, callback: (queryResult: any) => any, limit?: number, clickedObject?: any): void {
@@ -263,36 +256,6 @@ class GoogleSheets extends SQLDataSource implements ReadableDataSource, Writable
         }
     }
 
-    handleSignInClick(event) {
-        // TODO consider for OAuth
-        this._gapi.auth2.getAuthInstance().signIn();
-    }
-
-    handleSignOutClick(event) {
-        // TODO consider for OAuth
-        this._gapi.auth2.getAuthInstance().signOut();
-    }
-
-    queryUsingTypes(types: string[], limit: number): FetchResultSet {
-        // TODO
-        return null;
-    }
-
-    sumFromResultByColIndex(res: FetchResultSet, colIndex: number): number {
-        // TODO
-        return null;
-    }
-
-    sumFromResultByName(res: FetchResultSet, name: string): number {
-        // TODO
-        return null;
-    }
-
-    updateDataRecordUsingId(id: string, newRecord: DataRecord): boolean {
-        // TODO
-        return null;
-    }
-
     get spreadsheetId(): string {
         return this._spreadsheetId;
     }
@@ -347,5 +310,49 @@ class GoogleSheets extends SQLDataSource implements ReadableDataSource, Writable
 
     set signInController(value: any) {
         this._signInController = value;
+    }
+
+    deleteAttributeOfId(id: string, attributeName: string): Promise<boolean> {
+        return Promise.resolve(false);
+    }
+
+    deleteAttributesUsingQBE(qbe: QBE, attributeNames: string[]): Promise<boolean> {
+        return Promise.resolve(false);
+    }
+
+    deleteObjectOfId(id: string): Promise<boolean> {
+        return Promise.resolve(false);
+    }
+
+    deleteObjectsUsingQBE(qbe: QBE): Promise<boolean> {
+        return Promise.resolve(false);
+    }
+
+    insertAttributeOfId(id: string, attributeName: string, attributeValue: any): Promise<boolean> {
+        return Promise.resolve(false);
+    }
+
+    insertAttributesUsingQBE(qbe: QBE, newAttributes: KVP): Promise<boolean> {
+        return Promise.resolve(false);
+    }
+
+    insertNewObject(kvp: KVP): Promise<boolean> {
+        return Promise.resolve(false);
+    }
+
+    login(credentials: any): Promise<boolean> {
+        return Promise.resolve(false);
+    }
+
+    logout(): Promise<boolean> {
+        return Promise.resolve(false);
+    }
+
+    updateAttributeValueOfId(id: string, attributeName: string, newValue: any): Promise<boolean> {
+        return Promise.resolve(false);
+    }
+
+    updateAttributeValuesUsingQBE(qbe: QBE, newAttributeValues: KVP): Promise<boolean> {
+        return Promise.resolve(false);
     }
 }

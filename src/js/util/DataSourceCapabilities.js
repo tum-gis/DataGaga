@@ -1,4 +1,4 @@
-var DataSourceCapabilities = /** @class */ (function () {
+var DataSourceCapabilities = (function () {
     function DataSourceCapabilities(options) {
         this._webCapabilities = options.webCapabilities;
         this._dbTransactionCapabilities = options.dbTransactionCapabilities;

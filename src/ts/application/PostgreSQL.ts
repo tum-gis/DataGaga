@@ -1,7 +1,7 @@
 /**
  * An implementation for the data source PostgREST.
  */
-class PostgreSQL extends SQLDataSource implements ReadableDataSource, WritableDataSource, SecuredDataSource {
+class PostgreSQL extends SQLDataSource implements ReadableDataSource, WritableDataSource {
 
     /**
      * The name of the column containing the IDs of objects.
@@ -21,9 +21,7 @@ class PostgreSQL extends SQLDataSource implements ReadableDataSource, WritableDa
      * |    name                |   string                  |   My data source name     |
      * |    provider            |   string                  |   My data source provider |
      * |    uri                 |   string                  |   **REQUIRED**            |
-     * |    capabilities        |   DataSourceCapabilities  |   **built-in**            |
      * |    dataStructureType   |   DataStructureType       |   **REQUIRED**            |
-     * |    _proxyPrefix        |   string                  |                           |
      *
      * @param options an object containing the required information
      *
@@ -47,6 +45,8 @@ class PostgreSQL extends SQLDataSource implements ReadableDataSource, WritableDa
             }
         });
         this._capabilities = capabilitiesOptions;
+
+        this._dataSourceType = DataSourceType.PostgreSQL;
 
         Util.initAttribute(this, "_idColName", options.idColName, "gmlid");
     }
@@ -81,27 +81,6 @@ class PostgreSQL extends SQLDataSource implements ReadableDataSource, WritableDa
         }
 
         return result;
-    }
-
-
-    queryUsingId(id: string, callback: (queryResult: any) => any, limit?: number, clickedObject?: any): void {
-        // TODO use column number instead of column name (such as gmlid here)
-        this.queryUsingSql("?" + this.idColName + "=eq." + id, callback, !limit ? Number.MAX_VALUE : limit, clickedObject);
-    }
-
-    queryUsingSql(sql: string, callback: (queryResult: any) => any, limit?: number, clickedObject?: any): void {
-        // TODO handle limit
-        const baseUrl = this._uri;
-
-        var xmlHttp = new XMLHttpRequest();
-        xmlHttp.onreadystatechange = function () {
-            if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
-                var queryResult = xmlHttp.responseText;
-                callback(queryResult);
-            }
-        }
-        xmlHttp.open("GET", baseUrl + sql, true); // true for asynchronous
-        xmlHttp.send(null);
     }
 
     aggregateByIds(ids: string[], aggregateOperator: AggregateOperator, attributeName: string): Promise<number>;
@@ -142,7 +121,8 @@ class PostgreSQL extends SQLDataSource implements ReadableDataSource, WritableDa
             xmlHttp.open("GET", this._uri + "?" + this._idColName + "=eq." + id, true);
             xmlHttp.onreadystatechange = function () {
                 if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
-                    resolve(xmlHttp.responseText);
+                    let fetchResultSet = new FetchResultSet(xmlHttp.responseText);
+                    resolve(fetchResultSet);
                 } else {
                     reject({
                         status: xmlHttp.status,
@@ -176,16 +156,6 @@ class PostgreSQL extends SQLDataSource implements ReadableDataSource, WritableDa
     }
 
     insertNewObject(kvp: KVP): Promise<boolean> {
-        // TODO
-        return Promise.resolve(false);
-    }
-
-    login(credentials: any): Promise<boolean> {
-        // TODO
-        return Promise.resolve(false);
-    }
-
-    logout(): Promise<boolean> {
         // TODO
         return Promise.resolve(false);
     }

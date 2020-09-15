@@ -1,50 +1,29 @@
-enum DataSourceTypes {
+/**
+ * A list of all data source types.
+ * Note: The entries in this list must be the same as the class names!
+ */
+enum DataSourceType {
     GoogleSheets = "GoogleSheets",
     PostgreSQL = "PostgreSQL",
     KML = "KML"
 }
 
-enum ThirdPartyHandler {
-    Cesium = "Cesium"
-}
-
+/**
+ * A utility class for manipulating data sources on the client side
+ */
 class DataSourceController {
-    private _dataSource: DataSource;
-
-    private _options: any;
-    constructor(selectedDataSource: string, signInController: any, options: any) {
-        let scope = this;
-        scope._options = options;
-        if (selectedDataSource == DataSourceTypes.GoogleSheets) {
-            scope._dataSource = new GoogleSheets(signInController, scope._options);
-        } else if (selectedDataSource == DataSourceTypes.PostgreSQL) {
-            scope._dataSource = new PostgreSQL(signInController, scope._options);
-        } else if (selectedDataSource == DataSourceTypes.KML) {
-            scope._dataSource = new KMLDataSource(signInController, scope._options);
+    /**
+     * Instantiate a data source of type based on a given string or DataSourceType object.
+     *
+     * @param dataSourceType the type of the data source to be created, must be the same as the class names
+     * @param options
+     */
+    public static createDataSource(dataSourceType: string | DataSourceType, options: any): DataSource {
+        if (dataSourceType != null) {
+            var newInstance = Object.create(window[dataSourceType].prototype);
+            newInstance.constructor.apply(newInstance, [options]);
+            return newInstance;
         }
+        return undefined;
     }
-
-    fetchData(id: string, callback: (queryResultKvp: Map<string, string>) => any, limit?: number, clickedObject?: any) {
-        let scope = this;
-        scope._dataSource.queryUsingId(id, function (result) {
-            callback(scope._dataSource.responseToKvp(result));
-        }, limit, clickedObject);
-    }
-
-    get dataSource(): DataSource {
-        return this._dataSource;
-    }
-
-    set dataSource(value: DataSource) {
-        this._dataSource = value;
-    }
-
-    get options(): any {
-        return this._options;
-    }
-
-    set options(value: any) {
-        this._options = value;
-    }
-
 }

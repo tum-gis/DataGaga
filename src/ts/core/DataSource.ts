@@ -17,6 +17,13 @@ abstract class DataSource {
     protected _provider: string;
 
     /**
+     * The type of this data source.
+     *
+     * @protected
+     */
+    protected _dataSourceType: DataSourceType;
+
+    /**
      * The URI to the resource hosted on the web.
      *
      * @protected
@@ -37,13 +44,6 @@ abstract class DataSource {
     protected _dataStructureType: DataStructureType;
 
     /**
-     * A prefix for loading via proxy.
-     *
-     * @protected
-     */
-    protected _proxyPrefix: string;
-
-    /**
      * Constructor.
      *
      * @param options an object containing attributes defined in this class
@@ -52,10 +52,10 @@ abstract class DataSource {
     protected constructor(options) {
         Util.initAttribute(this, "_name", options.name, "My data source name");
         Util.initAttribute(this, "_provider", options.provider, "My data source provider");
+        Util.initAttribute(this, "_dataSourceType", options.provider, DataSourceType.PostgreSQL);
         Util.initAttribute(this, "_uri", options.uri, "");
         Util.initAttribute(this, "_capabilities", options.capabilities, undefined);
         Util.initAttribute(this, "_dataStructureType", options.dataStructureType, DataStructureType.HORIZONTAL);
-        Util.initAttribute(this, "_proxyPrefix", options.proxyPrefix, "");
     }
 
     get name(): string {
@@ -72,6 +72,14 @@ abstract class DataSource {
 
     set provider(value: string) {
         this._provider = value;
+    }
+
+    get dataSourceType(): DataSourceType {
+        return this._dataSourceType;
+    }
+
+    set dataSourceType(value: DataSourceType) {
+        this._dataSourceType = value;
     }
 
     get uri(): string {
@@ -97,14 +105,4 @@ abstract class DataSource {
     set dataStructureType(value: DataStructureType) {
         this._dataStructureType = value;
     }
-
-    get proxyPrefix(): string {
-        return this._proxyPrefix;
-    }
-
-    set proxyPrefix(value: string) {
-        this._proxyPrefix = value;
-    }
-
-    abstract transformToKVPArray(data: any): Array<KVP>;
 }
