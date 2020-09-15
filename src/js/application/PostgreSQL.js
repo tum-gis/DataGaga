@@ -31,30 +31,9 @@ var PostgreSQL = (function (_super) {
         });
         _this._capabilities = capabilitiesOptions;
         _this._dataSourceType = DataSourceType.PostgreSQL;
-        Util.initAttribute(_this, "_idColName", options.idColName, "gmlid");
+        DataSourceUtil.initAttribute(_this, "_idColName", options.idColName, "gmlid");
         return _this;
     }
-    PostgreSQL.prototype.transformToKVPArray = function (data) {
-        var dataJson = JSON.parse(data);
-        var result = Array();
-        if (this._dataStructureType === 0) {
-            var kvps = {};
-            for (var i = 0; i < dataJson.length; i++) {
-                var ele = dataJson[i];
-                for (var key in ele) {
-                    kvps[key] = ele[key];
-                }
-            }
-            result.push(kvps);
-        }
-        else {
-            for (var i = 0; i < dataJson.length; i++) {
-                var ele = dataJson[i];
-                result[ele.attribute] = ele.value;
-            }
-        }
-        return result;
-    };
     PostgreSQL.prototype.aggregateByIds = function (ids, aggregateOperator, attributeName) {
         return Promise.resolve(0);
     };
@@ -74,19 +53,14 @@ var PostgreSQL = (function (_super) {
         return Promise.resolve([]);
     };
     PostgreSQL.prototype.fetchAttributeValuesFromId = function (id) {
+        var scope = this;
         return new Promise(function (resolve, reject) {
             var xmlHttp = new XMLHttpRequest();
-            xmlHttp.open("GET", this._uri + "?" + this._idColName + "=eq." + id, true);
+            xmlHttp.open("GET", scope._uri + "?" + scope._idColName + "=eq." + id, true);
             xmlHttp.onreadystatechange = function () {
                 if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
                     var fetchResultSet = new FetchResultSet(xmlHttp.responseText);
                     resolve(fetchResultSet);
-                }
-                else {
-                    reject({
-                        status: xmlHttp.status,
-                        statusText: xmlHttp.statusText
-                    });
                 }
             };
             xmlHttp.onerror = function () {

@@ -48,39 +48,7 @@ class PostgreSQL extends SQLDataSource implements ReadableDataSource, WritableDa
 
         this._dataSourceType = DataSourceType.PostgreSQL;
 
-        Util.initAttribute(this, "_idColName", options.idColName, "gmlid");
-    }
-
-
-    transformToKVPArray(data: any): Array<KVP> {
-        // response is just a text -> parse to JSON
-        const dataJson = JSON.parse(data);
-        let result = Array<KVP>();
-
-        if (this._dataStructureType === DataStructureType.HORIZONTAL) {
-            // all attributes per object are stored in one row
-            let kvps: KVP = {};
-            for (let i = 0; i < dataJson.length; i++) {
-                const ele = dataJson[i];
-                for (let key in ele) {
-                    kvps[key] = ele[key];
-                }
-            }
-            result.push(kvps);
-        } else {
-            // one attribute per row
-            // only store id once
-            // (because the vertical table has multiple lines of the same id)
-            // result[this.idColName] = dataJson[0][this.idColName];
-
-            for (let i = 0; i < dataJson.length; i++) {
-                const ele = dataJson[i];
-                // TODO generic implementation for attribute and value
-                result[ele.attribute] = ele.value;
-            }
-        }
-
-        return result;
+        DataSourceUtil.initAttribute(this, "_idColName", options.idColName, "gmlid");
     }
 
     aggregateByIds(ids: string[], aggregateOperator: AggregateOperator, attributeName: string): Promise<number>;
@@ -116,18 +84,14 @@ class PostgreSQL extends SQLDataSource implements ReadableDataSource, WritableDa
     }
 
     fetchAttributeValuesFromId(id: string): Promise<FetchResultSet> {
+        let scope = this;
         return new Promise(function (resolve, reject) {
             var xmlHttp = new XMLHttpRequest();
-            xmlHttp.open("GET", this._uri + "?" + this._idColName + "=eq." + id, true);
+            xmlHttp.open("GET", scope._uri + "?" + scope._idColName + "=eq." + id, true);
             xmlHttp.onreadystatechange = function () {
                 if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
                     let fetchResultSet = new FetchResultSet(xmlHttp.responseText);
                     resolve(fetchResultSet);
-                } else {
-                    reject({
-                        status: xmlHttp.status,
-                        statusText: xmlHttp.statusText
-                    });
                 }
             }
             xmlHttp.onerror = function () {

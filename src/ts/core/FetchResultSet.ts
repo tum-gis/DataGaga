@@ -19,11 +19,11 @@ class FetchResultSet {
     constructor(data: any) {
         let tmpData = data;
         // Convert to JSON in case of string
-        if (Util.isString(data)) {
+        if (DataSourceUtil.isString(data)) {
             data = JSON.parse(data);
         }
         // Structure of given data must be an array of KVPs
-        if (Util.isArrayOfKVPs(data)) {
+        if (DataSourceUtil.isArrayOfKVPs(data)) {
             this._data = data;
         } else {
             this._data = undefined;

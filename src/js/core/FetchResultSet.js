@@ -1,10 +1,10 @@
 var FetchResultSet = (function () {
     function FetchResultSet(data) {
         var tmpData = data;
-        if (Util.isString(data)) {
+        if (DataSourceUtil.isString(data)) {
             data = JSON.parse(data);
         }
-        if (Util.isArrayOfKVPs(data)) {
+        if (DataSourceUtil.isArrayOfKVPs(data)) {
             this._data = data;
         }
         else {

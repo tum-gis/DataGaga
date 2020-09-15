@@ -50,12 +50,12 @@ abstract class DataSource {
      * @protected
      */
     protected constructor(options) {
-        Util.initAttribute(this, "_name", options.name, "My data source name");
-        Util.initAttribute(this, "_provider", options.provider, "My data source provider");
-        Util.initAttribute(this, "_dataSourceType", options.provider, DataSourceType.PostgreSQL);
-        Util.initAttribute(this, "_uri", options.uri, "");
-        Util.initAttribute(this, "_capabilities", options.capabilities, undefined);
-        Util.initAttribute(this, "_dataStructureType", options.dataStructureType, DataStructureType.HORIZONTAL);
+        DataSourceUtil.initAttribute(this, "_name", options.name, "My data source name");
+        DataSourceUtil.initAttribute(this, "_provider", options.provider, "My data source provider");
+        DataSourceUtil.initAttribute(this, "_dataSourceType", options.provider, DataSourceType.PostgreSQL);
+        DataSourceUtil.initAttribute(this, "_uri", options.uri, "");
+        DataSourceUtil.initAttribute(this, "_capabilities", options.capabilities, undefined);
+        DataSourceUtil.initAttribute(this, "_dataStructureType", options.dataStructureType, DataStructureType.HORIZONTAL);
     }
 
     get name(): string {
