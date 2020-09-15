@@ -1,4 +1,4 @@
-class KMLDataSource extends XMLDataSource {
+class KMLDataSource extends XMLDataSource implements ReadableDataSource, WritableDataSource, SecuredDataSource {
     private _useOwnKmlParser: boolean;
 
     constructor(signInController, options) {

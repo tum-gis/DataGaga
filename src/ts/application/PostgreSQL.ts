@@ -1,7 +1,7 @@
 /**
  * An implementation for the data source PostgREST.
  */
-class PostgreSQL extends SQLDataSource {
+class PostgreSQL extends SQLDataSource implements ReadableDataSource, WritableDataSource, SecuredDataSource {
 
     /**
      * The name of the column containing the IDs of objects.
@@ -199,6 +199,4 @@ class PostgreSQL extends SQLDataSource {
         // TODO
         return Promise.resolve(false);
     }
-
-
 }

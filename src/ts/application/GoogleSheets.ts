@@ -1,6 +1,6 @@
 // import * as request from "request-promise-native";
 
-class GoogleSheets extends SQLDataSource {
+class GoogleSheets extends SQLDataSource implements ReadableDataSource, WritableDataSource, SecuredDataSource {
     private _spreadsheetId: string;
     private _ranges: string[];
 
