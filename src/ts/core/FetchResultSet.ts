@@ -30,6 +30,38 @@ class FetchResultSet {
         }
     }
 
+    /**
+     * Converts this FetchResultSet object, which is an array of KVPs, to one single KVP depending on the data structure type.
+     *
+     * @param fetchResultSet the response received from the data source provider
+     * @param dataStructureType the data structure type of the response
+     */
+    public toKVP(dataStructureType: DataStructureType): KVP {
+        let kvpResult: KVP = {};
+        if (dataStructureType === DataStructureType.HORIZONTAL) {
+            // FetchResultSet is then an array of one row, the first column contains ID
+            let row = this.data[0];
+            let count = 0;
+            for (let k in Object.keys(row)) {
+                if (count++ === 0) {
+                    continue;
+                }
+                kvpResult[k] = row[k];
+            }
+        } else {
+            // FetchResultSet is then an array of multiple rows,
+            // each row contains only 3 columns: ID, attribute name and attribute value
+            for (var i = 0; i < this.data.length; i++) {
+                let row = this.data[i];
+                let keys = Object.keys(row);
+                let attributeName = row[keys[1]];
+                let attributeValue = row[keys[2]];
+                kvpResult[attributeName] = attributeValue;
+            }
+        }
+        return kvpResult;
+    }
+
     public getNrOfRows(): number {
         return this._data.length;
     }
