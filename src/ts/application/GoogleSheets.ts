@@ -1,3 +1,5 @@
+///<reference path="../core/SQLDataSource.ts"/>
+
 class GoogleSheets extends SQLDataSource implements ReadableDataSource, WritableDataSource, SecuredDataSource {
     private _spreadsheetId: string;
     private _ranges: string[];

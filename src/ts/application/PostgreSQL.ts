@@ -1,8 +1,9 @@
+///<reference path="../core/SQLDataSource.ts"/>
+
 /**
- * An implementation for the data source PostgREST.
+ * Implementation for PostgreSQL as data source.
  */
 class PostgreSQL extends SQLDataSource implements ReadableDataSource, WritableDataSource {
-
     /**
      * The name of the column containing the IDs of objects.
      * Normally this is the first column of a table (e.g. gmlid).

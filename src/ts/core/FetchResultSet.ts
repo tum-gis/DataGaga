@@ -1,3 +1,6 @@
+/**
+ * Stores responses from the data sources for further use.
+ */
 class FetchResultSet {
     /**
      * Stores results fetched from the data source.

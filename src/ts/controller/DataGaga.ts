@@ -11,7 +11,7 @@ enum DataSourceType {
 /**
  * A utility class for manipulating data sources on the client side
  */
-class DataSourceController {
+class DataGaga {
     /**
      * Instantiate a data source of type based on a given string or DataSourceType object.
      *

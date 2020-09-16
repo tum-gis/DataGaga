@@ -1,3 +1,8 @@
+///<reference path="../core/XMLDataSource.ts"/>
+
+/**
+ * Implementation for KML as data source.
+ */
 class KML extends XMLDataSource implements ReadableDataSource, WritableDataSource, ProxyDataSource {
     private _useOwnKmlParser: boolean;
     private _thirdPartyHandler: any;
