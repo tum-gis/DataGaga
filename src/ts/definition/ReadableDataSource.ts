@@ -3,6 +3,14 @@
  */
 interface ReadableDataSource {
     /**
+     * Retrieves the meta properties of this data source.
+     * The result is a JSON object.
+     *
+     * @protected
+     */
+    getMetaData(): Promise<any>;
+
+    /**
      * Fetches attribute values from a given ID.
      *
      * @param id

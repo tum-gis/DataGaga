@@ -52,6 +52,11 @@ class PostgreSQL extends SQLDataSource implements ReadableDataSource, WritableDa
         DataSourceUtil.initAttribute(this, "_idColName", options.idColName, "gmlid");
     }
 
+    getMetaData(): Promise<any> {
+        // TODO
+        return Promise.resolve(undefined);
+    }
+
     aggregateByIds(ids: string[], aggregateOperator: AggregateOperator, attributeName: string): Promise<number>;
     aggregateByIds(ids: string[], aggregateOperator: AggregateOperator): Promise<{ kvp: KVP }>;
     aggregateByIds(ids: string[], aggregateOperator: AggregateOperator, attributeName?: string): Promise<number> | Promise<{ kvp: KVP }> {
@@ -87,21 +92,12 @@ class PostgreSQL extends SQLDataSource implements ReadableDataSource, WritableDa
     fetchAttributeValuesFromId(id: string): Promise<FetchResultSet> {
         let scope = this;
         return new Promise(function (resolve, reject) {
-            var xmlHttp = new XMLHttpRequest();
-            xmlHttp.open("GET", scope._uri + "?" + scope._idColName + "=eq." + id, true);
-            xmlHttp.onreadystatechange = function () {
-                if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
-                    let fetchResultSet = new FetchResultSet(xmlHttp.responseText);
-                    resolve(fetchResultSet);
-                }
-            }
-            xmlHttp.onerror = function () {
-                reject({
-                    status: xmlHttp.status,
-                    statusText: xmlHttp.statusText
-                });
-            };
-            xmlHttp.send(null);
+            WebUtil.httpGet(scope._uri + "?" + scope._idColName + "=eq." + id).then(function (result) {
+                let fetchResultSet = new FetchResultSet(result);
+                resolve(fetchResultSet);
+            }).catch(function (error) {
+                reject(error);
+            })
         });
     }
 

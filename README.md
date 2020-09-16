@@ -1,4 +1,4 @@
-# Mashup Data Source Service
+# ***DataGaga*** - A Mash-up Data Source Service 
 All data sources unite! 
 A uniform JavaScript API for processing multiple data sources across the web.
 
@@ -29,8 +29,14 @@ and structure differences between the different APIs;
 + You can even treat all of them as one single data source and query/display their data in one single call.
 
 ### Installation
+
+##### TODO CDN link or similar
+
+##### Import JS File
 Copy and import the JavaScript folder [js](src/js) or the TypeScript folder [ts](src/ts) into your web project. 
 (We are working on providing an import link such as or similar to CDN.) And that's it, you're all set up!
+
+##### Build manually
 
 [comment]: <> (TODO Provide a CDN link.)
 

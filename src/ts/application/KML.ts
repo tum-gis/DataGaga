@@ -32,6 +32,11 @@ class KML extends XMLDataSource implements ReadableDataSource, WritableDataSourc
 
     _proxyPrefix: string;
 
+    getMetaData(): Promise<any> {
+        // TODO
+        return Promise.resolve(undefined);
+    }
+
     get proxyPrefix(): string {
         return this._proxyPrefix;
     }
@@ -181,54 +186,67 @@ class KML extends XMLDataSource implements ReadableDataSource, WritableDataSourc
     aggregateByIds(ids: string[], aggregateOperator: AggregateOperator, attributeName: string): Promise<number>;
     aggregateByIds(ids: string[], aggregateOperator: AggregateOperator): Promise<{ kvp: KVP }>;
     aggregateByIds(ids: string[], aggregateOperator: AggregateOperator, attributeName?: string): Promise<number> | Promise<{ kvp: KVP }> {
+        // TODO
         return Promise.resolve(undefined);
     }
 
     deleteAttributeOfId(id: string, attributeName: string): Promise<boolean> {
+        // TODO
         return Promise.resolve(false);
     }
 
     deleteAttributesUsingQBE(qbe: QBE, attributeNames: string[]): Promise<boolean> {
+        // TODO
         return Promise.resolve(false);
     }
 
     deleteObjectOfId(id: string): Promise<boolean> {
+        // TODO
         return Promise.resolve(false);
     }
 
     deleteObjectsUsingQBE(qbe: QBE): Promise<boolean> {
+        // TODO
         return Promise.resolve(false);
     }
 
     fetchAttributeNamesFromId(id: string): Promise<string[]> {
+        // TODO
         return Promise.resolve([]);
     }
 
     fetchAttributeValuesFromId(id: string): Promise<FetchResultSet> {
+        // TODO
         return Promise.resolve(undefined);
     }
 
     fetchIdsFromQBE(qbe: QBE, limit?: number): Promise<string[]> {
+        // TODO
         return Promise.resolve([]);
     }
 
     insertAttributeOfId(id: string, attributeName: string, attributeValue: any): Promise<boolean> {
+        // TODO
         return Promise.resolve(false);
     }
 
     insertAttributesUsingQBE(qbe: QBE, newAttributes: KVP): Promise<boolean> {
+        // TODO
         return Promise.resolve(false);
     }
 
     insertNewObject(kvp: KVP): Promise<boolean> {
+        // TODO
         return Promise.resolve(false);
     }
 
     updateAttributeValueOfId(id: string, attributeName: string, newValue: any): Promise<boolean> {
+        // TODO
         return Promise.resolve(false);
     }
 
     updateAttributeValuesUsingQBE(qbe: QBE, newAttributeValues: KVP): Promise<boolean> {
+        // TODO
         return Promise.resolve(false);
     }
 }

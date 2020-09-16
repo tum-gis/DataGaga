@@ -34,6 +34,24 @@ class FetchResultSet {
     }
 
     /**
+     * Adds a KVP object at the end of this array.
+     *
+     * @param kvp
+     */
+    public push(kvp: KVP): void {
+        this._data.push(kvp);
+    }
+
+    /**
+     * Removes a KVP object at a given index.
+     *
+     * @param index
+     */
+    public remove(index: number): void {
+        this._data.splice(index, 1);
+    }
+
+    /**
      * Converts this FetchResultSet object, which is an array of KVPs, to one single KVP depending on the data structure type.
      *
      * @param fetchResultSet the response received from the data source provider
@@ -41,11 +59,11 @@ class FetchResultSet {
      */
     public toKVP(dataStructureType: DataStructureType): KVP {
         let kvpResult: KVP = {};
-        if (dataStructureType === DataStructureType.HORIZONTAL) {
+        if (dataStructureType == DataStructureType.HORIZONTAL) {
             // FetchResultSet is then an array of one row, the first column contains ID
             let row = this.data[0];
             let count = 0;
-            for (let k in Object.keys(row)) {
+            for (let k in row) {
                 if (count++ === 0) {
                     continue;
                 }
