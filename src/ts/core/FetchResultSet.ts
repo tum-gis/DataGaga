@@ -59,9 +59,9 @@ class FetchResultSet {
      */
     public toKVP(dataStructureType: DataStructureType): KVP {
         let kvpResult: KVP = {};
-        if (dataStructureType == DataStructureType.HORIZONTAL) {
+        if (dataStructureType == DataStructureType.HORIZONTAL || this._data.length === 1) {
             // FetchResultSet is then an array of one row, the first column contains ID
-            let row = this.data[0];
+            let row = this._data[0];
             let count = 0;
             for (let k in row) {
                 if (count++ === 0) {
@@ -72,8 +72,8 @@ class FetchResultSet {
         } else {
             // FetchResultSet is then an array of multiple rows,
             // each row contains only 3 columns: ID, attribute name and attribute value
-            for (var i = 0; i < this.data.length; i++) {
-                let row = this.data[i];
+            for (var i = 0; i < this._data.length; i++) {
+                let row = this._data[i];
                 let keys = Object.keys(row);
                 let attributeName = row[keys[1]];
                 let attributeValue = row[keys[2]];

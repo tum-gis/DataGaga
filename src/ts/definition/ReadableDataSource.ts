@@ -22,18 +22,27 @@ interface ReadableDataSource {
      * Fetches only attribute names from a given ID.
      *
      * @param id
-     * @return a promise array of strings containing attribute names
+     * @return a promise array of distinct strings containing attribute names
      */
-    fetchAttributeNamesFromId(id: string): Promise<string[]>;
+    fetchAttributeNamesFromId(id: string): Promise<Set<string>>;
 
     /**
      * Fetches IDs from a given Query-By-Example expression.
      *
      * @param qbe
      * @param limit (optional) the maximum number of records should be fetched
-     * @return a promise array of strings containing IDs
+     * @return a promise array of distinct strings containing IDs
      */
-    fetchIdsFromQBE(qbe: QBE, limit?: number): Promise<string[]>;
+    fetchIdsFromQBE(qbe: QBE, limit?: number): Promise<Set<string>>;
+
+    /**
+     * Fetches IDs from a given array of Query-By-Example expressions.
+     *
+     * @param qbes an array of Query-By-Example expressions
+     * @param limit (optional) the maximum number of records should be fetched
+     * @return a promise array of distinct strings containing IDs
+     */
+    fetchIdsFromQBEs(qbes: Array<QBE>, limit?: number): Promise<Set<string>>;
 
     /**
      * Calculates the aggregated value of a given attribute from given IDs.

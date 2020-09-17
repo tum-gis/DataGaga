@@ -4,5 +4,5 @@ interface ProxyDataSource {
      *
      * @protected
      */
-    _proxyPrefix: string;
+    proxyPrefix: string;
 }

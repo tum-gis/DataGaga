@@ -38,12 +38,6 @@ abstract class DataSource {
     protected _capabilities: DataSourceCapabilities;
 
     /**
-     * The structural type of the data source.
-     * @protected
-     */
-    protected _dataStructureType: DataStructureType;
-
-    /**
      * Constructor.
      *
      * @param options an object containing attributes defined in this class
@@ -55,7 +49,6 @@ abstract class DataSource {
         DataSourceUtil.initAttribute(this, "_dataSourceType", options.provider, DataSourceType.PostgreSQL);
         DataSourceUtil.initAttribute(this, "_uri", options.uri, "");
         DataSourceUtil.initAttribute(this, "_capabilities", options.capabilities, undefined);
-        DataSourceUtil.initAttribute(this, "_dataStructureType", options.dataStructureType, DataStructureType.HORIZONTAL);
     }
 
     get name(): string {
@@ -96,13 +89,5 @@ abstract class DataSource {
 
     set capabilities(value: DataSourceCapabilities) {
         this._capabilities = value;
-    }
-
-    get dataStructureType(): DataStructureType {
-        return this._dataStructureType;
-    }
-
-    set dataStructureType(value: DataStructureType) {
-        this._dataStructureType = value;
     }
 }
