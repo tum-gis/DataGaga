@@ -1,6 +1,6 @@
-///<reference path="DataSource.ts"/>
+///<reference path="UnitDataSource.ts"/>
 
-abstract class XMLDataSource extends DataSource {
+abstract class XMLDataSource extends UnitDataSource {
     protected constructor(options) {
         super(options);
     }

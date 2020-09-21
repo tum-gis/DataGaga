@@ -1,35 +1,54 @@
+/**
+ * Capabilities of a data source.
+ */
 class DataSourceCapabilities {
+    /**
+     * Capabilities of connecting to the web.
+     *
+     * @private
+     */
     private _webCapabilities: WebCapabilities;
+
+    /**
+     * Capabilities of performing transactional database operations.
+     *
+     * @private
+     */
     private _dbTransactionCapabilities: DBTransactionCapabilities;
+
+    /**
+     * Capabilities of securing data.
+     * @private
+     */
     private _securityCapabilities: SecurityCapabilities;
 
-    constructor(options: any) {
+    public constructor(options: any) {
         this._webCapabilities = options.webCapabilities;
         this._dbTransactionCapabilities = options.dbTransactionCapabilities;
         this._securityCapabilities = options.securityCapabilities;
     }
 
-    get webCapabilities(): WebCapabilities {
+    public get webCapabilities(): WebCapabilities {
         return this._webCapabilities;
     }
 
-    set webCapabilities(value: WebCapabilities) {
+    public set webCapabilities(value: WebCapabilities) {
         this._webCapabilities = value;
     }
 
-    get dbTransactionCapabilities(): DBTransactionCapabilities {
+    public get dbTransactionCapabilities(): DBTransactionCapabilities {
         return this._dbTransactionCapabilities;
     }
 
-    set dbTransactionCapabilities(value: DBTransactionCapabilities) {
+    public set dbTransactionCapabilities(value: DBTransactionCapabilities) {
         this._dbTransactionCapabilities = value;
     }
 
-    get securityCapabilities(): SecurityCapabilities {
+    public get securityCapabilities(): SecurityCapabilities {
         return this._securityCapabilities;
     }
 
-    set securityCapabilities(value: SecurityCapabilities) {
+    public set securityCapabilities(value: SecurityCapabilities) {
         this._securityCapabilities = value;
     }
 }

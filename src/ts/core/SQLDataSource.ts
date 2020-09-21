@@ -1,6 +1,6 @@
-///<reference path="DataSource.ts"/>
+///<reference path="UnitDataSource.ts"/>
 
-abstract class SQLDataSource extends DataSource {
+abstract class SQLDataSource extends UnitDataSource {
     /**
      * The structural type of the data source.
      * @protected
@@ -12,11 +12,11 @@ abstract class SQLDataSource extends DataSource {
         DataSourceUtil.initAttribute(this, "_dataStructureType", options.dataStructureType, DataStructureType.HORIZONTAL);
     }
 
-    get dataStructureType(): DataStructureType {
+    public get dataStructureType(): DataStructureType {
         return this._dataStructureType;
     }
 
-    set dataStructureType(value: DataStructureType) {
+    public set dataStructureType(value: DataStructureType) {
         this._dataStructureType = value;
     }
 }

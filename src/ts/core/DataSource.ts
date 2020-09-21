@@ -10,25 +10,11 @@ abstract class DataSource {
     protected _name: string;
 
     /**
-     * The provider of this data source.
-     *
-     * @protected
-     */
-    protected _provider: string;
-
-    /**
      * The type of this data source.
      *
      * @protected
      */
     protected _dataSourceType: DataSourceType;
-
-    /**
-     * The URI to the resource hosted on the web.
-     *
-     * @protected
-     */
-    protected _uri: string;
 
     /**
      * Capabilities of the service hosting this data source.
@@ -45,49 +31,31 @@ abstract class DataSource {
      */
     protected constructor(options) {
         DataSourceUtil.initAttribute(this, "_name", options.name, "My data source name");
-        DataSourceUtil.initAttribute(this, "_provider", options.provider, "My data source provider");
         DataSourceUtil.initAttribute(this, "_dataSourceType", options.provider, DataSourceType.PostgreSQL);
-        DataSourceUtil.initAttribute(this, "_uri", options.uri, "");
         DataSourceUtil.initAttribute(this, "_capabilities", options.capabilities, undefined);
     }
 
-    get name(): string {
+    public get name(): string {
         return this._name;
     }
 
-    set name(value: string) {
+    public set name(value: string) {
         this._name = value;
     }
 
-    get provider(): string {
-        return this._provider;
-    }
-
-    set provider(value: string) {
-        this._provider = value;
-    }
-
-    get dataSourceType(): DataSourceType {
+    public get dataSourceType(): DataSourceType {
         return this._dataSourceType;
     }
 
-    set dataSourceType(value: DataSourceType) {
+    public set dataSourceType(value: DataSourceType) {
         this._dataSourceType = value;
     }
 
-    get uri(): string {
-        return this._uri;
-    }
-
-    set uri(value: string) {
-        this._uri = value;
-    }
-
-    get capabilities(): DataSourceCapabilities {
+    public get capabilities(): DataSourceCapabilities {
         return this._capabilities;
     }
 
-    set capabilities(value: DataSourceCapabilities) {
+    public set capabilities(value: DataSourceCapabilities) {
         this._capabilities = value;
     }
 }

@@ -19,7 +19,7 @@ class FetchResultSet {
      *
      * @param data
      */
-    constructor(data: any) {
+    public constructor(data: any) {
         let tmpData = data;
         // Convert to JSON in case of string
         if (DataSourceUtil.isString(data)) {
@@ -30,6 +30,12 @@ class FetchResultSet {
             this._data = data;
         } else {
             this._data = undefined;
+        }
+    }
+
+    public concat(otherFetchResultSet: FetchResultSet): void {
+        if (otherFetchResultSet != null && otherFetchResultSet.size()) {
+            this._data = this._data.concat(otherFetchResultSet._data);
         }
     }
 
@@ -87,6 +93,10 @@ class FetchResultSet {
         return this._data.length;
     }
 
+    public size(): number {
+        return this.getNrOfRows();
+    }
+
     /**
      * Calculates the number of entries stored in this data.
      * For a data in rectangular form, this will be number of rows times number of columns.
@@ -139,11 +149,11 @@ class FetchResultSet {
         return Object.keys(this._data[0]);
     }
 
-    get data(): Array<KVP> {
+    public get data(): Array<KVP> {
         return this._data;
     }
 
-    set data(value: Array<KVP>) {
+    public set data(value: Array<KVP>) {
         this._data = value;
     }
 }

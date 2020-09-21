@@ -37,7 +37,7 @@ class GoogleSheets extends SQLDataSource implements ReadableDataSource, Writable
      * @param options an object containing the required information
      *
      */
-    constructor(options) {
+    public constructor(options) {
         super(options);
 
         // Initialize capabilities
@@ -65,7 +65,7 @@ class GoogleSheets extends SQLDataSource implements ReadableDataSource, Writable
         DataSourceUtil.initAttribute(this, "_a1Notation", options.a1Notation, "A");
     }
 
-    getMetaData(): Promise<any> {
+    public getMetaData(): Promise<any> {
         // TODO
         let scope = this;
         return new Promise(function (resolve, reject) {
@@ -77,7 +77,7 @@ class GoogleSheets extends SQLDataSource implements ReadableDataSource, Writable
         });
     }
 
-    fetchAttributeValuesFromId(id: string): Promise<FetchResultSet> {
+    public fetchAttributeValuesFromId(id: string): Promise<FetchResultSet> {
         let scope = this;
         return new Promise(function (resolve, reject) {
             let baseUrl = "https://docs.google.com/spreadsheets/d/";
@@ -174,87 +174,87 @@ class GoogleSheets extends SQLDataSource implements ReadableDataSource, Writable
         });
     }
 
-    fetchAttributeNamesFromId(id: string): Promise<Set<string>> {
+    public fetchAttributeNamesFromId(id: string): Promise<Set<string>> {
         // TODO
         throw new Error("Method not implemented.");
     }
 
-    fetchIdsFromQBE(qbe: QBE, limit?: number): Promise<Set<string>> {
+    public fetchIdsFromQBE(qbe: QBE, limit?: number): Promise<Set<string>> {
         // TODO
         throw new Error("Method not implemented.");
     }
 
-    fetchIdsFromQBEs(qbes: Array<QBE>, limit?: number): Promise<Set<string>> {
+    public fetchIdsFromQBEs(qbes: Array<QBE>, limit?: number): Promise<Set<string>> {
         // TODO
         throw new Error("Method not implemented.");
     }
 
-    aggregateByIds(ids: string[], aggregateOperator: AggregateOperator, attributeName: string): Promise<number>;
-    aggregateByIds(ids: string[], aggregateOperator: AggregateOperator): Promise<{ kvp: KVP }>;
-    aggregateByIds(ids: string[], aggregateOperator: AggregateOperator, attributeName?: string): Promise<number> | Promise<{ kvp: KVP }> {
+    public aggregateByIds(ids: string[], aggregateOperator: AggregateOperator, attributeName: string): Promise<number>;
+    public aggregateByIds(ids: string[], aggregateOperator: AggregateOperator): Promise<{ kvp: KVP }>;
+    public aggregateByIds(ids: string[], aggregateOperator: AggregateOperator, attributeName?: string): Promise<number> | Promise<{ kvp: KVP }> {
         // TODO
         throw new Error("Method not implemented.");
     }
 
-    get spreadsheetId(): string {
+    public get spreadsheetId(): string {
         return this._spreadsheetId;
     }
 
-    set spreadsheetId(value: string) {
+    public set spreadsheetId(value: string) {
         this._spreadsheetId = value;
     }
 
-    deleteAttributeOfId(id: string, attributeName: string): Promise<boolean> {
+    public deleteAttributeOfId(id: string, attributeName: string): Promise<boolean> {
         // TODO
         throw new Error("Method not implemented.");
     }
 
-    deleteAttributesUsingQBE(qbe: QBE, attributeNames: string[]): Promise<boolean> {
+    public deleteAttributesUsingQBE(qbe: QBE, attributeNames: string[]): Promise<boolean> {
         // TODO
         throw new Error("Method not implemented.");
     }
 
-    deleteObjectOfId(id: string): Promise<boolean> {
+    public deleteObjectOfId(id: string): Promise<boolean> {
         // TODO
         throw new Error("Method not implemented.");
     }
 
-    deleteObjectsUsingQBE(qbe: QBE): Promise<boolean> {
+    public deleteObjectsUsingQBE(qbe: QBE): Promise<boolean> {
         // TODO
         throw new Error("Method not implemented.");
     }
 
-    insertAttributeOfId(id: string, attributeName: string, attributeValue: any): Promise<boolean> {
+    public insertAttributeOfId(id: string, attributeName: string, attributeValue: any): Promise<boolean> {
         // TODO
         throw new Error("Method not implemented.");
     }
 
-    insertAttributesUsingQBE(qbe: QBE, newAttributes: KVP): Promise<boolean> {
+    public insertAttributesUsingQBE(qbe: QBE, newAttributes: KVP): Promise<boolean> {
         // TODO
         throw new Error("Method not implemented.");
     }
 
-    insertNewObject(kvp: KVP): Promise<boolean> {
+    public insertNewObject(kvp: KVP): Promise<boolean> {
         // TODO
         throw new Error("Method not implemented.");
     }
 
-    login(credentials: any): Promise<boolean> {
+    public login(credentials: any): Promise<boolean> {
         // TODO
         throw new Error("Method not implemented.");
     }
 
-    logout(): Promise<boolean> {
+    public logout(): Promise<boolean> {
         // TODO
         throw new Error("Method not implemented.");
     }
 
-    updateAttributeValueOfId(id: string, attributeName: string, newValue: any): Promise<boolean> {
+    public updateAttributeValueOfId(id: string, attributeName: string, newValue: any): Promise<boolean> {
         // TODO
         throw new Error("Method not implemented.");
     }
 
-    updateAttributeValuesUsingQBE(qbe: QBE, newAttributeValues: KVP): Promise<boolean> {
+    public updateAttributeValuesUsingQBE(qbe: QBE, newAttributeValues: KVP): Promise<boolean> {
         // TODO
         throw new Error("Method not implemented.");
     }

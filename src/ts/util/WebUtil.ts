@@ -1,4 +1,13 @@
+/**
+ * An auxiliary class storing web utility functions.
+ */
 class WebUtil {
+    /**
+     * Retrieves information from the web using HTTP GET.
+     *
+     * @param url
+     * @return a promise result of the response from the web service
+     */
     public static httpGet(url: string): Promise<any> {
         return new Promise(function (resolve, reject) {
             let xmlHttp = new XMLHttpRequest();

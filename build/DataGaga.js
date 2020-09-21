@@ -14,9 +14,7 @@ var __extends = (this && this.__extends) || (function () {
 var DataSource = (function () {
     function DataSource(options) {
         DataSourceUtil.initAttribute(this, "_name", options.name, "My data source name");
-        DataSourceUtil.initAttribute(this, "_provider", options.provider, "My data source provider");
         DataSourceUtil.initAttribute(this, "_dataSourceType", options.provider, DataSourceType.PostgreSQL);
-        DataSourceUtil.initAttribute(this, "_uri", options.uri, "");
         DataSourceUtil.initAttribute(this, "_capabilities", options.capabilities, undefined);
     }
     Object.defineProperty(DataSource.prototype, "name", {
@@ -29,32 +27,12 @@ var DataSource = (function () {
         enumerable: false,
         configurable: true
     });
-    Object.defineProperty(DataSource.prototype, "provider", {
-        get: function () {
-            return this._provider;
-        },
-        set: function (value) {
-            this._provider = value;
-        },
-        enumerable: false,
-        configurable: true
-    });
     Object.defineProperty(DataSource.prototype, "dataSourceType", {
         get: function () {
             return this._dataSourceType;
         },
         set: function (value) {
             this._dataSourceType = value;
-        },
-        enumerable: false,
-        configurable: true
-    });
-    Object.defineProperty(DataSource.prototype, "uri", {
-        get: function () {
-            return this._uri;
-        },
-        set: function (value) {
-            this._uri = value;
         },
         enumerable: false,
         configurable: true
@@ -71,6 +49,36 @@ var DataSource = (function () {
     });
     return DataSource;
 }());
+var UnitDataSource = (function (_super) {
+    __extends(UnitDataSource, _super);
+    function UnitDataSource(options) {
+        var _this = _super.call(this, options) || this;
+        DataSourceUtil.initAttribute(_this, "_provider", options.provider, "My data source provider");
+        DataSourceUtil.initAttribute(_this, "_uri", options.uri, "");
+        return _this;
+    }
+    Object.defineProperty(UnitDataSource.prototype, "provider", {
+        get: function () {
+            return this._provider;
+        },
+        set: function (value) {
+            this._provider = value;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(UnitDataSource.prototype, "uri", {
+        get: function () {
+            return this._uri;
+        },
+        set: function (value) {
+            this._uri = value;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    return UnitDataSource;
+}(DataSource));
 var SQLDataSource = (function (_super) {
     __extends(SQLDataSource, _super);
     function SQLDataSource(options) {
@@ -89,7 +97,7 @@ var SQLDataSource = (function (_super) {
         configurable: true
     });
     return SQLDataSource;
-}(DataSource));
+}(UnitDataSource));
 var GoogleSheets = (function (_super) {
     __extends(GoogleSheets, _super);
     function GoogleSheets(options) {
@@ -215,7 +223,7 @@ var XMLDataSource = (function (_super) {
         return _super.call(this, options) || this;
     }
     return XMLDataSource;
-}(DataSource));
+}(UnitDataSource));
 var KML = (function (_super) {
     __extends(KML, _super);
     function KML(options) {
@@ -553,6 +561,11 @@ var FetchResultSet = (function () {
             this._data = undefined;
         }
     }
+    FetchResultSet.prototype.concat = function (otherFetchResultSet) {
+        if (otherFetchResultSet != null && otherFetchResultSet.size()) {
+            this._data = this._data.concat(otherFetchResultSet._data);
+        }
+    };
     FetchResultSet.prototype.push = function (kvp) {
         this._data.push(kvp);
     };
@@ -584,6 +597,9 @@ var FetchResultSet = (function () {
     };
     FetchResultSet.prototype.getNrOfRows = function () {
         return this._data.length;
+    };
+    FetchResultSet.prototype.size = function () {
+        return this.getNrOfRows();
     };
     FetchResultSet.prototype.getNrOfEntries = function () {
         var result = 0;
@@ -627,19 +643,81 @@ var FetchResultSet = (function () {
 }());
 var MashupDataSource = (function (_super) {
     __extends(MashupDataSource, _super);
-    function MashupDataSource() {
-        return _super !== null && _super.apply(this, arguments) || this;
+    function MashupDataSource(options, mashup) {
+        var _this = _super.call(this, options) || this;
+        if (mashup != null) {
+            _this._mashup = mashup;
+        }
+        return _this;
     }
-    Object.defineProperty(MashupDataSource.prototype, "mashupDataSources", {
+    MashupDataSource.prototype.addDataSource = function (dataSource) {
+        if (dataSource != null) {
+            this._mashup.push(dataSource);
+        }
+    };
+    MashupDataSource.prototype.removeDataSource = function (index) {
+        if (index != null && index >= 0 && index < this._mashup.length) {
+            this._mashup.splice(index, 1);
+        }
+    };
+    MashupDataSource.prototype.getMashupSize = function () {
+        return this._mashup.length;
+    };
+    MashupDataSource.prototype.get = function (index) {
+        return this._mashup[index];
+    };
+    Object.defineProperty(MashupDataSource.prototype, "mashup", {
         get: function () {
-            return this._mashupDataSources;
+            return this._mashup;
         },
         set: function (value) {
-            this._mashupDataSources = value;
+            this._mashup = value;
         },
         enumerable: false,
         configurable: true
     });
+    MashupDataSource.prototype.aggregateByIds = function (ids, aggregateOperator, attributeName) {
+        return Promise.resolve(undefined);
+    };
+    MashupDataSource.prototype.fetchAttributeNamesFromId = function (id) {
+        return Promise.resolve(undefined);
+    };
+    MashupDataSource.prototype.fetchAttributeValuesFromId = function (id) {
+        var scope = this;
+        var result = new FetchResultSet([]);
+        var promises = new Array();
+        for (var _i = 0, _a = scope._mashup; _i < _a.length; _i++) {
+            var datasource = _a[_i];
+            if (typeof datasource["fetchAttributeValuesFromId"] === "function") {
+                promises.push(datasource["fetchAttributeValuesFromId"](id));
+            }
+        }
+        return new Promise(function (resolve, reject) {
+            Promise.all(promises).then(function (fetchResultSets) {
+                for (var _i = 0, fetchResultSets_1 = fetchResultSets; _i < fetchResultSets_1.length; _i++) {
+                    var fetchResultSet = fetchResultSets_1[_i];
+                    result.concat(fetchResultSet);
+                }
+                if (result.size() >= 0) {
+                    resolve(result);
+                }
+                else {
+                    reject("Could not fetch for this mashup.");
+                }
+            }).catch(function (error) {
+                reject(error);
+            });
+        });
+    };
+    MashupDataSource.prototype.fetchIdsFromQBE = function (qbe, limit) {
+        return Promise.resolve(undefined);
+    };
+    MashupDataSource.prototype.fetchIdsFromQBEs = function (qbes, limit) {
+        return Promise.resolve(undefined);
+    };
+    MashupDataSource.prototype.getMetaData = function () {
+        return Promise.resolve(undefined);
+    };
     return MashupDataSource;
 }(DataSource));
 var DataSourceCapabilities = (function () {

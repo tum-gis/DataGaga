@@ -94,27 +94,27 @@ class QBE {
         return this.toJSON().toString();
     }
 
-    get attributeName(): string {
+    public get attributeName(): string {
         return this._attributeName;
     }
 
-    set attributeName(value: string) {
+    public set attributeName(value: string) {
         this._attributeName = value;
     }
 
-    get comparisonOperator(): ComparisonOperator {
+    public get comparisonOperator(): ComparisonOperator {
         return this._comparisonOperator;
     }
 
-    set comparisonOperator(value: ComparisonOperator) {
+    public set comparisonOperator(value: ComparisonOperator) {
         this._comparisonOperator = value;
     }
 
-    get value(): string {
+    public get value(): string {
         return this._value;
     }
 
-    set value(value: string) {
+    public set value(value: string) {
         this._value = value;
     }
 }

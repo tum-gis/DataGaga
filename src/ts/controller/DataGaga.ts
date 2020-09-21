@@ -17,6 +17,7 @@ class DataGaga {
      *
      * @param dataSourceType the type of the data source to be created, must be the same as the class names
      * @param options
+     * @param addToMashup whether the created data source should be added to the mashup one
      */
     public static createDataSource(dataSourceType: string | DataSourceType, options: any): DataSource {
         if (dataSourceType != null) {

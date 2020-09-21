@@ -52,7 +52,7 @@ class KML extends XMLDataSource implements ReadableDataSource, ProxyDataSource {
      * @param options an object containing the required information
      *
      */
-    constructor(options) {
+    public constructor(options) {
         super(options);
 
         // Initialize capabilities
@@ -75,24 +75,24 @@ class KML extends XMLDataSource implements ReadableDataSource, ProxyDataSource {
         this.proxyPrefix = options.proxyPrefix;
     }
 
-    getMetaData(): Promise<any> {
+    public getMetaData(): Promise<any> {
         // TODO
         throw new Error("Method not implemented.");
     }
 
-    aggregateByIds(ids: string[], aggregateOperator: AggregateOperator, attributeName: string): Promise<number>;
-    aggregateByIds(ids: string[], aggregateOperator: AggregateOperator): Promise<{ kvp: KVP }>;
-    aggregateByIds(ids: string[], aggregateOperator: AggregateOperator, attributeName?: string): Promise<number> | Promise<{ kvp: KVP }> {
+    public aggregateByIds(ids: string[], aggregateOperator: AggregateOperator, attributeName: string): Promise<number>;
+    public aggregateByIds(ids: string[], aggregateOperator: AggregateOperator): Promise<{ kvp: KVP }>;
+    public aggregateByIds(ids: string[], aggregateOperator: AggregateOperator, attributeName?: string): Promise<number> | Promise<{ kvp: KVP }> {
         // TODO
         throw new Error("Method not implemented.");
     }
 
-    fetchAttributeNamesFromId(id: string): Promise<Set<string>> {
+    public fetchAttributeNamesFromId(id: string): Promise<Set<string>> {
         // TODO
         throw new Error("Method not implemented.");
     }
 
-    fetchAttributeValuesFromId(id: string): Promise<FetchResultSet> {
+    public fetchAttributeValuesFromId(id: string): Promise<FetchResultSet> {
         let scope = this;
         return new Promise(function (resolve, reject) {
             WebUtil.httpGet((scope._uri.indexOf(scope.proxyPrefix) >= 0 ? "" : scope.proxyPrefix) + scope._uri).then(function (result) {
@@ -141,7 +141,7 @@ class KML extends XMLDataSource implements ReadableDataSource, ProxyDataSource {
      * @param id
      * @return a promise FetchResultSet object
      */
-    fetchAttributeValuesFromName(name: string): Promise<FetchResultSet> {
+    public fetchAttributeValuesFromName(name: string): Promise<FetchResultSet> {
         let scope = this;
         return new Promise(function (resolve, reject) {
             WebUtil.httpGet((scope._uri.indexOf(scope.proxyPrefix) >= 0 ? "" : scope.proxyPrefix) + scope._uri).then(function (result) {
@@ -193,7 +193,7 @@ class KML extends XMLDataSource implements ReadableDataSource, ProxyDataSource {
      * @param limit (optional) maximum number of returned IDs
      * @return an array of distinct placemark IDs or names
      */
-    fetchIdsFromQBE(qbe: QBE, limit?: number): Promise<Set<string>> {
+    public fetchIdsFromQBE(qbe: QBE, limit?: number): Promise<Set<string>> {
         let scope = this;
         if (limit == null) {
             limit = Number.MAX_VALUE;
@@ -326,7 +326,7 @@ class KML extends XMLDataSource implements ReadableDataSource, ProxyDataSource {
      * @param limit (optional) maximum number of returned IDs
      * @return an array of distinct placemark IDs
      */
-    fetchIdsFromQBEs(qbes: Array<QBE>, limit?: number): Promise<Set<string>> {
+    public fetchIdsFromQBEs(qbes: Array<QBE>, limit?: number): Promise<Set<string>> {
         let scope = this;
         if (limit == null) {
             limit = Number.MAX_VALUE;
