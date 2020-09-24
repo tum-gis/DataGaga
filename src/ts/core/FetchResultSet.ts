@@ -33,6 +33,11 @@ class FetchResultSet {
         }
     }
 
+    /**
+     * Merges another FetchResultSet object by appending it to the current one.
+     *
+     * @param otherFetchResultSet
+     */
     public concat(otherFetchResultSet: FetchResultSet): void {
         if (otherFetchResultSet != null && otherFetchResultSet.size()) {
             this._data = this._data.concat(otherFetchResultSet._data);

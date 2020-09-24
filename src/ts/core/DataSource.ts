@@ -29,9 +29,9 @@ abstract class DataSource {
      * @param options an object containing attributes defined in this class
      * @protected
      */
-    protected constructor(options) {
+    constructor(options: DataSourceOptions) {
         DataSourceUtil.initAttribute(this, "_name", options.name, "My data source name");
-        DataSourceUtil.initAttribute(this, "_dataSourceType", options.provider, DataSourceType.PostgreSQL);
+        DataSourceUtil.initAttribute(this, "_dataSourceType", options.dataSourceType, DataSourceType.PostgreSQL);
         DataSourceUtil.initAttribute(this, "_capabilities", options.capabilities, undefined);
     }
 
@@ -58,4 +58,10 @@ abstract class DataSource {
     public set capabilities(value: DataSourceCapabilities) {
         this._capabilities = value;
     }
+}
+
+interface DataSourceOptions {
+    name: string;
+    dataSourceType: string;
+    capabilities: DataSourceCapabilities;
 }

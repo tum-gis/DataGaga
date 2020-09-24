@@ -9,7 +9,7 @@ class MashupDataSource extends DataSource implements ReadableDataSource {
      */
     private _mashup: Array<DataSource>;
 
-    public constructor(options, mashup?: Array<DataSource>) {
+    public constructor(options: MashupDataSourceOptions, mashup?: Array<DataSource>) {
         super(options);
         if (mashup != null) {
             this._mashup = mashup;
@@ -43,7 +43,7 @@ class MashupDataSource extends DataSource implements ReadableDataSource {
      *
      * @return length of the mashup data source
      */
-    public getMashupSize(): number {
+    public size(): number {
         return this._mashup.length;
     }
 
@@ -65,9 +65,9 @@ class MashupDataSource extends DataSource implements ReadableDataSource {
         this._mashup = value;
     }
 
-    public aggregateByIds(ids: string[], aggregateOperator: AggregateOperator, attributeName: string): Promise<number>;
-    public aggregateByIds(ids: string[], aggregateOperator: AggregateOperator): Promise<{ kvp: KVP }>;
-    public aggregateByIds(ids: string[], aggregateOperator: AggregateOperator, attributeName?: string): Promise<number> | Promise<{ kvp: KVP }> {
+    public aggregateByIds(ids: Array<string>, aggregateOperator: AggregateOperator, attributeName: string): Promise<number>;
+    public aggregateByIds(ids: Array<string>, aggregateOperator: AggregateOperator): Promise<{ kvp: KVP }>;
+    public aggregateByIds(ids: Array<string>, aggregateOperator: AggregateOperator, attributeName?: string): Promise<number> | Promise<{ kvp: KVP }> {
         // TODO
         return Promise.resolve(undefined);
     }
@@ -115,8 +115,11 @@ class MashupDataSource extends DataSource implements ReadableDataSource {
         return Promise.resolve(undefined);
     }
 
-    public getMetaData(): Promise<any> {
+    public getMetaData(): Promise<JSONObject> {
         // TODO
         return Promise.resolve(undefined);
     }
+}
+
+interface MashupDataSourceOptions extends DataSourceOptions {
 }

@@ -1,9 +1,9 @@
-///<reference path="../core/SQLDataSource.ts"/>
+///<reference path="../core/FirstNormalFormDataSource.ts"/>
 
 /**
  * Implementation for PostgreSQL as data source.
  */
-class PostgreSQL extends SQLDataSource implements ReadableDataSource, WritableDataSource {
+class PostgreSQL extends FirstNormalFormDataSource implements ReadableDataSource, WritableDataSource, SecuredDataSource {
     /**
      * The name of the column containing the IDs of objects.
      * Normally this is the first column of a table (e.g. gmlid).
@@ -27,7 +27,7 @@ class PostgreSQL extends SQLDataSource implements ReadableDataSource, WritableDa
      * @param options an object containing the required information
      *
      */
-    public constructor(options) {
+    public constructor(options: PostgreSQLOptions) {
         super(options);
 
         // Initialize capabilities
@@ -52,14 +52,24 @@ class PostgreSQL extends SQLDataSource implements ReadableDataSource, WritableDa
         DataSourceUtil.initAttribute(this, "_idColName", options.idColName, "gmlid");
     }
 
-    public getMetaData(): Promise<any> {
+    public login(credentials: JSONObject): Promise<boolean> {
         // TODO
         throw new Error("Method not implemented.");
     }
 
-    public aggregateByIds(ids: string[], aggregateOperator: AggregateOperator, attributeName: string): Promise<number>;
-    public aggregateByIds(ids: string[], aggregateOperator: AggregateOperator): Promise<{ kvp: KVP }>;
-    public aggregateByIds(ids: string[], aggregateOperator: AggregateOperator, attributeName?: string): Promise<number> | Promise<{ kvp: KVP }> {
+    public logout(): Promise<boolean> {
+        // TODO
+        throw new Error("Method not implemented.");
+    }
+
+    public getMetaData(): Promise<JSONObject> {
+        // TODO
+        throw new Error("Method not implemented.");
+    }
+
+    public aggregateByIds(ids: Array<string>, aggregateOperator: AggregateOperator, attributeName: string): Promise<number>;
+    public aggregateByIds(ids: Array<string>, aggregateOperator: AggregateOperator): Promise<{ kvp: KVP }>;
+    public aggregateByIds(ids: Array<string>, aggregateOperator: AggregateOperator, attributeName?: string): Promise<number> | Promise<{ kvp: KVP }> {
         // TODO
         throw new Error("Method not implemented.");
     }
@@ -69,7 +79,7 @@ class PostgreSQL extends SQLDataSource implements ReadableDataSource, WritableDa
         throw new Error("Method not implemented.");
     }
 
-    public deleteAttributesUsingQBE(qbe: QBE, attributeNames: string[]): Promise<boolean> {
+    public deleteAttributesUsingQBE(qbe: QBE, attributeNames: Array<string>): Promise<boolean> {
         // TODO
         throw new Error("Method not implemented.");
     }
@@ -121,7 +131,7 @@ class PostgreSQL extends SQLDataSource implements ReadableDataSource, WritableDa
         throw new Error("Method not implemented.");
     }
 
-    public insertNewObject(kvp: KVP): Promise<boolean> {
+    public insertNewObject(json: JSONObject): Promise<boolean> {
         // TODO
         throw new Error("Method not implemented.");
     }
@@ -135,4 +145,8 @@ class PostgreSQL extends SQLDataSource implements ReadableDataSource, WritableDa
         // TODO
         throw new Error("Method not implemented.");
     }
+}
+
+interface PostgreSQLOptions extends FirstNormalFormDataSourceOptions {
+    idColName: string;
 }

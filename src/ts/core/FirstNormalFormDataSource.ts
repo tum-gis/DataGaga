@@ -1,13 +1,13 @@
 ///<reference path="UnitDataSource.ts"/>
 
-abstract class SQLDataSource extends UnitDataSource {
+abstract class FirstNormalFormDataSource extends UnitDataSource {
     /**
      * The structural type of the data source.
      * @protected
      */
     protected _dataStructureType: DataStructureType;
 
-    protected constructor(options) {
+    protected constructor(options: FirstNormalFormDataSourceOptions) {
         super(options);
         DataSourceUtil.initAttribute(this, "_dataStructureType", options.dataStructureType, DataStructureType.HORIZONTAL);
     }
@@ -19,4 +19,8 @@ abstract class SQLDataSource extends UnitDataSource {
     public set dataStructureType(value: DataStructureType) {
         this._dataStructureType = value;
     }
+}
+
+interface FirstNormalFormDataSourceOptions extends UnitDataSourceOptions {
+    dataStructureType: DataStructureType;
 }

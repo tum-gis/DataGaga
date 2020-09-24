@@ -1,4 +1,4 @@
-///<reference path="../core/XMLDataSource.ts"/>
+///<reference path="../core/NonFirstNormalFormDataSource.ts"/>
 /**
  * Defines attribute names in KML that can be queried using QBE expressions.
  */
@@ -34,7 +34,7 @@ const enum QueryableAttributeNamesKML {
 /**
  * Implementation for KML as data source.
  */
-class KML extends XMLDataSource implements ReadableDataSource, ProxyDataSource {
+class KML extends NonFirstNormalFormDataSource implements ReadableDataSource, ProxyDataSource {
 
     proxyPrefix: string;
 
@@ -52,7 +52,7 @@ class KML extends XMLDataSource implements ReadableDataSource, ProxyDataSource {
      * @param options an object containing the required information
      *
      */
-    public constructor(options) {
+    public constructor(options: KMLOptions) {
         super(options);
 
         // Initialize capabilities
@@ -75,14 +75,14 @@ class KML extends XMLDataSource implements ReadableDataSource, ProxyDataSource {
         this.proxyPrefix = options.proxyPrefix;
     }
 
-    public getMetaData(): Promise<any> {
+    public getMetaData(): Promise<JSONObject> {
         // TODO
         throw new Error("Method not implemented.");
     }
 
-    public aggregateByIds(ids: string[], aggregateOperator: AggregateOperator, attributeName: string): Promise<number>;
-    public aggregateByIds(ids: string[], aggregateOperator: AggregateOperator): Promise<{ kvp: KVP }>;
-    public aggregateByIds(ids: string[], aggregateOperator: AggregateOperator, attributeName?: string): Promise<number> | Promise<{ kvp: KVP }> {
+    public aggregateByIds(ids: Array<string>, aggregateOperator: AggregateOperator, attributeName: string): Promise<number>;
+    public aggregateByIds(ids: Array<string>, aggregateOperator: AggregateOperator): Promise<{ kvp: KVP }>;
+    public aggregateByIds(ids: Array<string>, aggregateOperator: AggregateOperator, attributeName?: string): Promise<number> | Promise<{ kvp: KVP }> {
         // TODO
         throw new Error("Method not implemented.");
     }
@@ -344,4 +344,8 @@ class KML extends XMLDataSource implements ReadableDataSource, ProxyDataSource {
             resolve(new Set<string>(array));
         });
     }
+}
+
+interface KMLOptions extends NonFirstNormalFormDataSourceOptions {
+    proxyPrefix: string;
 }

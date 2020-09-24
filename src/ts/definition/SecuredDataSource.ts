@@ -1,5 +1,5 @@
 interface SecuredDataSource {
-    login(credentials: any): Promise<boolean>;
+    login(credentials: JSONObject): Promise<boolean>;
 
     logout(): Promise<boolean>;
 }

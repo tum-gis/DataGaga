@@ -1,9 +1,9 @@
-///<reference path="../core/SQLDataSource.ts"/>
+///<reference path="../core/FirstNormalFormDataSource.ts"/>
 
 /**
  * Implementation for GoogleSheets as data source.
  */
-class GoogleSheets extends SQLDataSource implements ReadableDataSource, WritableDataSource, SecuredDataSource {
+class GoogleSheets extends FirstNormalFormDataSource implements ReadableDataSource, WritableDataSource, SecuredDataSource {
     private static apiUrlPrefix: string = "https://sheets.googleapis.com/v4/spreadsheets/";
 
     /**
@@ -37,7 +37,7 @@ class GoogleSheets extends SQLDataSource implements ReadableDataSource, Writable
      * @param options an object containing the required information
      *
      */
-    public constructor(options) {
+    public constructor(options: GoogleSheetsOptions) {
         super(options);
 
         // Initialize capabilities
@@ -65,7 +65,7 @@ class GoogleSheets extends SQLDataSource implements ReadableDataSource, Writable
         DataSourceUtil.initAttribute(this, "_a1Notation", options.a1Notation, "A");
     }
 
-    public getMetaData(): Promise<any> {
+    public getMetaData(): Promise<JSONObject> {
         // TODO
         let scope = this;
         return new Promise(function (resolve, reject) {
@@ -189,9 +189,9 @@ class GoogleSheets extends SQLDataSource implements ReadableDataSource, Writable
         throw new Error("Method not implemented.");
     }
 
-    public aggregateByIds(ids: string[], aggregateOperator: AggregateOperator, attributeName: string): Promise<number>;
-    public aggregateByIds(ids: string[], aggregateOperator: AggregateOperator): Promise<{ kvp: KVP }>;
-    public aggregateByIds(ids: string[], aggregateOperator: AggregateOperator, attributeName?: string): Promise<number> | Promise<{ kvp: KVP }> {
+    public aggregateByIds(ids: Array<string>, aggregateOperator: AggregateOperator, attributeName: string): Promise<number>;
+    public aggregateByIds(ids: Array<string>, aggregateOperator: AggregateOperator): Promise<{ kvp: KVP }>;
+    public aggregateByIds(ids: Array<string>, aggregateOperator: AggregateOperator, attributeName?: string): Promise<number> | Promise<{ kvp: KVP }> {
         // TODO
         throw new Error("Method not implemented.");
     }
@@ -209,7 +209,7 @@ class GoogleSheets extends SQLDataSource implements ReadableDataSource, Writable
         throw new Error("Method not implemented.");
     }
 
-    public deleteAttributesUsingQBE(qbe: QBE, attributeNames: string[]): Promise<boolean> {
+    public deleteAttributesUsingQBE(qbe: QBE, attributeNames: Array<string>): Promise<boolean> {
         // TODO
         throw new Error("Method not implemented.");
     }
@@ -234,12 +234,12 @@ class GoogleSheets extends SQLDataSource implements ReadableDataSource, Writable
         throw new Error("Method not implemented.");
     }
 
-    public insertNewObject(kvp: KVP): Promise<boolean> {
+    public insertNewObject(json: JSONObject): Promise<boolean> {
         // TODO
         throw new Error("Method not implemented.");
     }
 
-    public login(credentials: any): Promise<boolean> {
+    public login(credentials: JSONObject): Promise<boolean> {
         // TODO
         throw new Error("Method not implemented.");
     }
@@ -258,4 +258,9 @@ class GoogleSheets extends SQLDataSource implements ReadableDataSource, Writable
         // TODO
         throw new Error("Method not implemented.");
     }
+}
+
+interface GoogleSheetsOptions extends FirstNormalFormDataSourceOptions {
+    spreadsheetId: string;
+    a1Notation: string;
 }

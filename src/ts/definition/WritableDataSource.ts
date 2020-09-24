@@ -65,10 +65,9 @@ interface WritableDataSource {
     /**
      * Inserts a new object/row to the data source.
      *
-     * @param kvp a Key-Value-Pair object containing the data to be inserted
      * @return a promise boolean value, true if the change has been successfully executed, otherwise false
      */
-    insertNewObject(kvp: KVP): Promise<boolean>;
+    insertNewObject(json: JSONObject): Promise<boolean>;
 
     /**
      * Deletes an object of a given ID from the data source.
@@ -105,7 +104,7 @@ interface WritableDataSource {
      * @param attributeNames
      * @return a promise boolean value, true if the change has been successfully executed, otherwise false
      */
-    deleteAttributesUsingQBE(qbe: QBE, attributeNames: string[]): Promise<boolean>;
+    deleteAttributesUsingQBE(qbe: QBE, attributeNames: Array<string>): Promise<boolean>;
 
     /**
      * Deletes objects from the data source filtered by the Query-By-Example expression.

@@ -8,7 +8,7 @@ interface ReadableDataSource {
      *
      * @protected
      */
-    getMetaData(): Promise<any>;
+    getMetaData(): Promise<JSONObject>;
 
     /**
      * Fetches attribute values from a given ID.
@@ -52,7 +52,7 @@ interface ReadableDataSource {
      * @param attributeName
      * @return a promise aggregated value of the given attribute over the given IDs
      */
-    aggregateByIds(ids: string[], aggregateOperator: AggregateOperator, attributeName: string): Promise<number>;
+    aggregateByIds(ids: Array<string>, aggregateOperator: AggregateOperator, attributeName: string): Promise<number>;
 
     /**
      * Calculates the aggregated value of all attributes from given IDs.
@@ -69,5 +69,5 @@ interface ReadableDataSource {
      * @param aggregateOperator
      * @return a promise set of aggregated values of the given attribute over the given IDs
      */
-    aggregateByIds(ids: string[], aggregateOperator: AggregateOperator): Promise<{ kvp: KVP }>;
+    aggregateByIds(ids: Array<string>, aggregateOperator: AggregateOperator): Promise<{ kvp: KVP }>;
 }

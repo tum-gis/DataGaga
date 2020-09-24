@@ -14,7 +14,7 @@ var __extends = (this && this.__extends) || (function () {
 var DataSource = (function () {
     function DataSource(options) {
         DataSourceUtil.initAttribute(this, "_name", options.name, "My data source name");
-        DataSourceUtil.initAttribute(this, "_dataSourceType", options.provider, DataSourceType.PostgreSQL);
+        DataSourceUtil.initAttribute(this, "_dataSourceType", options.dataSourceType, DataSourceType.PostgreSQL);
         DataSourceUtil.initAttribute(this, "_capabilities", options.capabilities, undefined);
     }
     Object.defineProperty(DataSource.prototype, "name", {
@@ -79,14 +79,14 @@ var UnitDataSource = (function (_super) {
     });
     return UnitDataSource;
 }(DataSource));
-var SQLDataSource = (function (_super) {
-    __extends(SQLDataSource, _super);
-    function SQLDataSource(options) {
+var FirstNormalFormDataSource = (function (_super) {
+    __extends(FirstNormalFormDataSource, _super);
+    function FirstNormalFormDataSource(options) {
         var _this = _super.call(this, options) || this;
         DataSourceUtil.initAttribute(_this, "_dataStructureType", options.dataStructureType, "Horizontal");
         return _this;
     }
-    Object.defineProperty(SQLDataSource.prototype, "dataStructureType", {
+    Object.defineProperty(FirstNormalFormDataSource.prototype, "dataStructureType", {
         get: function () {
             return this._dataStructureType;
         },
@@ -96,7 +96,7 @@ var SQLDataSource = (function (_super) {
         enumerable: false,
         configurable: true
     });
-    return SQLDataSource;
+    return FirstNormalFormDataSource;
 }(UnitDataSource));
 var GoogleSheets = (function (_super) {
     __extends(GoogleSheets, _super);
@@ -199,7 +199,7 @@ var GoogleSheets = (function (_super) {
     GoogleSheets.prototype.insertAttributesUsingQBE = function (qbe, newAttributes) {
         throw new Error("Method not implemented.");
     };
-    GoogleSheets.prototype.insertNewObject = function (kvp) {
+    GoogleSheets.prototype.insertNewObject = function (json) {
         throw new Error("Method not implemented.");
     };
     GoogleSheets.prototype.login = function (credentials) {
@@ -216,13 +216,13 @@ var GoogleSheets = (function (_super) {
     };
     GoogleSheets.apiUrlPrefix = "https://sheets.googleapis.com/v4/spreadsheets/";
     return GoogleSheets;
-}(SQLDataSource));
-var XMLDataSource = (function (_super) {
-    __extends(XMLDataSource, _super);
-    function XMLDataSource(options) {
+}(FirstNormalFormDataSource));
+var NonFirstNormalFormDataSource = (function (_super) {
+    __extends(NonFirstNormalFormDataSource, _super);
+    function NonFirstNormalFormDataSource(options) {
         return _super.call(this, options) || this;
     }
-    return XMLDataSource;
+    return NonFirstNormalFormDataSource;
 }(UnitDataSource));
 var KML = (function (_super) {
     __extends(KML, _super);
@@ -450,7 +450,7 @@ var KML = (function (_super) {
         });
     };
     return KML;
-}(XMLDataSource));
+}(NonFirstNormalFormDataSource));
 var PostgreSQL = (function (_super) {
     __extends(PostgreSQL, _super);
     function PostgreSQL(options) {
@@ -474,6 +474,12 @@ var PostgreSQL = (function (_super) {
         DataSourceUtil.initAttribute(_this, "_idColName", options.idColName, "gmlid");
         return _this;
     }
+    PostgreSQL.prototype.login = function (credentials) {
+        throw new Error("Method not implemented.");
+    };
+    PostgreSQL.prototype.logout = function () {
+        throw new Error("Method not implemented.");
+    };
     PostgreSQL.prototype.getMetaData = function () {
         throw new Error("Method not implemented.");
     };
@@ -518,7 +524,7 @@ var PostgreSQL = (function (_super) {
     PostgreSQL.prototype.insertAttributesUsingQBE = function (qbe, newAttributes) {
         throw new Error("Method not implemented.");
     };
-    PostgreSQL.prototype.insertNewObject = function (kvp) {
+    PostgreSQL.prototype.insertNewObject = function (json) {
         throw new Error("Method not implemented.");
     };
     PostgreSQL.prototype.updateAttributeValueOfId = function (id, attributeName, newValue) {
@@ -528,7 +534,7 @@ var PostgreSQL = (function (_super) {
         throw new Error("Method not implemented.");
     };
     return PostgreSQL;
-}(SQLDataSource));
+}(FirstNormalFormDataSource));
 var DataSourceType;
 (function (DataSourceType) {
     DataSourceType["GoogleSheets"] = "GoogleSheets";
@@ -660,7 +666,7 @@ var MashupDataSource = (function (_super) {
             this._mashup.splice(index, 1);
         }
     };
-    MashupDataSource.prototype.getMashupSize = function () {
+    MashupDataSource.prototype.size = function () {
         return this._mashup.length;
     };
     MashupDataSource.prototype.get = function (index) {

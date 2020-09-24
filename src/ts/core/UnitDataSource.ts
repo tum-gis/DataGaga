@@ -24,7 +24,7 @@ abstract class UnitDataSource extends DataSource {
      * @param options an object containing attributes defined in this class
      * @protected
      */
-    protected constructor(options) {
+    protected constructor(options: UnitDataSourceOptions) {
         super(options);
         DataSourceUtil.initAttribute(this, "_provider", options.provider, "My data source provider");
         DataSourceUtil.initAttribute(this, "_uri", options.uri, "");
@@ -45,4 +45,9 @@ abstract class UnitDataSource extends DataSource {
     public set uri(value: string) {
         this._uri = value;
     }
+}
+
+interface UnitDataSourceOptions extends DataSourceOptions {
+    provider: string;
+    uri: string;
 }
