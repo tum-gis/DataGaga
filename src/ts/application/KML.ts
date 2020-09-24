@@ -56,7 +56,7 @@ class KML extends NonFirstNormalFormDataSource implements ReadableDataSource, Pr
         super(options);
 
         // Initialize capabilities
-        let capabilitiesOptions: DataSourceCapabilities = new DataSourceCapabilities({
+        let capabilitiesOptions: DataSourceCapabilities = {
             webCapabilities: {
                 restAPI: false
             },
@@ -69,7 +69,7 @@ class KML extends NonFirstNormalFormDataSource implements ReadableDataSource, Pr
             securityCapabilities: {
                 oauth: false
             }
-        });
+        };
         this._capabilities = capabilitiesOptions;
 
         this.proxyPrefix = options.proxyPrefix;

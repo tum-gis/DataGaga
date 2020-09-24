@@ -102,7 +102,7 @@ var GoogleSheets = (function (_super) {
     __extends(GoogleSheets, _super);
     function GoogleSheets(options) {
         var _this = _super.call(this, options) || this;
-        var capabilitiesOptions = new DataSourceCapabilities({
+        var capabilitiesOptions = {
             webCapabilities: {
                 restAPI: true
             },
@@ -115,7 +115,7 @@ var GoogleSheets = (function (_super) {
             securityCapabilities: {
                 oauth: true
             }
-        });
+        };
         _this._capabilities = capabilitiesOptions;
         _this._dataSourceType = DataSourceType.GoogleSheets;
         _this._spreadsheetId = options.uri.replace(/.+?(spreadsheets\/d\/)/, "").replace(/(?=\/edit).+/, "");
@@ -228,7 +228,7 @@ var KML = (function (_super) {
     __extends(KML, _super);
     function KML(options) {
         var _this = _super.call(this, options) || this;
-        var capabilitiesOptions = new DataSourceCapabilities({
+        var capabilitiesOptions = {
             webCapabilities: {
                 restAPI: false
             },
@@ -241,7 +241,7 @@ var KML = (function (_super) {
             securityCapabilities: {
                 oauth: false
             }
-        });
+        };
         _this._capabilities = capabilitiesOptions;
         _this.proxyPrefix = options.proxyPrefix;
         return _this;
@@ -455,7 +455,7 @@ var PostgreSQL = (function (_super) {
     __extends(PostgreSQL, _super);
     function PostgreSQL(options) {
         var _this = _super.call(this, options) || this;
-        var capabilitiesOptions = new DataSourceCapabilities({
+        var capabilitiesOptions = {
             webCapabilities: {
                 restAPI: true
             },
@@ -468,7 +468,7 @@ var PostgreSQL = (function (_super) {
             securityCapabilities: {
                 oauth: true
             }
-        });
+        };
         _this._capabilities = capabilitiesOptions;
         _this._dataSourceType = DataSourceType.PostgreSQL;
         DataSourceUtil.initAttribute(_this, "_idColName", options.idColName, "gmlid");
@@ -726,44 +726,6 @@ var MashupDataSource = (function (_super) {
     };
     return MashupDataSource;
 }(DataSource));
-var DataSourceCapabilities = (function () {
-    function DataSourceCapabilities(options) {
-        this._webCapabilities = options.webCapabilities;
-        this._dbTransactionCapabilities = options.dbTransactionCapabilities;
-        this._securityCapabilities = options.securityCapabilities;
-    }
-    Object.defineProperty(DataSourceCapabilities.prototype, "webCapabilities", {
-        get: function () {
-            return this._webCapabilities;
-        },
-        set: function (value) {
-            this._webCapabilities = value;
-        },
-        enumerable: false,
-        configurable: true
-    });
-    Object.defineProperty(DataSourceCapabilities.prototype, "dbTransactionCapabilities", {
-        get: function () {
-            return this._dbTransactionCapabilities;
-        },
-        set: function (value) {
-            this._dbTransactionCapabilities = value;
-        },
-        enumerable: false,
-        configurable: true
-    });
-    Object.defineProperty(DataSourceCapabilities.prototype, "securityCapabilities", {
-        get: function () {
-            return this._securityCapabilities;
-        },
-        set: function (value) {
-            this._securityCapabilities = value;
-        },
-        enumerable: false,
-        configurable: true
-    });
-    return DataSourceCapabilities;
-}());
 var DataSourceUtil = (function () {
     function DataSourceUtil() {
     }
@@ -853,7 +815,7 @@ var QBE = (function () {
             }
         }
     };
-    QBE.prototype.toJSON = function () {
+    QBE.prototype.toKVP = function () {
         var result = {};
         result["attributeName"] = this._attributeName;
         result["comparisonOperator"] = this._comparisonOperator;
@@ -861,7 +823,7 @@ var QBE = (function () {
         return result;
     };
     QBE.prototype.toString = function () {
-        return this.toJSON().toString();
+        return this.toKVP().toString();
     };
     Object.defineProperty(QBE.prototype, "attributeName", {
         get: function () {

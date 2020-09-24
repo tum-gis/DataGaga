@@ -31,7 +31,7 @@ class PostgreSQL extends FirstNormalFormDataSource implements ReadableDataSource
         super(options);
 
         // Initialize capabilities
-        let capabilitiesOptions: DataSourceCapabilities = new DataSourceCapabilities({
+        let capabilitiesOptions: DataSourceCapabilities = {
             webCapabilities: {
                 restAPI: true
             },
@@ -44,7 +44,7 @@ class PostgreSQL extends FirstNormalFormDataSource implements ReadableDataSource
             securityCapabilities: {
                 oauth: true
             }
-        });
+        };
         this._capabilities = capabilitiesOptions;
 
         this._dataSourceType = DataSourceType.PostgreSQL;

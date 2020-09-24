@@ -82,7 +82,7 @@ class QBE {
      *
      * @return a JSON object, which is also a KVP containing 3 key-value-pairs
      */
-    public toJSON(): KVP {
+    public toKVP(): KVP {
         let result = {};
         result["attributeName"] = this._attributeName;
         result["comparisonOperator"] = this._comparisonOperator;
@@ -91,7 +91,7 @@ class QBE {
     }
 
     public toString(): string {
-        return this.toJSON().toString();
+        return this.toKVP().toString();
     }
 
     public get attributeName(): string {

@@ -41,7 +41,7 @@ class GoogleSheets extends FirstNormalFormDataSource implements ReadableDataSour
         super(options);
 
         // Initialize capabilities
-        let capabilitiesOptions: DataSourceCapabilities = new DataSourceCapabilities({
+        let capabilitiesOptions: DataSourceCapabilities = {
             webCapabilities: {
                 restAPI: true
             },
@@ -54,7 +54,7 @@ class GoogleSheets extends FirstNormalFormDataSource implements ReadableDataSour
             securityCapabilities: {
                 oauth: true
             }
-        });
+        };
         this._capabilities = capabilitiesOptions;
 
         this._dataSourceType = DataSourceType.GoogleSheets;
