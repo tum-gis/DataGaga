@@ -154,6 +154,19 @@ class FetchResultSet {
         return Object.keys(this._data[0]);
     }
 
+    public toString(): string {
+        let result = "[\n";
+        for (let kvp of this._data) {
+            result += "\t{\n";
+            Object.keys(kvp).forEach(function (key) {
+                result += "\t\t" + key + " : " + kvp[key] + "\n";
+            });
+            result += "\t}\n";
+        }
+        result += "]\n";
+        return result;
+    }
+
     public get data(): Array<KVP> {
         return this._data;
     }

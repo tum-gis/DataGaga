@@ -3,6 +3,7 @@
  * Note: The entries in this list must be the same as the class names!
  */
 enum DataSourceType {
+    Mashup = "Mashup",
     GoogleSheets = "GoogleSheets",
     PostgreSQL = "PostgreSQL",
     KML = "KML"
@@ -20,11 +21,26 @@ class DataGaga {
      * @param addToMashup whether the created data source should be added to the mashup one
      */
     public static createDataSource(dataSourceType: string | DataSourceType, options: any): DataSource {
+        /*
         if (dataSourceType != null) {
             var newInstance = Object.create(window[dataSourceType].prototype);
             newInstance.constructor.apply(newInstance, [options]);
             return newInstance;
         }
-        return undefined;
+        */
+        if (dataSourceType != null) {
+            switch (dataSourceType) {
+                case DataSourceType.Mashup:
+                    return new MashupDataSource(options);
+                case DataSourceType.GoogleSheets:
+                    return new GoogleSheets(options);
+                case DataSourceType.PostgreSQL:
+                    return new PostgreSQL(options);
+                case DataSourceType.KML:
+                    return new KML(options);
+                default:
+                    return null;
+            }
+        }
     }
 }

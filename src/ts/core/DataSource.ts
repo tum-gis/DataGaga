@@ -62,6 +62,6 @@ abstract class DataSource {
 
 interface DataSourceOptions {
     name: string;
-    dataSourceType: string;
+    dataSourceType: DataSourceType;
     capabilities: DataSourceCapabilities;
 }

@@ -1,13 +1,51 @@
+const yargs = require('yargs');
+const XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
+const winston = require('winston');
+const logger = winston.createLogger({
+    level: 'info',
+    format: winston.format.json(),
+    // defaultMeta: {service: 'user-service'},
+    transports: [
+        //
+        // - Write all logs with level `error` and below to `error.log`
+        // - Write all logs with level `info` and below to `combined.log`
+        //
+        new winston.transports.File({filename: './log/error.log', level: 'error'}),
+        new winston.transports.File({filename: './log/combined.log'}),
+    ],
+});
+
+//
+// If we're not in production then log to the `console` with the format:
+// `${info.level}: ${info.message} JSON.stringify({ ...rest }) `
+//
+if (process.env.NODE_ENV !== 'production') {
+    logger.add(new winston.transports.Console({
+        format: winston.format.simple(),
+    }));
+}
+
+// ==================================================================
+
+
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+            ({__proto__: []} instanceof Array && function (d, b) {
+                d.__proto__ = b;
+            }) ||
+            function (d, b) {
+                for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p];
+            };
         return extendStatics(d, b);
     };
     return function (d, b) {
         extendStatics(d, b);
-        function __() { this.constructor = d; }
+
+        function __() {
+            this.constructor = d;
+        }
+
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
@@ -17,6 +55,7 @@ var DataSource = (function () {
         DataSourceUtil.initAttribute(this, "_dataSourceType", options.dataSourceType, DataSourceType.PostgreSQL);
         DataSourceUtil.initAttribute(this, "_capabilities", options.capabilities, undefined);
     }
+
     Object.defineProperty(DataSource.prototype, "name", {
         get: function () {
             return this._name;
@@ -51,12 +90,14 @@ var DataSource = (function () {
 }());
 var UnitDataSource = (function (_super) {
     __extends(UnitDataSource, _super);
+
     function UnitDataSource(options) {
         var _this = _super.call(this, options) || this;
         DataSourceUtil.initAttribute(_this, "_provider", options.provider, "My data source provider");
         DataSourceUtil.initAttribute(_this, "_uri", options.uri, "");
         return _this;
     }
+
     Object.defineProperty(UnitDataSource.prototype, "provider", {
         get: function () {
             return this._provider;
@@ -81,11 +122,13 @@ var UnitDataSource = (function (_super) {
 }(DataSource));
 var FirstNormalFormDataSource = (function (_super) {
     __extends(FirstNormalFormDataSource, _super);
+
     function FirstNormalFormDataSource(options) {
         var _this = _super.call(this, options) || this;
         DataSourceUtil.initAttribute(_this, "_dataStructureType", options.dataStructureType, "Horizontal");
         return _this;
     }
+
     Object.defineProperty(FirstNormalFormDataSource.prototype, "dataStructureType", {
         get: function () {
             return this._dataStructureType;
@@ -100,6 +143,7 @@ var FirstNormalFormDataSource = (function (_super) {
 }(UnitDataSource));
 var GoogleSheets = (function (_super) {
     __extends(GoogleSheets, _super);
+
     function GoogleSheets(options) {
         var _this = _super.call(this, options) || this;
         var capabilitiesOptions = {
@@ -122,6 +166,7 @@ var GoogleSheets = (function (_super) {
         DataSourceUtil.initAttribute(_this, "_a1Notation", options.a1Notation, "A");
         return _this;
     }
+
     GoogleSheets.prototype.getMetaData = function () {
         var scope = this;
         return new Promise(function (resolve, reject) {
@@ -219,13 +264,16 @@ var GoogleSheets = (function (_super) {
 }(FirstNormalFormDataSource));
 var NonFirstNormalFormDataSource = (function (_super) {
     __extends(NonFirstNormalFormDataSource, _super);
+
     function NonFirstNormalFormDataSource(options) {
         return _super.call(this, options) || this;
     }
+
     return NonFirstNormalFormDataSource;
 }(UnitDataSource));
 var KML = (function (_super) {
     __extends(KML, _super);
+
     function KML(options) {
         var _this = _super.call(this, options) || this;
         var capabilitiesOptions = {
@@ -246,6 +294,7 @@ var KML = (function (_super) {
         _this.proxyPrefix = options.proxyPrefix;
         return _this;
     }
+
     KML.prototype.getMetaData = function () {
         throw new Error("Method not implemented.");
     };
@@ -453,6 +502,7 @@ var KML = (function (_super) {
 }(NonFirstNormalFormDataSource));
 var PostgreSQL = (function (_super) {
     __extends(PostgreSQL, _super);
+
     function PostgreSQL(options) {
         var _this = _super.call(this, options) || this;
         var capabilitiesOptions = {
@@ -474,6 +524,7 @@ var PostgreSQL = (function (_super) {
         DataSourceUtil.initAttribute(_this, "_idColName", options.idColName, "gmlid");
         return _this;
     }
+
     PostgreSQL.prototype.login = function (credentials) {
         throw new Error("Method not implemented.");
     };
@@ -545,6 +596,7 @@ var DataSourceType;
 var DataGaga = (function () {
     function DataGaga() {
     }
+
     DataGaga.createDataSource = function (dataSourceType, options) {
         if (dataSourceType != null) {
             switch (dataSourceType) {
@@ -571,11 +623,11 @@ var FetchResultSet = (function () {
         }
         if (DataSourceUtil.isArrayOfKVPs(data)) {
             this._data = data;
-        }
-        else {
+        } else {
             this._data = undefined;
         }
     }
+
     FetchResultSet.prototype.concat = function (otherFetchResultSet) {
         if (otherFetchResultSet != null && otherFetchResultSet.size()) {
             this._data = this._data.concat(otherFetchResultSet._data);
@@ -598,8 +650,7 @@ var FetchResultSet = (function () {
                 }
                 kvpResult[k] = row[k];
             }
-        }
-        else {
+        } else {
             for (var i = 0; i < this._data.length; i++) {
                 var row = this._data[i];
                 var keys = Object.keys(row);
@@ -674,6 +725,7 @@ var FetchResultSet = (function () {
 }());
 var MashupDataSource = (function (_super) {
     __extends(MashupDataSource, _super);
+
     function MashupDataSource(options, mashup) {
         var _this = _super.call(this, options) || this;
         if (mashup != null) {
@@ -681,6 +733,7 @@ var MashupDataSource = (function (_super) {
         }
         return _this;
     }
+
     MashupDataSource.prototype.addDataSource = function (dataSource) {
         if (dataSource != null) {
             this._mashup.push(dataSource);
@@ -731,8 +784,7 @@ var MashupDataSource = (function (_super) {
                 }
                 if (result.size() >= 0) {
                     resolve(result);
-                }
-                else {
+                } else {
                     reject("Could not fetch for this mashup.");
                 }
             }).catch(function (error) {
@@ -754,11 +806,11 @@ var MashupDataSource = (function (_super) {
 var DataSourceUtil = (function () {
     function DataSourceUtil() {
     }
+
     DataSourceUtil.initAttribute = function (object, attributeName, attributeValue, defaultValue) {
         if (attributeValue == null) {
             object[attributeName] = defaultValue;
-        }
-        else {
+        } else {
             object[attributeName] = attributeValue;
         }
     };
@@ -770,8 +822,7 @@ var DataSourceUtil = (function () {
                 }
             }
             return true;
-        }
-        else {
+        } else {
             return false;
         }
     };
@@ -798,6 +849,7 @@ var QBE = (function () {
         this._comparisonOperator = comparisonOperator;
         this._value = value;
     }
+
     QBE.prototype.assert = function (value, caseSensitive) {
         var otherNumValue = Number(value);
         var thisNumValue = Number(this._value);
@@ -816,8 +868,7 @@ var QBE = (function () {
                 default:
                     return false;
             }
-        }
-        else {
+        } else {
             var otherTextValue = value;
             var thisTextValue = this._value;
             if (caseSensitive != null && caseSensitive) {
@@ -885,6 +936,7 @@ var QBE = (function () {
 var WebUtil = (function () {
     function WebUtil() {
     }
+
     WebUtil.httpGet = function (url) {
         return new Promise(function (resolve, reject) {
             var xmlHttp = new XMLHttpRequest();
@@ -905,3 +957,64 @@ var WebUtil = (function () {
     };
     return WebUtil;
 }());
+
+
+// ==================================================================
+
+
+let mashupDataSource = DataGaga.createDataSource("Mashup", {
+    name: "",
+    dataSourceType: "Mashup",
+});
+
+export function cli(args) {
+    const argv = yargs
+        .scriptName("datagaga")
+        .usage("$0 <cmd> [args]")
+        .command("add", "Adds a single data source to the current mashup one", (yargs) => {
+            yargs.positional('type', {
+                alias: 't',
+                description: 'The data source type',
+                type: "string",
+                default: "",
+                nargs: 1,
+                demand: true
+            });
+            yargs.positional('uri', {
+                alias: 'u',
+                description: 'The URI to access the data source',
+                type: "string",
+                default: "",
+                nargs: 1,
+                demand: true
+            });
+        }, (argv) => {
+            logger.log("info", "OK");
+            let options = {
+                type: argv.type,
+                uri: argv.uri
+            }
+            let dataSource = DataGaga.createDataSource(argv.type, options);
+            dataSource.fetchAttributeValuesFromId("IGN_BATIMENT0000000246489703").then(function (result) {
+                logger.info(result);
+            }).catch(function (error) {
+                logger.warn(error);
+            });
+            //mashupDataSource.addDataSource(dataSource);
+        })
+        .example("$0 --add " +
+            "--type PostgreSQL " +
+            "--name 'My data source' " +
+            "--provider 'The service provider'" +
+            "--uri 'example.com'" +
+            "--idColdName 'gmlid' ")
+        .command("size", "Counts the number of data sources included so far", (yargs) => {
+        }, (argv) => {
+            logger.info("Included data sources: " + mashupDataSource.size());
+        })
+        .help()
+        .alias('help', 'h')
+        .argv;
+
+    console.log(argv);
+}

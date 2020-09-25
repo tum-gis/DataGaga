@@ -1,0 +1,28 @@
+{
+  "name": "datagaga",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "bin": {
+    "@son-hnguyen/datagaga": "bin/datagaga",
+    "datagaga": "bin/datagaga"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Son H. Nguyen",
+  "license": "MIT",
+  "dependencies": {
+    "esm": "^3.2.25",
+    "link": "^0.1.5",
+    "requirejs": "^2.3.6",
+    "winston": "^3.3.3",
+    "xmlhttprequest": "^1.8.0",
+    "yargs": "^16.0.3"
+  },
+  "devDependencies": {
+    "@types/node": "^14.11.2",
+    "typescript": "^4.0.3"
+  }
+}
