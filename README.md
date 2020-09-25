@@ -1,11 +1,11 @@
-# ***DataGaga*** - A manager for web data sources 
+# ***DataGaga*** - A manager for web data sources :earth_africa:
 All data sources unite! 
 A uniform JavaScript API for processing multiple data sources across the web.
 The included data sources can be "fused" together to become one single mashup data source!
 
 **Note**: **This project is under active development, so stay tuned!**
 
-### What is it?
+### :gift: What is it?
 Have you ever had too many web services and data sources all over the internet 
 and found it too cumbersome to save every single one of them?
 You only care about data and not where they are stored and how they can be retrieved?
@@ -17,7 +17,7 @@ Not only can such data sources be imported from different providers and places,
 they can be combined as one single mashup data source for your convenience.
 You just need to declare the data source(s) you'd like to include, we take care of the rest.
 
-### How it started
+### :globe_with_meridians: How it started
 In the field of Geographic Information System (GIS), besides displaying geometric 3D models (like buildings, bridges and tunnels),
 it is often required to enrich these models with thematic information,
 such as heights, numbers of stories, construction years, etc.
@@ -43,22 +43,19 @@ Using our tool:
 and structure differences between the different APIs;
 + You can even treat all of them as one single data source and query/display their data in one single call.
 
-### Installation
+### :electric_plug: Installation
 
-##### TODO CDN link or similar
-
-##### Import JS File
 Copy and import the JavaScript file [DataGaga.js](build/DataGaga.js) into your web project. 
 (We are working on providing an import link such as or similar to CDN.) And that's it, you're all set up!
 
-##### Build manually
+### :hammer: Build manually
 Simply compile the all the TypeScript files in folder [ts](src/ts). 
 This will generate one single JavaScript file [DataGaga.js](build/DataGaga.js) located in the folder [build](build). 
 
 [comment]: <> (TODO Provide a CDN link.)
 
-### How do I use this?
-1. First declare an ``options`` object for your data source:
+### :monkey: How do I use this?
+1. :seedling: First declare an ``options`` object for your data source:
     ```javascript
     var options = {
         name: "My Data Source 1",
@@ -75,7 +72,7 @@ This will generate one single JavaScript file [DataGaga.js](build/DataGaga.js) l
 
     [comment]: <> (TODO Provide a more detailed documentation on the options.)
 
-1. Initialize data source:
+1. :herb: Initialize data source:
    ```javascript
    var googleSheetsDataSource = new GoogleSheets(options);
    var postgreSQLDataSource = new PostgreSQL(options);
@@ -89,7 +86,7 @@ This will generate one single JavaScript file [DataGaga.js](build/DataGaga.js) l
    
    [comment]: <> (TODO Provide a more detailed documentation on the parameters of the constructors.)
 
-3. *(Optional)* If needed, the created data sources can be combined into one single mashup data source:
+1. :palm_tree: *(Optional)* If needed, the created data sources can be combined into one single mashup data source:
    ```javascript
    var mashupDataSource = new MashupDataSource(options);
    mashupDataSource.addDataSource(googleSheetsDataSource);
@@ -100,7 +97,7 @@ This will generate one single JavaScript file [DataGaga.js](build/DataGaga.js) l
    mashupDataSource.removeDataSource(2);
    ```
 
-1. Start querying, both individual and mashup data sources have the same methods:
+1. :tada: Start querying, both individual and mashup data sources have the same methods:
    ```javascript
    mashupDataSource.fetchAttributeValuesFromId(id)
    .then(function(result) {
@@ -120,7 +117,7 @@ This will generate one single JavaScript file [DataGaga.js](build/DataGaga.js) l
 
 [comment]: <> (TODO Provide a more detailed documentation on the getCapabilities.)
 
-### How do I declare my own data sources?
+### :muscle: How do I declare my own data sources?
 For your convenience, we already include Google Spreadsheets and PostgreSQL (more to come!) both in JavaScript and TypeScript.
 But if you know a popular data source that is not included, please let us know in the 
 [issue section](https://github.com/tum-gis/mashup-data-source-service/issues), 
