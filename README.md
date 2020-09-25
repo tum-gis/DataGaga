@@ -123,8 +123,8 @@ But if you know a popular data source that is not included, please let us know i
 [issue section](https://github.com/tum-gis/mashup-data-source-service/issues), 
 and perhaps we could define it for you!
 
-Otherwise if you are a power user, you can declare your own data source(s) in a JavaScript or TypeScript file. 
-Have a look at our codes [here](src/ts/application) for JavaScript and [here](src/ts/application) for TypeScript.
+Otherwise if you are a power user, you can declare your own data source(s) in a TypeScript file. 
+Have a look at our codes [here](src/ts/application).
 We are working on a more detailed documentation on this, so stay tuned!
 
 [comment]: <> (TODO Provide a more detailed documentation on how to declare own data sources.)
