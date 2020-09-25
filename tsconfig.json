@@ -1,9 +1,11 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
+    "module": "amd",
+    "removeComments": true,
     "target": "es5",
     "sourceMap": false,
     "outDir": "src/js",
+    "outFile": "build/DataGaga.js",
     "lib": [
       "dom",
       "es5",

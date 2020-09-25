@@ -1,11 +1,37 @@
-// import * as request from "request-promise-native";
+///<reference path="../core/FirstNormalFormDataSource.ts"/>
 
-class PostgreSQL extends SQLDataSource {
-    constructor(signInController, options) {
-        super(signInController, options);
+/**
+ * Implementation for PostgreSQL as data source.
+ */
+class PostgreSQL extends FirstNormalFormDataSource implements ReadableDataSource, WritableDataSource, SecuredDataSource {
+    /**
+     * The name of the column containing the IDs of objects.
+     * Normally this is the first column of a table (e.g. gmlid).
+     *
+     * @private
+     */
+    private _idColName: string;
+
+    /**
+     * A constructor to instantiate a PostgreSQL object.
+     * This requires an object options with the following structure
+     *
+     *
+     * |    Attribute name      |   Data type               |   Default value           |
+     * |------------------------|---------------------------|---------------------------|
+     * |    name                |   string                  |   My data source name     |
+     * |    provider            |   string                  |   My data source provider |
+     * |    uri                 |   string                  |   **REQUIRED**            |
+     * |    dataStructureType   |   DataStructureType       |   **REQUIRED**            |
+     *
+     * @param options an object containing the required information
+     *
+     */
+    public constructor(options: PostgreSQLOptions) {
+        super(options);
 
         // Initialize capabilities
-        let capabilitiesOptions: DataSourceCapabilities = new DataSourceCapabilities({
+        let capabilitiesOptions: DataSourceCapabilities = {
             webCapabilities: {
                 restAPI: true
             },
@@ -18,109 +44,109 @@ class PostgreSQL extends SQLDataSource {
             securityCapabilities: {
                 oauth: true
             }
-        });
+        };
         this._capabilities = capabilitiesOptions;
 
-        this._idColName = !options.idColName ? "gmlid" : options.idColName;
+        this._dataSourceType = DataSourceType.PostgreSQL;
+
+        DataSourceUtil.initAttribute(this, "_idColName", options.idColName, "gmlid");
     }
 
-    responseToKvp(response: any): Map<string, string> {
-        // TODO test with PostgREST
-        // response is just a text -> parse to JSON
-        const responseJson = JSON.parse(response);
-        let result = new Map<string, string>();
-
-        if (this.tableType == TableTypes.Horizontal) {
-            // all attributes per object are stored in one row
-            for (let i = 0; i < responseJson.length; i++) {
-                const ele = responseJson[i];
-                for (let key in ele) {
-                    result[key] = ele[key];
-                }
-            }
-        } else {
-            // one attribute per row
-            // only store id once
-            // (because the vertical table has multiple lines of the same id)
-            // result[this.idColName] = responseJson[0][this.idColName];
-
-            for (let i = 0; i < responseJson.length; i++) {
-                const ele = responseJson[i];
-                // TODO generic implementation for attribute and value
-                result[ele.attribute] = ele.value;
-            }
-        }
-
-        return result;
-    }
-
-    countFromResult(res: QueryResult): number {
-        return res.getSize();
-    }
-
-    deleteDataRecordUsingId(id: string): boolean {
+    public login(credentials: JSONObject): Promise<boolean> {
         // TODO
-        return null;
+        throw new Error("Method not implemented.");
     }
 
-    fetchIdsFromResult(res: QueryResult): string[] {
+    public logout(): Promise<boolean> {
         // TODO
-        return null;
+        throw new Error("Method not implemented.");
     }
 
-    insertDataRecord(record: DataRecord): boolean {
+    public getMetaData(): Promise<JSONObject> {
         // TODO
-        return null;
+        throw new Error("Method not implemented.");
     }
 
-    queryUsingIds(ids: string[]): QueryResult {
+    public aggregateByIds(ids: Array<string>, aggregateOperator: AggregateOperator, attributeName: string): Promise<number>;
+    public aggregateByIds(ids: Array<string>, aggregateOperator: AggregateOperator): Promise<{ kvp: KVP }>;
+    public aggregateByIds(ids: Array<string>, aggregateOperator: AggregateOperator, attributeName?: string): Promise<number> | Promise<{ kvp: KVP }> {
         // TODO
-        return null;
+        throw new Error("Method not implemented.");
     }
 
-    queryUsingNames(names: string[], limit: number): QueryResult {
+    public deleteAttributeOfId(id: string, attributeName: string): Promise<boolean> {
         // TODO
-        return null;
+        throw new Error("Method not implemented.");
     }
 
-    queryUsingId(id: string, callback: (queryResult: any) => any, limit?: number, clickedObject?: any): void {
-        // TODO use column number instead of column name (such as gmlid here)
-        this.queryUsingSql("?" + this.idColName + "=eq." + id, callback, !limit ? Number.MAX_VALUE : limit, clickedObject);
-    }
-
-    queryUsingSql(sql: string, callback: (queryResult: any) => any, limit?: number, clickedObject?: any): void {
-        // TODO handle limit
-        const baseUrl = this._uri;
-
-        var xmlHttp = new XMLHttpRequest();
-        xmlHttp.onreadystatechange = function () {
-            if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
-                var queryResult = xmlHttp.responseText;
-                callback(queryResult);
-            }
-        }
-        xmlHttp.open("GET", baseUrl + sql, true); // true for asynchronous
-        xmlHttp.send(null);
-    }
-
-    queryUsingTypes(types: string[], limit: number): QueryResult {
+    public deleteAttributesUsingQBE(qbe: QBE, attributeNames: Array<string>): Promise<boolean> {
         // TODO
-        return null;
+        throw new Error("Method not implemented.");
     }
 
-    sumFromResultByColIndex(res: QueryResult, colIndex: number): number {
+    public deleteObjectOfId(id: string): Promise<boolean> {
         // TODO
-        return null;
+        throw new Error("Method not implemented.");
     }
 
-    sumFromResultByName(res: QueryResult, name: string): number {
+    public deleteObjectsUsingQBE(qbe: QBE): Promise<boolean> {
         // TODO
-        return null;
+        throw new Error("Method not implemented.");
     }
 
-    updateDataRecordUsingId(id: string, newRecord: DataRecord): boolean {
+    public fetchAttributeNamesFromId(id: string): Promise<Set<string>> {
         // TODO
-        return null;
+        throw new Error("Method not implemented.");
     }
 
+    public fetchAttributeValuesFromId(id: string): Promise<FetchResultSet> {
+        let scope = this;
+        return new Promise(function (resolve, reject) {
+            WebUtil.httpGet(scope._uri + "?" + scope._idColName + "=eq." + id).then(function (result) {
+                let fetchResultSet = new FetchResultSet(result);
+                resolve(fetchResultSet);
+            }).catch(function (error) {
+                reject(error);
+            })
+        });
+    }
+
+    public fetchIdsFromQBE(qbe: QBE, limit?: number): Promise<Set<string>> {
+        // TODO
+        throw new Error("Method not implemented.");
+    }
+
+    public fetchIdsFromQBEs(qbes: Array<QBE>, limit?: number): Promise<Set<string>> {
+        // TODO
+        throw new Error("Method not implemented.");
+    }
+
+    public insertAttributeOfId(id: string, attributeName: string, attributeValue: any): Promise<boolean> {
+        // TODO
+        throw new Error("Method not implemented.");
+    }
+
+    public insertAttributesUsingQBE(qbe: QBE, newAttributes: KVP): Promise<boolean> {
+        // TODO
+        throw new Error("Method not implemented.");
+    }
+
+    public insertNewObject(json: JSONObject): Promise<boolean> {
+        // TODO
+        throw new Error("Method not implemented.");
+    }
+
+    public updateAttributeValueOfId(id: string, attributeName: string, newValue: any): Promise<boolean> {
+        // TODO
+        throw new Error("Method not implemented.");
+    }
+
+    public updateAttributeValuesUsingQBE(qbe: QBE, newAttributeValues: KVP): Promise<boolean> {
+        // TODO
+        throw new Error("Method not implemented.");
+    }
+}
+
+interface PostgreSQLOptions extends FirstNormalFormDataSourceOptions {
+    idColName: string;
 }

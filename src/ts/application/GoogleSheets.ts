@@ -1,27 +1,47 @@
-// import * as request from "request-promise-native";
+///<reference path="../core/FirstNormalFormDataSource.ts"/>
 
-class GoogleSheets extends SQLDataSource {
+/**
+ * Implementation for GoogleSheets as data source.
+ */
+class GoogleSheets extends FirstNormalFormDataSource implements ReadableDataSource, WritableDataSource, SecuredDataSource {
+    private static apiUrlPrefix: string = "https://sheets.googleapis.com/v4/spreadsheets/";
+
+    /**
+     * The ID of the spreadsheet.
+     *
+     * @private
+     */
     private _spreadsheetId: string;
-    private _ranges: string[];
 
-    private _apiKey: string;
-    // OAuth
-    private _clientId: string;
-    // Authorize using one of the following scopes:
-    // 'https://www.googleapis.com/auth/drive'
-    // 'https://www.googleapis.com/auth/drive.file'
-    // 'https://www.googleapis.com/auth/drive.readonly'
-    // 'https://www.googleapis.com/auth/spreadsheets'
-    // 'https://www.googleapis.com/auth/spreadsheets.readonly'
-    private _scope: string;
+    /**
+     * The A1 notation referring to a group of cells in the spreadsheet.
+     * More info: https://developers.google.com/sheets/api/guides/concepts#a1_notation.
+     *
+     * @private
+     */
+    private _a1Notation: string; // TODO
 
-    private _gapi: any;
-
-    constructor(signInController, options, gapi?) {
-        super(signInController, options);
+    /**
+     * A constructor to instantiate a PostgreSQL object.
+     * This requires an object options with the following structure
+     *
+     *
+     * |    Attribute name      |   Data type               |   Default value           |
+     * |------------------------|---------------------------|---------------------------|
+     * |    name                |   string                  |   My data source name     |
+     * |    provider            |   string                  |   My data source provider |
+     * |    uri                 |   string                  |   **REQUIRED**            |
+     * |    dataStructureType   |   DataStructureType       |   **REQUIRED**            |
+     * |    a1Notation          |   string                  |   A                       |
+     *
+     * @param options an object containing the required information
+     *
+     */
+    public constructor(options: GoogleSheetsOptions) {
+        super(options);
 
         // Initialize capabilities
-        let capabilitiesOptions: DataSourceCapabilities = new DataSourceCapabilities({
+        let capabilitiesOptions: DataSourceCapabilities = {
             webCapabilities: {
                 restAPI: true
             },
@@ -34,318 +54,213 @@ class GoogleSheets extends SQLDataSource {
             securityCapabilities: {
                 oauth: true
             }
-        });
+        };
         this._capabilities = capabilitiesOptions;
 
+        this._dataSourceType = DataSourceType.GoogleSheets;
+
         this._spreadsheetId = options.uri.replace(/.+?(spreadsheets\/d\/)/, "").replace(/(?=\/edit).+/, "");
-        // take the entire first sheet using default name 'Sheet1' if no range is provided
-        // more information on the A1 notation:
-        // https://developers.google.com/sheets/api/guides/concepts#a1_notation
-        this._ranges = !options.ranges ? (["'Sheet1'"]) : options.ranges;
-        this._apiKey = options.apiKey;
-        this._clientId = !options.clientId ? '' : options.clientId;
-        this._scope = !options.scope ? 'https://www.googleapis.com/auth/spreadsheets' : options.scope;
-        this._gapi = gapi;
-        this._idColName = !options.idColName ? "A" : options.idColName;
-        this._signInController = signInController;
+
+        // An A1 notation is something like "Sheet1!A1:B2", if none is given then "A" (first sheet) is used
+        DataSourceUtil.initAttribute(this, "_a1Notation", options.a1Notation, "A");
     }
 
-    responseToKvp(response: any): Map<string, string> {
-        let result = new Map<string, string>();
-        const rows = response.table.rows;
-        const cols = response.table.cols;
-
-        if (rows[0] && rows[0].c) {
-            // Structure of the JSON response from Google Visualization API
-            // https://developers.google.com/chart/interactive/docs/reference#dataparam
-            // Ignore the first column (containing ID) --> start i with 1 instead of 0
-            if (this.tableType == TableTypes.Horizontal) {
-                for (let i = 1; i < rows[0].c.length; i++) {
-                    const key = cols[i].label;
-                    const value = rows[0].c[i] ? rows[0].c[i].v : undefined;
-                    result[key] = value;
-                }
-            } else {
-                // one attribute per row
-                // only store id once
-                // (because the vertical table has multiple lines of the same id)
-                // assuming id is in the first column
-                // result[this.idColName] = rows[0].c[0].v;
-
-                for (let i = 1; i < rows.length; i++) {
-                    // TODO generic implemetation for fields id (c[0]) attribute (c[1]) and value (c[2])
-                    const key = rows[i].c[1].v;
-                    const value = rows[i].c[2].v;
-                    result[key] = value;
-                }
-            }
-        }
-
-        return result;
-    }
-
-    // This function is implemented for handling response from Google Sheets API
-    responseToKvp_OLD(response: any): Map<string, string> {
-        // TODO refactor
-        let result = new Map<string, string>();
-
-        // momentarily consider all sheets of this spreadsheet
-        // TODO look at this._ranges and find the declared sheets and ranges
-        for (let i = 0; i < response.sheets.length; i++) {
-            let sheetData = response.sheets[i].data;
-            for (let j = 0; j < sheetData.length; j++) {
-                let row = sheetData[j].rowData;
-                for (let k = 0; k < row.length; k++) {
-                    let rowValues = row[k].values;
-                    const key = rowValues[0].effectiveValue.stringValue;
-                    const value = rowValues[1].effectiveValue.stringValue;
-                    result[key] = value;
-                }
-            }
-        }
-
-        return result;
-    }
-
-    countFromResult(res: QueryResult): number {
-        return res.getSize();
-    }
-
-    deleteDataRecordUsingId(id: string): boolean {
+    public getMetaData(): Promise<JSONObject> {
         // TODO
-        return null;
+        let scope = this;
+        return new Promise(function (resolve, reject) {
+            WebUtil.httpGet(GoogleSheets.apiUrlPrefix + scope._spreadsheetId + "?&fields=sheets.properties").then(function (result) {
+                resolve(result);
+            }).catch(function (error) {
+                reject(error);
+            })
+        });
     }
 
-    fetchIdsFromResult(res: QueryResult): string[] {
-        // TODO
-        return null;
-    }
-
-    insertDataRecord(record: DataRecord): boolean {
-        // TODO
-        return null;
-    }
-
-    queryUsingIds(ids: string[]): QueryResult {
-        // TODO
-        return null;
-    }
-
-    queryUsingNames(names: string[], limit: number): QueryResult {
-        // TODO
-        return null;
-    }
-
-    queryUsingId(id: string, callback: (queryResult: any) => any, limit?: number, clickedObject?: any): void {
-        this.queryUsingSql("SELECT * WHERE A='" + id + "'", callback, !limit ? Number.MAX_VALUE : limit, clickedObject);
-    }
-
-    queryUsingSql(sql: string, callback: (queryResult: any) => any, limit?: number, clickedObject?: any): void {
-        // TODO handle limit
-        const baseUrl = "https://docs.google.com/spreadsheets/d/";
-
-        var xmlHttp = new XMLHttpRequest();
-        xmlHttp.onreadystatechange = function () {
-            if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
-                var queryResult = xmlHttp.responseText;
+    public fetchAttributeValuesFromId(id: string): Promise<FetchResultSet> {
+        let scope = this;
+        return new Promise(function (resolve, reject) {
+            let baseUrl = "https://docs.google.com/spreadsheets/d/";
+            let sql = "SELECT * WHERE A='" + id + "'"; // TODO
+            WebUtil.httpGet(baseUrl + scope._spreadsheetId + "/gviz/tq?tq=" + encodeURI(sql)).then(function (result) {
                 // The response is in JSON but contains the following string:
                 // "/*O_o*/google.visualization.Query.setResponse({status:ok, ...})"
                 // https://developers.google.com/chart/interactive/docs/dev/implementing_data_source#jsondatatable
                 // The Google Visualization API is used here for querying data from Google Spreadsheets
                 // https://developers.google.com/chart/interactive/docs/querylanguage#setting-the-query-in-the-data-source-url
-                callback(JSON.parse(queryResult.replace("/*O_o*/", "").replace(/(google\.visualization\.Query\.setResponse\(|\);$)/g, "")));
-            }
-        };
-        xmlHttp.open("GET", baseUrl + this._spreadsheetId + "/gviz/tq?tq=" + encodeURI(sql), true); // true for asynchronous
-        if (this._signInController != null) {
-            xmlHttp.setRequestHeader('Authorization', 'Bearer ' + this._signInController.accessToken);
-        }
-        xmlHttp.send(null);
-    }
+                let jsonResult = JSON.parse(result.replace("/*O_o*/", "").replace(/(google\.visualization\.Query\.setResponse\(|\);$)/g, ""));
 
-    // This function is implemented using gapi
-    queryUsingSql_OLD(sql: string, limit: number, callback: (queryResult: any) => any): void {
-        // TODO refactor
-        // TODO handle sql query and limit
+                // cols[i].label contain all values of each column (incl. column names)
+                // these are separated by space, which makes it hard to parse a column that has space in its name
+                // therefore, we extract the first entries of the labels for the column names
+                // then proceed to extract the values from rows
+                // this can be applied to both vertical and horizontal table type
+                /*
+                    cols = [
+                        {
+                            id: "A",
+                            label: "Col0_Name Col0_Row1 Col0_Row2 ...",
+                            type: string
+                        },
+                        {
+                            id: "B",
+                            label: "Col1_Name Col1_Row1 Col1_Row2 ...",
+                            type: string
+                        },
+                        {
+                            id: "C",
+                            label: "Col2_Name Col2_Row1 Col2_Row2 ...",
+                            type: string
+                        }
+                    ]
 
-        const scope = this;
-        handleClientLoad(callback);
-
-        function handleClientLoad(callback: (queryResult: string) => any) {
-            scope._gapi.load('client:auth2', initClient);
-
-            function initClient() {
-                scope._gapi.client.init({
-                    'apiKey': scope._apiKey,
-                    'clientId': scope._clientId,
-                    'scope': scope._scope,
-                    'discoveryDocs': [scope._uri],
-                }).then(function () {
-                    if (scope._gapi.auth2.getAuthInstance() && scope._gapi.auth2.getAuthInstance().isSignedIn) {
-                        // OAuth credentials available
-                        scope._gapi.auth2.getAuthInstance().isSignedIn.listen(updateSignInStatus);
-                        updateSignInStatus(scope._gapi.auth2.getAuthInstance().isSignedIn.get());
-                    } else {
-                        // no sign-in required?
-                        makeApiCall();
-                    }
-                });
-
-                function updateSignInStatus(isSignedIn) {
-                    if (isSignedIn) {
-                        makeApiCall();
-                    }
-                }
-
-                function makeApiCall() {
-                    const params = {
-                        // The spreadsheet to request.
-                        "spreadsheetId": scope._spreadsheetId,
-
-                        "requests": [
+                    rows = [
+                        c: [
                             {
-                                "addFilterView": {
-                                    "filter": {
-                                        // "filterViewId": 1234567890,
-                                        "title": "A Filter",
-                                        "range": {
-                                            "sheetId": 0,
-                                            "startRowIndex": 0,
-                                            //"endRowIndex": 5,
-                                            "startColumnIndex": 0,
-                                            //"endColumnIndex": 2
-                                        },
-                                        // "namedRangeId": string,
-                                        // 'sortSpecs': [{
-                                        //     'dimensionIndex': 3,
-                                        //     'sortOrder': 'ASCENDING'
-                                        // }],
-                                        "criteria": {
-                                            0: {
-                                                "condition": {
-                                                    "type": "TEXT_EQ",
-                                                    "values": [
-                                                        {
-                                                            "userEnteredValue": "A"
-                                                        }
-                                                    ]
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
+                                v: Col0_Row1
+                            },
+                            {
+                                v: Col1_Row1
+                            },
+                            {
+                                v: Col2_Row1
                             }
                         ],
-                        "includeSpreadsheetInResponse": true,
-                        // "responseRanges": ["'Sheet1'!A1:C5"],
-                        "responseIncludeGridData": true
+                        c: [
+                            {
+                                v: Col0_Row2
+                            },
+                            {
+                                v: Col1_Row2
+                            },
+                            {
+                                v: Col2_Row2
+                            }
+                        ],
+                        c: [
+                            {
+                                v: Col0_Row3
+                            },
+                            {
+                                v: Col1_Row3
+                            },
+                            {
+                                v: Col2_Row3
+                            }
+                        ],
+                        ...
+                    ]
+                 */
+                let cols = jsonResult.table.cols;
+                let rows = jsonResult.table.rows;
 
-
-
-
-                        // The ranges to retrieve from the spreadsheet.
-                        // "ranges": scope._ranges,
-
-
-                        // True if grid data should be returned.
-                        // This parameter is ignored if a field mask was set in the request.
-                        // includeGridData: true
-                    };
-
-                    const request = scope._gapi.client.sheets.spreadsheets.batchUpdate(params);
-                    request.then(function (response) {
-                        callback(response.result);
-                    }, function (reason) {
-                        console.error('error: ' + reason.result.error.message);
-                    });
+                let fetchResultSet: FetchResultSet = new FetchResultSet([]);
+                let keys = [];
+                for (let i = 0; i < cols.length; i++) {
+                    keys[i] = cols[i].label.split(" ")[0];
                 }
-            }
-        }
+                for (let i = 0; i < rows.length; i++) {
+                    let kvp = {};
+                    for (let j = 0; j < rows[i].c.length; j++) {
+                        // the cols.length and rows[i].c.length mus be the same
+                        kvp[keys[j]] = rows[i].c[j] == null ? "" : rows[i].c[j]["v"];
+                    }
+                    fetchResultSet.push(kvp);
+                }
+                resolve(fetchResultSet);
+            }).catch(function (error) {
+                reject(error);
+            })
+        });
     }
 
-    handleSignInClick(event) {
-        // TODO consider for OAuth
-        this._gapi.auth2.getAuthInstance().signIn();
-    }
-
-    handleSignOutClick(event) {
-        // TODO consider for OAuth
-        this._gapi.auth2.getAuthInstance().signOut();
-    }
-
-    queryUsingTypes(types: string[], limit: number): QueryResult {
+    public fetchAttributeNamesFromId(id: string): Promise<Set<string>> {
         // TODO
-        return null;
+        throw new Error("Method not implemented.");
     }
 
-    sumFromResultByColIndex(res: QueryResult, colIndex: number): number {
+    public fetchIdsFromQBE(qbe: QBE, limit?: number): Promise<Set<string>> {
         // TODO
-        return null;
+        throw new Error("Method not implemented.");
     }
 
-    sumFromResultByName(res: QueryResult, name: string): number {
+    public fetchIdsFromQBEs(qbes: Array<QBE>, limit?: number): Promise<Set<string>> {
         // TODO
-        return null;
+        throw new Error("Method not implemented.");
     }
 
-    updateDataRecordUsingId(id: string, newRecord: DataRecord): boolean {
+    public aggregateByIds(ids: Array<string>, aggregateOperator: AggregateOperator, attributeName: string): Promise<number>;
+    public aggregateByIds(ids: Array<string>, aggregateOperator: AggregateOperator): Promise<{ kvp: KVP }>;
+    public aggregateByIds(ids: Array<string>, aggregateOperator: AggregateOperator, attributeName?: string): Promise<number> | Promise<{ kvp: KVP }> {
         // TODO
-        return null;
+        throw new Error("Method not implemented.");
     }
 
-    get spreadsheetId(): string {
+    public get spreadsheetId(): string {
         return this._spreadsheetId;
     }
 
-    set spreadsheetId(value: string) {
+    public set spreadsheetId(value: string) {
         this._spreadsheetId = value;
     }
 
-    get ranges(): string[] {
-        return this._ranges;
+    public deleteAttributeOfId(id: string, attributeName: string): Promise<boolean> {
+        // TODO
+        throw new Error("Method not implemented.");
     }
 
-    set ranges(value: string[]) {
-        this._ranges = value;
+    public deleteAttributesUsingQBE(qbe: QBE, attributeNames: Array<string>): Promise<boolean> {
+        // TODO
+        throw new Error("Method not implemented.");
     }
 
-    get apiKey(): string {
-        return this._apiKey;
+    public deleteObjectOfId(id: string): Promise<boolean> {
+        // TODO
+        throw new Error("Method not implemented.");
     }
 
-    set apiKey(value: string) {
-        this._apiKey = value;
+    public deleteObjectsUsingQBE(qbe: QBE): Promise<boolean> {
+        // TODO
+        throw new Error("Method not implemented.");
     }
 
-    get clientId(): string {
-        return this._clientId;
+    public insertAttributeOfId(id: string, attributeName: string, attributeValue: any): Promise<boolean> {
+        // TODO
+        throw new Error("Method not implemented.");
     }
 
-    set clientId(value: string) {
-        this._clientId = value;
+    public insertAttributesUsingQBE(qbe: QBE, newAttributes: KVP): Promise<boolean> {
+        // TODO
+        throw new Error("Method not implemented.");
     }
 
-    get scope(): string {
-        return this._scope;
+    public insertNewObject(json: JSONObject): Promise<boolean> {
+        // TODO
+        throw new Error("Method not implemented.");
     }
 
-    set scope(value: string) {
-        this._scope = value;
+    public login(credentials: JSONObject): Promise<boolean> {
+        // TODO
+        throw new Error("Method not implemented.");
     }
 
-    get gapi() {
-        return this._gapi;
+    public logout(): Promise<boolean> {
+        // TODO
+        throw new Error("Method not implemented.");
     }
 
-    set gapi(value) {
-        this._gapi = value;
+    public updateAttributeValueOfId(id: string, attributeName: string, newValue: any): Promise<boolean> {
+        // TODO
+        throw new Error("Method not implemented.");
     }
 
-    get signInController() {
-        return this._signInController;
+    public updateAttributeValuesUsingQBE(qbe: QBE, newAttributeValues: KVP): Promise<boolean> {
+        // TODO
+        throw new Error("Method not implemented.");
     }
+}
 
-    set signInController(value: any) {
-        this._signInController = value;
-    }
+interface GoogleSheetsOptions extends FirstNormalFormDataSourceOptions {
+    spreadsheetId: string;
+    a1Notation: string;
 }

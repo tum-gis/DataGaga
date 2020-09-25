@@ -1,99 +1,125 @@
-abstract class MashupDataSource implements ReadableDataSource, WritableDataSource {
-    private _mashupDataSources: Array<DataSource>;
+/**
+ * A mashup storing multiple data sources as one.
+ */
+class MashupDataSource extends DataSource implements ReadableDataSource {
+    /**
+     * Stores multiple data sources and considers them as one.
+     *
+     * @private
+     */
+    private _mashup: Array<DataSource>;
 
-    get mashupDataSources(): Array<DataSource> {
-        return this._mashupDataSources;
+    public constructor(options: MashupDataSourceOptions, mashup?: Array<DataSource>) {
+        super(options);
+        if (mashup != null) {
+            this._mashup = mashup;
+        }
     }
 
-    set mashupDataSources(value: Array<DataSource>) {
-        this._mashupDataSources = value;
+    /**
+     * Adds a data source to the mashup one.
+     *
+     * @param dataSource
+     */
+    public addDataSource(dataSource: DataSource): void {
+        if (dataSource != null) {
+            this._mashup.push(dataSource);
+        }
     }
 
-    public getCapabilities(): DataSourceCapabilities {
+    /**
+     * Removes a data source from mashup.
+     *
+     * @param index position (>= 0) of the data source to be removed
+     */
+    public removeDataSource(index: number): void {
+        if (index != null && index >= 0 && index < this._mashup.length) {
+            this._mashup.splice(index, 1);
+        }
+    }
+
+    /**
+     * Gives the size of the mashup data source.
+     *
+     * @return length of the mashup data source
+     */
+    public size(): number {
+        return this._mashup.length;
+    }
+
+    /**
+     * Returns a unit data source at a given index.
+     *
+     * @param index
+     * @return a unit data source
+     */
+    public get(index: number): DataSource {
+        return this._mashup[index];
+    }
+
+    public get mashup(): Array<DataSource> {
+        return this._mashup;
+    }
+
+    public set mashup(value: Array<DataSource>) {
+        this._mashup = value;
+    }
+
+    public aggregateByIds(ids: Array<string>, aggregateOperator: AggregateOperator, attributeName: string): Promise<number>;
+    public aggregateByIds(ids: Array<string>, aggregateOperator: AggregateOperator): Promise<{ kvp: KVP }>;
+    public aggregateByIds(ids: Array<string>, aggregateOperator: AggregateOperator, attributeName?: string): Promise<number> | Promise<{ kvp: KVP }> {
         // TODO
-        return null;
+        return Promise.resolve(undefined);
     }
 
-    public getMostCommonCapabilities(): DataSourceCapabilities {
-        // TOTO
-        return null;
-    }
-
-    public getNames(): Array<string> {
+    public fetchAttributeNamesFromId(id: string): Promise<Set<string>> {
         // TODO
-        return null;
+        return Promise.resolve(undefined);
     }
 
-    public getProviders(): Array<string> {
-        // TODO
-        return null;
+    public fetchAttributeValuesFromId(id: string): Promise<FetchResultSet> {
+        let scope = this;
+        let result = new FetchResultSet([]);
+        let promises = new Array<Promise<FetchResultSet>>();
+        for (let datasource of scope._mashup) {
+            // Check if this object has a function (since interface can only checked by instanceof in TS in runtime)
+            if (typeof datasource["fetchAttributeValuesFromId"] === "function") {
+                promises.push(datasource["fetchAttributeValuesFromId"](id));
+            }
+        }
+
+        return new Promise(function (resolve, reject) {
+                Promise.all(promises).then(function (fetchResultSets) {
+                    for (let fetchResultSet of fetchResultSets) {
+                        result.concat(fetchResultSet);
+                    }
+                    if (result.size() >= 0) {
+                        resolve(result);
+                    } else {
+                        reject("Could not fetch for this mashup.")
+                    }
+                }).catch(function (error) {
+                    reject(error);
+                })
+            }
+        )
     }
 
-    public getTypes(): Array<string> {
+    public fetchIdsFromQBE(qbe: QBE, limit ?: number): Promise<Set<string>> {
         // TODO
-        return null;
+        return Promise.resolve(undefined);
     }
 
-    public getUris(): Array<string> {
+    public fetchIdsFromQBEs(qbes: Array<QBE>, limit ?: number): Promise<Set<string>> {
         // TODO
-        return null;
+        return Promise.resolve(undefined);
     }
 
-    countFromResult(res: QueryResult): number {
+    public getMetaData(): Promise<JSONObject> {
         // TODO
-        return null;
+        return Promise.resolve(undefined);
     }
+}
 
-    deleteDataRecordUsingId(id: string): boolean {
-        // TODO
-        return null;
-    }
-
-    fetchIdsFromResult(res: QueryResult): string[] {
-        // TODO
-        return null;
-    }
-
-    insertDataRecord(record: DataRecord): boolean {
-        // TODO
-        return null;
-    }
-
-    queryUsingId(id: string, callback: (queryResult: any) => any, limit?: number, clickedObject?: any): void {
-        // TODO
-    }
-
-    queryUsingIds(ids: string[]): QueryResult {
-        // TODO
-        return null;
-    }
-
-    queryUsingNames(names: string[], limit: number): QueryResult {
-        // TODO
-        return null;
-    }
-
-    queryUsingSql(sql: string, callback: (queryResult: any) => any, limit?: number, clickedObject?: any): void {
-        // TODO
-    }
-
-    queryUsingTypes(types: string[], limit: number): QueryResult {
-        // TODO
-        return null;
-    }
-
-    sumFromResultByColIndex(res: QueryResult, colIndex: number): number {
-        // TODO
-        return null;
-    }
-
-    sumFromResultByName(res: QueryResult, name: string): number {
-        // TODO
-        return null;
-    }
-
-    updateDataRecordUsingId(id: string, newRecord: DataRecord): boolean {
-        // TODO
-        return null;
-    }
+interface MashupDataSourceOptions extends DataSourceOptions {
 }

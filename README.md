@@ -1,19 +1,34 @@
-# Mashup Data Source Service
+# ***DataGaga*** - A manager for web data sources 
 All data sources unite! 
 A uniform JavaScript API for processing multiple data sources across the web.
+The included data sources can be "fused" together to become one single mashup data source!
 
 **Note**: **This project is under active development, so stay tuned!**
 
 ### What is it?
 Have you ever had too many web services and data sources all over the internet 
 and found it too cumbersome to save every single one of them?
+You only care about data and not where they are stored and how they can be retrieved?
 
-No worries no more! The Mashup Data Source Service is a library to manage and organize the 
+No worries no more! *DataGaga* is a library to manage and organize the 
 data sources on the web in one place. 
 We define a general concept to support almost all popular data sources online. 
 Not only can such data sources be imported from different providers and places, 
 they can be combined as one single mashup data source for your convenience.
-You just need to declare the data source(s) in your code, we take care of the rest.
+You just need to declare the data source(s) you'd like to include, we take care of the rest.
+
+### How it started
+In the field of Geographic Information System (GIS), besides displaying geometric 3D models (like buildings, bridges and tunnels),
+it is often required to enrich these models with thematic information,
+such as heights, numbers of stories, construction years, etc.
+Such data are however often provided from various web services and providers,
+which introduces many problems:
++ The sheer number of the resource URIs will only increase as more and more data sources are involved,
+and developer sometimes lose track of which URI belongs to which data source and for what purpose.
++ Each web data service or provider has their own standard and syntax to access to the hosted data.
+Morover, the responses also often differ vastly between web services.
++ Sometimes an object may have its data stored in different locations
+and it is difficult to handle all of these at once.   
 
 For example, you'd like to query your own tables hosted in the following services:
 + Google Spreadsheets
@@ -22,15 +37,23 @@ For example, you'd like to query your own tables hosted in the following service
 
 Normally you would have to treat them separately in your code because 
 they have different API syntax structures and protocols.
-Using the Mashup Data Source Service: 
+Using our tool: 
 + You only need to declare these data sources once;
 + You can then query your data easily in one place regardless of the syntax 
 and structure differences between the different APIs;
 + You can even treat all of them as one single data source and query/display their data in one single call.
 
 ### Installation
-Copy and import the JavaScript folder [js](src/js) or the TypeScript folder [ts](src/ts) into your web project. 
+
+##### TODO CDN link or similar
+
+##### Import JS File
+Copy and import the JavaScript file [DataGaga.js](build/DataGaga.js) into your web project. 
 (We are working on providing an import link such as or similar to CDN.) And that's it, you're all set up!
+
+##### Build manually
+Simply compile the all the TypeScript files in folder [ts](src/ts). 
+This will generate one single JavaScript file [DataGaga.js](build/DataGaga.js) located in the folder [build](build). 
 
 [comment]: <> (TODO Provide a CDN link.)
 
@@ -53,29 +76,41 @@ Copy and import the JavaScript folder [js](src/js) or the TypeScript folder [ts]
     [comment]: <> (TODO Provide a more detailed documentation on the options.)
 
 1. Initialize data source:
-    ```javascript
-    // Google Spreadsheets
-    var dataSource = new GoogleSheets(options);
-    
-    // Google Spreadsheets
-    var dataSource = new PostgreSQL(options);
-    ```
+   ```javascript
+   var googleSheetsDataSource = new GoogleSheets(options);
+   var postgreSQLDataSource = new PostgreSQL(options);
+   var kmlDataSource = new KML(options);
+   
+   // alternatively, you could use the controller
+   var googleSheetsDataSource = DataGaga.createDataSource("GoogleSheets", options);
+   var postgreSQLDataSource = DataGaga.createDataSource("PostgreSQL", options);
+   var kmlDataSource = DataGaga.createDataSource("KML", options);
+   ```
    
    [comment]: <> (TODO Provide a more detailed documentation on the parameters of the constructors.)
 
-1. Start querying:
-    ```javascript
-    dataSource.queryUsingId(id, function (result) {
-        callback(dataSource.responseToKvp(result));
-    }, limit);
-    ```
+3. *(Optional)* If needed, the created data sources can be combined into one single mashup data source:
+   ```javascript
+   var mashupDataSource = new MashupDataSource(options);
+   mashupDataSource.addDataSource(googleSheetsDataSource);
+   mashupDataSource.addDataSource(postgreSQLDataSource);
+   mashupDataSource.addDataSource(kmlDataSource);
+   
+   // to remove KML data source
+   mashupDataSource.removeDataSource(2);
+   ```
+
+1. Start querying, both individual and mashup data sources have the same methods:
+   ```javascript
+   mashupDataSource.fetchAttributeValuesFromId(id)
+   .then(function(result) {
+       console.log(result);
+   }.catch(function(error) {
+       console.warn(error);
+   }));
+   ```
     where:
     + ``id`` ``required``: the ID of the object to be queried
-    + ``limit`` ``optional``: only fetches the first ``limit`` results from the data source
-    
-    Here we use the built-in function ```dataSource.responseToKvp(result)``` 
-    to transform the query results to Key-Value-Pairs.
-    You can then use these KVPs such as by employing the ``callback`` function (must be implemented by you).
     
     [comment]: <> (TODO Provide a more detailed documentation on the structure of the KVPs.)
     
@@ -92,7 +127,7 @@ But if you know a popular data source that is not included, please let us know i
 and perhaps we could define it for you!
 
 Otherwise if you are a power user, you can declare your own data source(s) in a JavaScript or TypeScript file. 
-Have a look at our codes [here](src/js/application) for JavaScript and [here](src/ts/application) for TypeScript.
+Have a look at our codes [here](src/ts/application) for JavaScript and [here](src/ts/application) for TypeScript.
 We are working on a more detailed documentation on this, so stay tuned!
 
 [comment]: <> (TODO Provide a more detailed documentation on how to declare own data sources.)
