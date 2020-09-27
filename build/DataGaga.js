@@ -677,6 +677,22 @@ var FetchResultSet = (function () {
         }
         return Object.keys(this._data[0]);
     };
+    FetchResultSet.prototype.toString = function () {
+        var result = "[\n";
+        var _loop_1 = function (kvp) {
+            result += "\t{\n";
+            Object.keys(kvp).forEach(function (key) {
+                result += "\t\t" + key + " : " + kvp[key] + "\n";
+            });
+            result += "\t}\n";
+        };
+        for (var _i = 0, _a = this._data; _i < _a.length; _i++) {
+            var kvp = _a[_i];
+            _loop_1(kvp);
+        }
+        result += "]\n";
+        return result;
+    };
     Object.defineProperty(FetchResultSet.prototype, "data", {
         get: function () {
             return this._data;
