@@ -1,1 +1,0 @@
-tplant --input src\ts\**\*.ts --output modelling\UML_auto.svg
