@@ -11,12 +11,16 @@
       "es5",
       "scripthost",
       "es2015.collection"
-    ]
+    ],
+    "strict": true
   },
   "exclude": [
-    "node_modules"
+    "build",
+    "modelling",
+    "node_modules",
+    "tools"
   ],
   "include": [
-    "src/ts/**/*"
+    "src/**/*"
   ]
 }

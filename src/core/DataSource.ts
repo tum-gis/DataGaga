@@ -30,9 +30,22 @@ abstract class DataSource {
      * @protected
      */
     constructor(options: DataSourceOptions) {
-        DataSourceUtil.initAttribute(this, "_name", options.name, "My data source name");
-        DataSourceUtil.initAttribute(this, "_dataSourceType", options.dataSourceType, DataSourceType.PostgreSQL);
-        DataSourceUtil.initAttribute(this, "_capabilities", options.capabilities, undefined);
+        this._name = (options.name == null) ? "My data source name" : options.name;
+        this._dataSourceType = (options.dataSourceType == null) ? DataSourceType.PostgreSQL : options.dataSourceType;
+        this._capabilities = (options.capabilities == null) ? {
+            webCapabilities: {
+                restAPI: false
+            },
+            dbTransactionCapabilities: {
+                read: true,
+                insert: false,
+                delete: false,
+                update: false
+            },
+            securityCapabilities: {
+                oauth: false
+            }
+        } : options.capabilities;
     }
 
     public get name(): string {
@@ -62,6 +75,6 @@ abstract class DataSource {
 
 interface DataSourceOptions {
     name: string;
-    dataSourceType: string;
+    dataSourceType: DataSourceType;
     capabilities: DataSourceCapabilities;
 }

@@ -34,7 +34,10 @@ class QBE {
      * @param caseSensitive (optional) boolean, only need for text comparisons
      * @return true if the given value satisfies the QBE expression compared to the reference value, false otherwise
      */
-    public assert(value: string, caseSensitive?: boolean): boolean {
+    public assert(value: string | null, caseSensitive?: boolean): boolean {
+        if (value == null) {
+            return false;
+        }
         // check is numeric
         let otherNumValue = Number(value);
         let thisNumValue = Number(this._value)
@@ -83,7 +86,7 @@ class QBE {
      * @return a JSON object, which is also a KVP containing 3 key-value-pairs
      */
     public toKVP(): KVP {
-        let result = {};
+        let result: KVP = {};
         result["attributeName"] = this._attributeName;
         result["comparisonOperator"] = this._comparisonOperator;
         result["value"] = this._value;

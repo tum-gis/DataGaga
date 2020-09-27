@@ -1,13 +1,17 @@
 {
-  "name": "mashup-data-source-service",
+  "name": "datagaga",
   "version": "1.0.0",
-  "description": "A uniform JavaScript API for processing multiple data sources",
+  "description": "A manager for web data sources",
   "main": "index.js",
   "dependencies": {
     "@types/gapi": "0.0.39",
+    "esm": "^3.2.25",
     "request": "^2.88.0",
     "request-promise-native": "^1.0.7",
-    "uniq": "^1.0.1"
+    "uniq": "^1.0.1",
+    "winston": "^3.3.3",
+    "xmlhttprequest": "^1.8.0",
+    "yargs": "^16.0.3"
   },
   "devDependencies": {
     "@types/jest": "^24.0.18",
@@ -21,12 +25,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/tum-gis/mashup-data-source-service.git"
+    "url": "git+https://github.com/tum-gis/DataGaga.git"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Son H. Nguyen (@son-hnguyen)",
+  "license": "MIT",
   "bugs": {
-    "url": "https://github.com/tum-gis/mashup-data-source-service/issues"
+    "url": "https://github.com/tum-gis/DataGaga/issues"
   },
-  "homepage": "https://github.com/tum-gis/mashup-data-source-service#readme"
+  "homepage": "https://github.com/tum-gis/DataGaga#readme"
 }

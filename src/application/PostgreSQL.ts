@@ -49,7 +49,7 @@ class PostgreSQL extends FirstNormalFormDataSource implements ReadableDataSource
 
         this._dataSourceType = DataSourceType.PostgreSQL;
 
-        DataSourceUtil.initAttribute(this, "_idColName", options.idColName, "gmlid");
+        this._idColName = (options.idColName == null) ? "gmlid" : options.idColName;
     }
 
     public login(credentials: JSONObject): Promise<boolean> {

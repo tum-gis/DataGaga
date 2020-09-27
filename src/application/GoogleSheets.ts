@@ -62,7 +62,7 @@ class GoogleSheets extends FirstNormalFormDataSource implements ReadableDataSour
         this._spreadsheetId = options.uri.replace(/.+?(spreadsheets\/d\/)/, "").replace(/(?=\/edit).+/, "");
 
         // An A1 notation is something like "Sheet1!A1:B2", if none is given then "A" (first sheet) is used
-        DataSourceUtil.initAttribute(this, "_a1Notation", options.a1Notation, "A");
+        this._a1Notation = (options.a1Notation == null) ? "A" : options.a1Notation;
     }
 
     public getMetaData(): Promise<JSONObject> {
@@ -160,7 +160,7 @@ class GoogleSheets extends FirstNormalFormDataSource implements ReadableDataSour
                     keys[i] = cols[i].label.split(" ")[0];
                 }
                 for (let i = 0; i < rows.length; i++) {
-                    let kvp = {};
+                    let kvp: KVP = {};
                     for (let j = 0; j < rows[i].c.length; j++) {
                         // the cols.length and rows[i].c.length mus be the same
                         kvp[keys[j]] = rows[i].c[j] == null ? "" : rows[i].c[j]["v"];

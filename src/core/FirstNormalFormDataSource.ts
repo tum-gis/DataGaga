@@ -9,7 +9,7 @@ abstract class FirstNormalFormDataSource extends UnitDataSource {
 
     protected constructor(options: FirstNormalFormDataSourceOptions) {
         super(options);
-        DataSourceUtil.initAttribute(this, "_dataStructureType", options.dataStructureType, DataStructureType.HORIZONTAL);
+        this._dataStructureType = (options.dataStructureType == null) ? DataStructureType.HORIZONTAL : options.dataStructureType;
     }
 
     public get dataStructureType(): DataStructureType {

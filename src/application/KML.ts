@@ -98,7 +98,7 @@ class KML extends NonFirstNormalFormDataSource implements ReadableDataSource, Pr
             WebUtil.httpGet((scope._uri.indexOf(scope.proxyPrefix) >= 0 ? "" : scope.proxyPrefix) + scope._uri).then(function (result) {
                 let xmlParser = new DOMParser();
                 let xmlDoc = xmlParser.parseFromString(result, "text/xml");
-                let placemark: Element = xmlDoc.getElementById(id);
+                let placemark: HTMLElement | null = xmlDoc.getElementById(id);
                 if (placemark == null) {
                     reject("KML Placemark with ID = " + id + " does not exist!");
                     return;
@@ -116,12 +116,14 @@ class KML extends NonFirstNormalFormDataSource implements ReadableDataSource, Pr
                 let simpleDataList = schemaData.getElementsByTagName('SimpleData');
 
                 let array = [];
-                let kvp = {};
+                let kvp: KVP = {};
                 kvp["id"] = id;
                 for (let i = 0; i < simpleDataList.length; i++) {
-                    let key = simpleDataList[i].getAttribute("name");
+                    let key: string | null = simpleDataList[i].getAttribute("name");
                     let value = simpleDataList[i].textContent;
-                    kvp[key] = value;
+                    if (key != null) {
+                        kvp[key] = value;
+                    }
                 }
                 array.push(kvp);
 
@@ -165,12 +167,14 @@ class KML extends NonFirstNormalFormDataSource implements ReadableDataSource, Pr
                         let simpleDataList = schemaData.getElementsByTagName('SimpleData');
 
                         let array = [];
-                        let kvp = {};
+                        let kvp: KVP = {};
                         kvp["id"] = name;
                         for (let i = 0; i < simpleDataList.length; i++) {
                             let key = simpleDataList[i].getAttribute("name");
                             let value = simpleDataList[i].textContent;
-                            kvp[key] = value;
+                            if (key != null) {
+                                kvp[key] = value;
+                            }
                         }
                         array.push(kvp);
 
@@ -195,13 +199,14 @@ class KML extends NonFirstNormalFormDataSource implements ReadableDataSource, Pr
      */
     public fetchIdsFromQBE(qbe: QBE, limit?: number): Promise<Set<string>> {
         let scope = this;
-        if (limit == null) {
-            limit = Number.MAX_VALUE;
-        }
         return new Promise(function (resolve, reject) {
             WebUtil.httpGet((scope._uri.indexOf(scope.proxyPrefix) >= 0 ? "" : scope.proxyPrefix) + scope._uri).then(function (result) {
                 let xmlParser = new DOMParser();
                 let xmlDoc = xmlParser.parseFromString(result, "text/xml");
+
+                if (limit == null) {
+                    limit = Number.MAX_VALUE;
+                }
 
                 let array = new Set<string>();
                 let count = 0;
@@ -229,6 +234,9 @@ class KML extends NonFirstNormalFormDataSource implements ReadableDataSource, Pr
                                     if (tmpId == null) {
                                         tmpId = iPlacemark.getElementsByTagName("name")[0].textContent;
                                     }
+                                    if (tmpId == null) {
+                                        tmpId = "";
+                                    }
                                     array.add(tmpId);
                                 }
                             }
@@ -247,6 +255,9 @@ class KML extends NonFirstNormalFormDataSource implements ReadableDataSource, Pr
                                     let tmpId = iPlacemark.getAttribute("id");
                                     if (tmpId == null) {
                                         tmpId = iPlacemark.getElementsByTagName("name")[0].textContent;
+                                    }
+                                    if (tmpId == null) {
+                                        tmpId = "";
                                     }
                                     array.add(tmpId);
                                 }
@@ -271,6 +282,9 @@ class KML extends NonFirstNormalFormDataSource implements ReadableDataSource, Pr
                                         let tmpId = iPlacemark.getAttribute("id");
                                         if (tmpId == null) {
                                             tmpId = iPlacemark.getElementsByTagName("name")[0].textContent;
+                                        }
+                                        if (tmpId == null) {
+                                            tmpId = "";
                                         }
                                         array.add(tmpId);
                                     }
@@ -299,6 +313,9 @@ class KML extends NonFirstNormalFormDataSource implements ReadableDataSource, Pr
                                         let tmpId = iPlacemark.getAttribute("id");
                                         if (tmpId == null) {
                                             tmpId = iPlacemark.getElementsByTagName("name")[0].textContent;
+                                        }
+                                        if (tmpId == null) {
+                                            tmpId = "";
                                         }
                                         array.add(tmpId);
                                     }

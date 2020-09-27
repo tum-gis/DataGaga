@@ -1,3 +1,4 @@
+"use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -13,9 +14,22 @@ var __extends = (this && this.__extends) || (function () {
 })();
 var DataSource = (function () {
     function DataSource(options) {
-        DataSourceUtil.initAttribute(this, "_name", options.name, "My data source name");
-        DataSourceUtil.initAttribute(this, "_dataSourceType", options.dataSourceType, DataSourceType.PostgreSQL);
-        DataSourceUtil.initAttribute(this, "_capabilities", options.capabilities, undefined);
+        this._name = (options.name == null) ? "My data source name" : options.name;
+        this._dataSourceType = (options.dataSourceType == null) ? DataSourceType.PostgreSQL : options.dataSourceType;
+        this._capabilities = (options.capabilities == null) ? {
+            webCapabilities: {
+                restAPI: false
+            },
+            dbTransactionCapabilities: {
+                read: true,
+                insert: false,
+                delete: false,
+                update: false
+            },
+            securityCapabilities: {
+                oauth: false
+            }
+        } : options.capabilities;
     }
     Object.defineProperty(DataSource.prototype, "name", {
         get: function () {
@@ -53,8 +67,8 @@ var UnitDataSource = (function (_super) {
     __extends(UnitDataSource, _super);
     function UnitDataSource(options) {
         var _this = _super.call(this, options) || this;
-        DataSourceUtil.initAttribute(_this, "_provider", options.provider, "My data source provider");
-        DataSourceUtil.initAttribute(_this, "_uri", options.uri, "");
+        _this._provider = (options.provider == null) ? "My data source provider" : options.provider;
+        _this._uri = (options.uri == null) ? "" : options.uri;
         return _this;
     }
     Object.defineProperty(UnitDataSource.prototype, "provider", {
@@ -83,7 +97,7 @@ var FirstNormalFormDataSource = (function (_super) {
     __extends(FirstNormalFormDataSource, _super);
     function FirstNormalFormDataSource(options) {
         var _this = _super.call(this, options) || this;
-        DataSourceUtil.initAttribute(_this, "_dataStructureType", options.dataStructureType, "Horizontal");
+        _this._dataStructureType = (options.dataStructureType == null) ? "Horizontal" : options.dataStructureType;
         return _this;
     }
     Object.defineProperty(FirstNormalFormDataSource.prototype, "dataStructureType", {
@@ -119,7 +133,7 @@ var GoogleSheets = (function (_super) {
         _this._capabilities = capabilitiesOptions;
         _this._dataSourceType = DataSourceType.GoogleSheets;
         _this._spreadsheetId = options.uri.replace(/.+?(spreadsheets\/d\/)/, "").replace(/(?=\/edit).+/, "");
-        DataSourceUtil.initAttribute(_this, "_a1Notation", options.a1Notation, "A");
+        _this._a1Notation = (options.a1Notation == null) ? "A" : options.a1Notation;
         return _this;
     }
     GoogleSheets.prototype.getMetaData = function () {
@@ -275,7 +289,9 @@ var KML = (function (_super) {
                 for (var i = 0; i < simpleDataList.length; i++) {
                     var key = simpleDataList[i].getAttribute("name");
                     var value = simpleDataList[i].textContent;
-                    kvp[key] = value;
+                    if (key != null) {
+                        kvp[key] = value;
+                    }
                 }
                 array.push(kvp);
                 var fetchResultSet = new FetchResultSet(array);
@@ -305,7 +321,9 @@ var KML = (function (_super) {
                         for (var i_1 = 0; i_1 < simpleDataList.length; i_1++) {
                             var key = simpleDataList[i_1].getAttribute("name");
                             var value = simpleDataList[i_1].textContent;
-                            kvp[key] = value;
+                            if (key != null) {
+                                kvp[key] = value;
+                            }
                         }
                         array.push(kvp);
                         var fetchResultSet = new FetchResultSet(array);
@@ -319,13 +337,13 @@ var KML = (function (_super) {
     };
     KML.prototype.fetchIdsFromQBE = function (qbe, limit) {
         var scope = this;
-        if (limit == null) {
-            limit = Number.MAX_VALUE;
-        }
         return new Promise(function (resolve, reject) {
             WebUtil.httpGet((scope._uri.indexOf(scope.proxyPrefix) >= 0 ? "" : scope.proxyPrefix) + scope._uri).then(function (result) {
                 var xmlParser = new DOMParser();
                 var xmlDoc = xmlParser.parseFromString(result, "text/xml");
+                if (limit == null) {
+                    limit = Number.MAX_VALUE;
+                }
                 var array = new Set();
                 var count = 0;
                 var placemarks = xmlDoc.getElementsByTagName("Placemark");
@@ -350,6 +368,9 @@ var KML = (function (_super) {
                                     if (tmpId == null) {
                                         tmpId = iPlacemark.getElementsByTagName("name")[0].textContent;
                                     }
+                                    if (tmpId == null) {
+                                        tmpId = "";
+                                    }
                                     array.add(tmpId);
                                 }
                             }
@@ -367,6 +388,9 @@ var KML = (function (_super) {
                                     var tmpId = iPlacemark.getAttribute("id");
                                     if (tmpId == null) {
                                         tmpId = iPlacemark.getElementsByTagName("name")[0].textContent;
+                                    }
+                                    if (tmpId == null) {
+                                        tmpId = "";
                                     }
                                     array.add(tmpId);
                                 }
@@ -389,6 +413,9 @@ var KML = (function (_super) {
                                         var tmpId = iPlacemark.getAttribute("id");
                                         if (tmpId == null) {
                                             tmpId = iPlacemark.getElementsByTagName("name")[0].textContent;
+                                        }
+                                        if (tmpId == null) {
+                                            tmpId = "";
                                         }
                                         array.add(tmpId);
                                     }
@@ -413,6 +440,9 @@ var KML = (function (_super) {
                                         var tmpId = iPlacemark.getAttribute("id");
                                         if (tmpId == null) {
                                             tmpId = iPlacemark.getElementsByTagName("name")[0].textContent;
+                                        }
+                                        if (tmpId == null) {
+                                            tmpId = "";
                                         }
                                         array.add(tmpId);
                                     }
@@ -471,7 +501,7 @@ var PostgreSQL = (function (_super) {
         };
         _this._capabilities = capabilitiesOptions;
         _this._dataSourceType = DataSourceType.PostgreSQL;
-        DataSourceUtil.initAttribute(_this, "_idColName", options.idColName, "gmlid");
+        _this._idColName = (options.idColName == null) ? "gmlid" : options.idColName;
         return _this;
     }
     PostgreSQL.prototype.login = function (credentials) {
@@ -537,6 +567,7 @@ var PostgreSQL = (function (_super) {
 }(FirstNormalFormDataSource));
 var DataSourceType;
 (function (DataSourceType) {
+    DataSourceType["Mashup"] = "Mashup";
     DataSourceType["GoogleSheets"] = "GoogleSheets";
     DataSourceType["PostgreSQL"] = "PostgreSQL";
     DataSourceType["KML"] = "KML";
@@ -546,11 +577,22 @@ var DataGaga = (function () {
     }
     DataGaga.createDataSource = function (dataSourceType, options) {
         if (dataSourceType != null) {
-            var newInstance = Object.create(window[dataSourceType].prototype);
-            newInstance.constructor.apply(newInstance, [options]);
-            return newInstance;
+            switch (dataSourceType) {
+                case DataSourceType.Mashup:
+                    return new MashupDataSource(options);
+                case DataSourceType.GoogleSheets:
+                    return new GoogleSheets(options);
+                case DataSourceType.PostgreSQL:
+                    return new PostgreSQL(options);
+                case DataSourceType.KML:
+                    return new KML(options);
+                default:
+                    throw new Error("Invalid data source type. Entered value: " + dataSourceType + ".");
+            }
         }
-        return undefined;
+        else {
+            throw new Error("Empty data source type entered.");
+        }
     };
     return DataGaga;
 }());
@@ -564,7 +606,7 @@ var FetchResultSet = (function () {
             this._data = data;
         }
         else {
-            this._data = undefined;
+            this._data = [];
         }
     }
     FetchResultSet.prototype.concat = function (otherFetchResultSet) {
@@ -654,6 +696,9 @@ var MashupDataSource = (function (_super) {
         if (mashup != null) {
             _this._mashup = mashup;
         }
+        else {
+            _this._mashup = [];
+        }
         return _this;
     }
     MashupDataSource.prototype.addDataSource = function (dataSource) {
@@ -683,10 +728,10 @@ var MashupDataSource = (function (_super) {
         configurable: true
     });
     MashupDataSource.prototype.aggregateByIds = function (ids, aggregateOperator, attributeName) {
-        return Promise.resolve(undefined);
+        throw new Error("Method not implemented.");
     };
     MashupDataSource.prototype.fetchAttributeNamesFromId = function (id) {
-        return Promise.resolve(undefined);
+        throw new Error("Method not implemented.");
     };
     MashupDataSource.prototype.fetchAttributeValuesFromId = function (id) {
         var scope = this;
@@ -716,27 +761,19 @@ var MashupDataSource = (function (_super) {
         });
     };
     MashupDataSource.prototype.fetchIdsFromQBE = function (qbe, limit) {
-        return Promise.resolve(undefined);
+        throw new Error("Method not implemented.");
     };
     MashupDataSource.prototype.fetchIdsFromQBEs = function (qbes, limit) {
-        return Promise.resolve(undefined);
+        throw new Error("Method not implemented.");
     };
     MashupDataSource.prototype.getMetaData = function () {
-        return Promise.resolve(undefined);
+        throw new Error("Method not implemented.");
     };
     return MashupDataSource;
 }(DataSource));
 var DataSourceUtil = (function () {
     function DataSourceUtil() {
     }
-    DataSourceUtil.initAttribute = function (object, attributeName, attributeValue, defaultValue) {
-        if (attributeValue == null) {
-            object[attributeName] = defaultValue;
-        }
-        else {
-            object[attributeName] = attributeValue;
-        }
-    };
     DataSourceUtil.isArrayOfKVPs = function (object) {
         if (this.isArray(object)) {
             for (var i in object) {
@@ -774,6 +811,9 @@ var QBE = (function () {
         this._value = value;
     }
     QBE.prototype.assert = function (value, caseSensitive) {
+        if (value == null) {
+            return false;
+        }
         var otherNumValue = Number(value);
         var thisNumValue = Number(this._value);
         if (!isNaN(thisNumValue) && !isNaN(otherNumValue)) {

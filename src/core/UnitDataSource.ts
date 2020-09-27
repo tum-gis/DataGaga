@@ -26,8 +26,8 @@ abstract class UnitDataSource extends DataSource {
      */
     protected constructor(options: UnitDataSourceOptions) {
         super(options);
-        DataSourceUtil.initAttribute(this, "_provider", options.provider, "My data source provider");
-        DataSourceUtil.initAttribute(this, "_uri", options.uri, "");
+        this._provider = (options.provider == null) ? "My data source provider" : options.provider;
+        this._uri = (options.uri == null) ? "" : options.uri;
     }
 
     public get provider(): string {

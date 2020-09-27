@@ -13,6 +13,8 @@ class MashupDataSource extends DataSource implements ReadableDataSource {
         super(options);
         if (mashup != null) {
             this._mashup = mashup;
+        } else {
+            this._mashup = [];
         }
     }
 
@@ -69,12 +71,12 @@ class MashupDataSource extends DataSource implements ReadableDataSource {
     public aggregateByIds(ids: Array<string>, aggregateOperator: AggregateOperator): Promise<{ kvp: KVP }>;
     public aggregateByIds(ids: Array<string>, aggregateOperator: AggregateOperator, attributeName?: string): Promise<number> | Promise<{ kvp: KVP }> {
         // TODO
-        return Promise.resolve(undefined);
+        throw new Error("Method not implemented.");
     }
 
     public fetchAttributeNamesFromId(id: string): Promise<Set<string>> {
         // TODO
-        return Promise.resolve(undefined);
+        throw new Error("Method not implemented.");
     }
 
     public fetchAttributeValuesFromId(id: string): Promise<FetchResultSet> {
@@ -83,7 +85,9 @@ class MashupDataSource extends DataSource implements ReadableDataSource {
         let promises = new Array<Promise<FetchResultSet>>();
         for (let datasource of scope._mashup) {
             // Check if this object has a function (since interface can only checked by instanceof in TS in runtime)
+            // @ts-ignore
             if (typeof datasource["fetchAttributeValuesFromId"] === "function") {
+                // @ts-ignore
                 promises.push(datasource["fetchAttributeValuesFromId"](id));
             }
         }
@@ -107,17 +111,17 @@ class MashupDataSource extends DataSource implements ReadableDataSource {
 
     public fetchIdsFromQBE(qbe: QBE, limit ?: number): Promise<Set<string>> {
         // TODO
-        return Promise.resolve(undefined);
+        throw new Error("Method not implemented.");
     }
 
     public fetchIdsFromQBEs(qbes: Array<QBE>, limit ?: number): Promise<Set<string>> {
         // TODO
-        return Promise.resolve(undefined);
+        throw new Error("Method not implemented.");
     }
 
     public getMetaData(): Promise<JSONObject> {
         // TODO
-        return Promise.resolve(undefined);
+        throw new Error("Method not implemented.");
     }
 }
 

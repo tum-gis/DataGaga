@@ -124,7 +124,7 @@ But if you know a popular data source that is not included, please let us know i
 and perhaps we could define it for you!
 
 Otherwise if you are a power user, you can declare your own data source(s) in a TypeScript file. 
-Have a look at our codes [here](src/ts/application).
+Have a look at our codes [here](src/application).
 We are working on a more detailed documentation on this, so stay tuned!
 
 [comment]: <> (TODO Provide a more detailed documentation on how to declare own data sources.)
