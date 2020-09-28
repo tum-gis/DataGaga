@@ -48,8 +48,20 @@ and structure differences between the different APIs;
 
 ### :electric_plug: Installation
 
-Copy and import the JavaScript file [DataGaga.js](build/DataGaga.js) into your web project. 
-(We are working on providing an import link such as or similar to CDN.) And that's it, you're all set up!
+##### ``npm``
+
+This is a NodeJS project and can therefore be easily installed using ``npm``:
+
+```
+npm install datagaga
+```
+
+Have a look at the [npm page](https://www.npmjs.com/package/datagaga) for more details.
+
+##### Web project
+
+Alternatively, the entire source codes are built into one single JavaScript file [DataGaga.js](build/DataGaga.js)
+and can be imported to your web projects with ease. (We are working on providing an import link such as or similar to CDN.)
 
 ### :hammer: Build manually
 Simply compile the all the TypeScript files in folder [ts](src/ts). 
