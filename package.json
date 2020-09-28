@@ -34,7 +34,8 @@
     "url": "git+https://github.com/tum-gis/DataGaga.git"
   },
   "files": [
-    "dist"
+    "dist",
+    "resources/DataGaga.png"
   ],
   "author": "Son H. Nguyen (@son-hnguyen)",
   "license": "MIT",
