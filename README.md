@@ -1,6 +1,7 @@
+# ***DataGaga*** - A manager for web data sources :earth_africa:
+
 <img src="resources/DataGaga.png" alt="DataGaga first look" width="100%"/>
 
-# ***DataGaga*** - A manager for web data sources :earth_africa:
 All data sources unite! 
 A uniform JavaScript API for processing multiple data sources across the web.
 The included data sources can be "fused" together to become one single mashup data source!
