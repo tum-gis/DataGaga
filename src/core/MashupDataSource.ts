@@ -5,6 +5,7 @@ import {JSONObject} from "../util/JSONObject";
 import {QBE} from "../util/QBE";
 import {AggregateOperator} from "../util/AggregateOperator";
 import {DataSource, DataSourceOptions} from "./DataSource";
+import {DataSourceCapabilities, DataSourceType} from "..";
 
 /**
  * A mashup storing multiple data sources as one.
@@ -24,6 +25,25 @@ export class MashupDataSource extends DataSource implements ReadableDataSource {
         } else {
             this._mashup = [];
         }
+    }
+
+    /**
+     * Makes a copy of another mashup data source.
+     *
+     * @param otherMashupDataSource the origin mashup data source to be copied
+     * @return a cloned mashup data source
+     */
+    public static fromObject(otherMashupDataSource: any): MashupDataSource {
+        if (otherMashupDataSource == null) {
+            return otherMashupDataSource;
+        }
+        let options = {
+            name: otherMashupDataSource.name,
+            dataSourceType: otherMashupDataSource.dataSourceType,
+            capabilities: otherMashupDataSource.capabilities
+        }
+        let mashupDataSource = new MashupDataSource(options);
+        return Object.assign(mashupDataSource, otherMashupDataSource);
     }
 
     /**
@@ -93,10 +113,8 @@ export class MashupDataSource extends DataSource implements ReadableDataSource {
         let promises = new Array<Promise<FetchResultSet>>();
         for (let datasource of scope._mashup) {
             // Check if this object has a function (since interface can only checked by instanceof in TS in runtime)
-            // @ts-ignore
-            if (typeof datasource["fetchAttributeValuesFromId"] === "function") {
-                // @ts-ignore
-                promises.push(datasource["fetchAttributeValuesFromId"](id));
+            if (typeof datasource.hasOwnProperty("fetchAttributeValuesFromId")) {
+                promises.push((<ReadableDataSource><unknown>datasource).fetchAttributeValuesFromId(id));
             }
         }
 

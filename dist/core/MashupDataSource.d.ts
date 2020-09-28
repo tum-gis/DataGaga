@@ -8,6 +8,7 @@ import { DataSource, DataSourceOptions } from "./DataSource";
 export declare class MashupDataSource extends DataSource implements ReadableDataSource {
     private _mashup;
     constructor(options: MashupDataSourceOptions, mashup?: Array<DataSource>);
+    static fromObject(otherMashupDataSource: any): MashupDataSource;
     addDataSource(dataSource: DataSource): void;
     removeDataSource(index: number): void;
     size(): number;

@@ -42,7 +42,7 @@ class GoogleSheets extends FirstNormalFormDataSource_1.FirstNormalFormDataSource
             let baseUrl = "https://docs.google.com/spreadsheets/d/";
             let sql = "SELECT * WHERE A='" + id + "'";
             axios_1.default.get(baseUrl + scope._spreadsheetId + "/gviz/tq?tq=" + encodeURI(sql)).then(function (result) {
-                let jsonResult = JSON.parse(JSON.stringify(result.data).replace("/*O_o*/", "").replace(/(google\.visualization\.Query\.setResponse\(|\);$)/g, ""));
+                let jsonResult = JSON.parse(result.data.replace("/*O_o*/", "").replace(/(google\.visualization\.Query\.setResponse\(|\);$)/g, ""));
                 let cols = jsonResult.table.cols;
                 let rows = jsonResult.table.rows;
                 let fetchResultSet = new FetchResultSet_1.FetchResultSet([]);

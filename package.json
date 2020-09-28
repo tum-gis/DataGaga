@@ -1,6 +1,6 @@
 {
   "name": "datagaga",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "A manager for web data sources",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -8,6 +8,7 @@
     "@types/gapi": "0.0.39",
     "axios": "^0.20.0",
     "esm": "^3.2.25",
+    "jsdom": "^16.4.0",
     "request": "^2.88.0",
     "request-promise-native": "^1.0.7",
     "uniq": "^1.0.1",

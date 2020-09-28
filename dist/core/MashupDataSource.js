@@ -13,6 +13,18 @@ class MashupDataSource extends DataSource_1.DataSource {
             this._mashup = [];
         }
     }
+    static fromObject(otherMashupDataSource) {
+        if (otherMashupDataSource == null) {
+            return otherMashupDataSource;
+        }
+        let options = {
+            name: otherMashupDataSource.name,
+            dataSourceType: otherMashupDataSource.dataSourceType,
+            capabilities: otherMashupDataSource.capabilities
+        };
+        let mashupDataSource = new MashupDataSource(options);
+        return Object.assign(mashupDataSource, otherMashupDataSource);
+    }
     addDataSource(dataSource) {
         if (dataSource != null) {
             this._mashup.push(dataSource);
@@ -46,8 +58,8 @@ class MashupDataSource extends DataSource_1.DataSource {
         let result = new FetchResultSet_1.FetchResultSet([]);
         let promises = new Array();
         for (let datasource of scope._mashup) {
-            if (typeof datasource["fetchAttributeValuesFromId"] === "function") {
-                promises.push(datasource["fetchAttributeValuesFromId"](id));
+            if (typeof datasource.hasOwnProperty("fetchAttributeValuesFromId")) {
+                promises.push(datasource.fetchAttributeValuesFromId(id));
             }
         }
         return new Promise(function (resolve, reject) {

@@ -4,6 +4,8 @@ exports.KML = void 0;
 const NonFirstNormalFormDataSource_1 = require("../core/NonFirstNormalFormDataSource");
 const FetchResultSet_1 = require("../core/FetchResultSet");
 const axios_1 = require("axios");
+const jsdom = require("jsdom");
+const { JSDOM } = jsdom;
 class KML extends NonFirstNormalFormDataSource_1.NonFirstNormalFormDataSource {
     constructor(options) {
         super(options);
@@ -36,10 +38,9 @@ class KML extends NonFirstNormalFormDataSource_1.NonFirstNormalFormDataSource {
     fetchAttributeValuesFromId(id) {
         let scope = this;
         return new Promise(function (resolve, reject) {
-            axios_1.default.get((scope._uri.indexOf(scope.proxyPrefix) >= 0 ? "" : scope.proxyPrefix) + scope._uri).then(function (result) {
-                let xmlParser = new DOMParser();
-                let xmlDoc = xmlParser.parseFromString(JSON.stringify(result.data), "text/xml");
-                let placemark = xmlDoc.getElementById(id);
+            axios_1.default.get(((scope.proxyPrefix == null || scope._uri.indexOf(scope.proxyPrefix) >= 0) ? "" : scope.proxyPrefix) + scope._uri).then(function (result) {
+                let xmlDoc = new JSDOM(result.data);
+                let placemark = xmlDoc.window.document.getElementById(id);
                 if (placemark == null) {
                     reject("KML Placemark with ID = " + id + " does not exist!");
                     return;
@@ -68,10 +69,9 @@ class KML extends NonFirstNormalFormDataSource_1.NonFirstNormalFormDataSource {
     fetchAttributeValuesFromName(name) {
         let scope = this;
         return new Promise(function (resolve, reject) {
-            axios_1.default.get((scope._uri.indexOf(scope.proxyPrefix) >= 0 ? "" : scope.proxyPrefix) + scope._uri).then(function (result) {
-                let xmlParser = new DOMParser();
-                let xmlDoc = xmlParser.parseFromString(JSON.stringify(result), "text/xml");
-                let placemarks = xmlDoc.getElementsByTagName("Placemark");
+            axios_1.default.get(((scope.proxyPrefix == null || scope._uri.indexOf(scope.proxyPrefix) >= 0) ? "" : scope.proxyPrefix) + scope._uri).then(function (result) {
+                let xmlDoc = new JSDOM(result.data);
+                let placemarks = xmlDoc.window.document.getElementsByTagName("Placemark");
                 for (let i = 0; i < placemarks.length; i++) {
                     let iPlacemark = placemarks[i];
                     let placemarkName = iPlacemark.getElementsByTagName("name")[0];
@@ -102,15 +102,14 @@ class KML extends NonFirstNormalFormDataSource_1.NonFirstNormalFormDataSource {
     fetchIdsFromQBE(qbe, limit) {
         let scope = this;
         return new Promise(function (resolve, reject) {
-            axios_1.default.get((scope._uri.indexOf(scope.proxyPrefix) >= 0 ? "" : scope.proxyPrefix) + scope._uri).then(function (result) {
-                let xmlParser = new DOMParser();
-                let xmlDoc = xmlParser.parseFromString(JSON.stringify(result.data), "text/xml");
+            axios_1.default.get(((scope.proxyPrefix == null || scope._uri.indexOf(scope.proxyPrefix) >= 0) ? "" : scope.proxyPrefix) + scope._uri).then(function (result) {
+                let xmlDoc = new JSDOM(result.data);
                 if (limit == null) {
                     limit = Number.MAX_VALUE;
                 }
                 let array = new Set();
                 let count = 0;
-                let placemarks = xmlDoc.getElementsByTagName("Placemark");
+                let placemarks = xmlDoc.window.document.getElementsByTagName("Placemark");
                 switch (qbe.attributeName) {
                     case "id":
                         array = new Set();

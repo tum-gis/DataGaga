@@ -99,7 +99,7 @@ export class GoogleSheets extends FirstNormalFormDataSource implements ReadableD
                 // https://developers.google.com/chart/interactive/docs/dev/implementing_data_source#jsondatatable
                 // The Google Visualization API is used here for querying data from Google Spreadsheets
                 // https://developers.google.com/chart/interactive/docs/querylanguage#setting-the-query-in-the-data-source-url
-                let jsonResult = JSON.parse(JSON.stringify(result.data).replace("/*O_o*/", "").replace(/(google\.visualization\.Query\.setResponse\(|\);$)/g, ""));
+                let jsonResult = JSON.parse(result.data.replace("/*O_o*/", "").replace(/(google\.visualization\.Query\.setResponse\(|\);$)/g, ""));
 
                 // cols[i].label contain all values of each column (incl. column names)
                 // these are separated by space, which makes it hard to parse a column that has space in its name

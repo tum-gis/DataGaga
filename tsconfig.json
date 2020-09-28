@@ -7,7 +7,6 @@
     "outDir": "dist",
     // "outFile": "build/DataGaga.js",
     "lib": [
-      "dom",
       "es5",
       "scripthost",
       "es2015.collection"
