@@ -1,6 +1,6 @@
 /**
  * Represents a set of Key-Value-Pair.
  */
-interface KVP {
+export interface KVP {
     [key: string]: any
 }

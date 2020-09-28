@@ -1,9 +1,9 @@
-///<reference path="DataSource.ts"/>
+import {DataSource, DataSourceOptions} from "./DataSource";
 
 /**
  * A base class for all unit data sources that can be combined to form a mashup.
  */
-abstract class UnitDataSource extends DataSource {
+export abstract class UnitDataSource extends DataSource {
     /**
      * The provider of this data source.
      *
@@ -47,7 +47,7 @@ abstract class UnitDataSource extends DataSource {
     }
 }
 
-interface UnitDataSourceOptions extends DataSourceOptions {
+export interface UnitDataSourceOptions extends DataSourceOptions {
     provider: string;
     uri: string;
 }

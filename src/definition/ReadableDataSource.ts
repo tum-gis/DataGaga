@@ -1,7 +1,13 @@
+import {FetchResultSet} from "../core/FetchResultSet";
+import {JSONObject} from "../util/JSONObject";
+import {KVP} from "../util/KVP";
+import {QBE} from "../util/QBE";
+import {AggregateOperator} from "../util/AggregateOperator";
+
 /**
  * Declares read-only functionalities of a data source.
  */
-interface ReadableDataSource {
+export interface ReadableDataSource {
     /**
      * Retrieves the meta properties of this data source.
      * The result is a JSON object.

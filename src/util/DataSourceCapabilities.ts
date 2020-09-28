@@ -1,7 +1,7 @@
 /**
  * Capabilities of a data source.
  */
-interface DataSourceCapabilities {
+export interface DataSourceCapabilities {
     /**
      * Capabilities of connecting to the web.
      *
@@ -20,17 +20,17 @@ interface DataSourceCapabilities {
     securityCapabilities: SecurityCapabilities;
 }
 
-interface WebCapabilities {
+export interface WebCapabilities {
     restAPI: boolean
 }
 
-interface DBTransactionCapabilities {
+export interface DBTransactionCapabilities {
     read: boolean,
     insert: boolean,
     delete: boolean,
     update: boolean
 }
 
-interface SecurityCapabilities {
+export interface SecurityCapabilities {
     oauth: boolean
 }

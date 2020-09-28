@@ -1,7 +1,11 @@
+import {KVP} from "../util/KVP";
+import {DataStructureType} from "../util/DataStructureType";
+import {DataSourceUtil} from "../util/DataSourceUtil";
+
 /**
  * Stores responses from the data sources for further use.
  */
-class FetchResultSet {
+export class FetchResultSet {
     /**
      * Stores results fetched from the data source.
      * Example:

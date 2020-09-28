@@ -1,9 +1,20 @@
-///<reference path="../core/FirstNormalFormDataSource.ts"/>
+import {WritableDataSource} from "../definition/WritableDataSource";
+import {KVP} from "../util/KVP";
+import {FirstNormalFormDataSource, FirstNormalFormDataSourceOptions} from "../core/FirstNormalFormDataSource";
+import {FetchResultSet} from "../core/FetchResultSet";
+import {WebUtil} from "../util/WebUtil";
+import {DataSourceCapabilities} from "../util/DataSourceCapabilities";
+import {ReadableDataSource} from "../definition/ReadableDataSource";
+import {JSONObject} from "../util/JSONObject";
+import {QBE} from "../util/QBE";
+import {SecuredDataSource} from "../definition/SecuredDataSource";
+import {AggregateOperator} from "../util/AggregateOperator";
+import {DataSourceType} from "../controller/DataGaga";
 
 /**
  * Implementation for PostgreSQL as data source.
  */
-class PostgreSQL extends FirstNormalFormDataSource implements ReadableDataSource, WritableDataSource, SecuredDataSource {
+export class PostgreSQL extends FirstNormalFormDataSource implements ReadableDataSource, WritableDataSource, SecuredDataSource {
     /**
      * The name of the column containing the IDs of objects.
      * Normally this is the first column of a table (e.g. gmlid).
@@ -147,6 +158,6 @@ class PostgreSQL extends FirstNormalFormDataSource implements ReadableDataSource
     }
 }
 
-interface PostgreSQLOptions extends FirstNormalFormDataSourceOptions {
+export interface PostgreSQLOptions extends FirstNormalFormDataSourceOptions {
     idColName: string;
 }

@@ -1,4 +1,4 @@
-const enum ComparisonOperator {
+export const enum ComparisonOperator {
     EQ = "==",
     LT = "<",
     LEQ = "<=",

@@ -2,9 +2,14 @@
   "name": "datagaga",
   "version": "1.0.0",
   "description": "A manager for web data sources",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "dependencies": {
+    "@types/gapi": "0.0.39",
     "esm": "^3.2.25",
+    "request": "^2.88.0",
+    "request-promise-native": "^1.0.7",
+    "uniq": "^1.0.1",
     "winston": "^3.3.3",
     "xmlhttprequest": "^1.8.0",
     "yargs": "^16.0.3"
@@ -12,10 +17,14 @@
   "devDependencies": {
     "@types/jest": "^24.0.18",
     "@types/node": "^12.7.5",
+    "@types/request-promise-native": "^1.0.16",
     "jest": "^24.9.0",
-    "ts-jest": "^24.1.0"
+    "ts-jest": "^24.1.0",
+    "ts-node": "^9.0.0",
+    "typescript": "^4.0.3"
   },
   "scripts": {
+    "build": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -23,7 +32,7 @@
     "url": "git+https://github.com/tum-gis/DataGaga.git"
   },
   "files": [
-    "src/**/*.ts"
+    "dist"
   ],
   "author": "Son H. Nguyen (@son-hnguyen)",
   "license": "MIT",

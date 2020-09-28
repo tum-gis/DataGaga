@@ -1,7 +1,10 @@
+import {DataSourceCapabilities} from "../util/DataSourceCapabilities";
+import {DataSourceType} from "../controller/DataGaga";
+
 /**
  * A base class for all data sources.
  */
-abstract class DataSource {
+export abstract class DataSource {
     /**
      * An easy-to-rember name of the data source.
      *
@@ -73,7 +76,7 @@ abstract class DataSource {
     }
 }
 
-interface DataSourceOptions {
+export interface DataSourceOptions {
     name: string;
     dataSourceType: DataSourceType;
     capabilities: DataSourceCapabilities;

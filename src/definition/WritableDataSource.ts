@@ -1,7 +1,11 @@
+import {KVP} from "../util/KVP";
+import {QBE} from "../util/QBE";
+import {JSONObject} from "../util/JSONObject";
+
 /**
  * Declares write functionalities of a data source.
  */
-interface WritableDataSource {
+export interface WritableDataSource {
     /**
      * Updates an attribute value of a given ID.
      *

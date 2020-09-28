@@ -1,8 +1,14 @@
+import {MashupDataSource} from "../core/MashupDataSource";
+import {GoogleSheets} from "../application/GoogleSheets";
+import {PostgreSQL} from "../application/PostgreSQL";
+import {DataSource} from "../core/DataSource";
+import {KML} from "../application/KML";
+
 /**
  * A list of all data source types.
  * Note: The entries in this list must be the same as the class names!
  */
-enum DataSourceType {
+export const enum DataSourceType {
     Mashup = "Mashup",
     GoogleSheets = "GoogleSheets",
     PostgreSQL = "PostgreSQL",
@@ -12,7 +18,7 @@ enum DataSourceType {
 /**
  * A utility class for manipulating data sources on the client side
  */
-class DataGaga {
+export class DataGaga {
     /**
      * Instantiate a data source of type based on a given string or DataSourceType object.
      *

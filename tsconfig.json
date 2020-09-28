@@ -1,11 +1,13 @@
 {
   "compilerOptions": {
-    "module": "amd",
+    "module": "umd",
+    "moduleResolution": "node",
+    "esModuleInterop": true,
     "removeComments": true,
     "target": "es5",
-    "sourceMap": false,
-    "outDir": "src/js",
-    "outFile": "build/DataGaga.js",
+    "sourceMap": true,
+    "outDir": "dist",
+    // "outFile": "build/DataGaga.js",
     "lib": [
       "dom",
       "es5",
@@ -21,6 +23,6 @@
     "tools"
   ],
   "include": [
-    "src/**/*"
+    "src"
   ]
 }

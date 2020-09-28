@@ -1,6 +1,6 @@
 // https://github.com/microsoft/TypeScript/issues/1897#issuecomment-580962081
 
-type JSONObject =
+export type JSONObject =
     | null
     | boolean
     | number
@@ -8,7 +8,7 @@ type JSONObject =
     | JSONObject[]
     | { [prop: string]: JSONObject };
 
-type JsonCompatible<T> = {
+export type JsonCompatible<T> = {
     [P in keyof T]: T[P] extends JSONObject
         ? T[P]
         : Pick<T, P> extends Required<Pick<T, P>>

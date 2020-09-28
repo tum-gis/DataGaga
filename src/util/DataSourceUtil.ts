@@ -1,7 +1,7 @@
 /**
  * Utility class containing auxiliary methods.
  */
-class DataSourceUtil {
+export class DataSourceUtil {
     /**
      * Check if a given object is an array of KVPs.
      *

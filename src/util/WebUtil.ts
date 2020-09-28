@@ -1,7 +1,7 @@
 /**
  * An auxiliary class storing web utility functions.
  */
-class WebUtil {
+export class WebUtil {
     /**
      * Retrieves information from the web using HTTP GET.
      *

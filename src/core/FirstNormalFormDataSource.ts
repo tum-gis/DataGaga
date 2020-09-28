@@ -1,6 +1,7 @@
-///<reference path="UnitDataSource.ts"/>
+import {UnitDataSource, UnitDataSourceOptions} from "./UnitDataSource";
+import {DataStructureType} from "../util/DataStructureType";
 
-abstract class FirstNormalFormDataSource extends UnitDataSource {
+export abstract class FirstNormalFormDataSource extends UnitDataSource {
     /**
      * The structural type of the data source.
      * @protected
@@ -21,6 +22,6 @@ abstract class FirstNormalFormDataSource extends UnitDataSource {
     }
 }
 
-interface FirstNormalFormDataSourceOptions extends UnitDataSourceOptions {
+export interface FirstNormalFormDataSourceOptions extends UnitDataSourceOptions {
     dataStructureType: DataStructureType;
 }

@@ -1,7 +1,15 @@
+import {FetchResultSet} from "./FetchResultSet";
+import {ReadableDataSource} from "../definition/ReadableDataSource";
+import {KVP} from "../util/KVP";
+import {JSONObject} from "../util/JSONObject";
+import {QBE} from "../util/QBE";
+import {AggregateOperator} from "../util/AggregateOperator";
+import {DataSource, DataSourceOptions} from "./DataSource";
+
 /**
  * A mashup storing multiple data sources as one.
  */
-class MashupDataSource extends DataSource implements ReadableDataSource {
+export class MashupDataSource extends DataSource implements ReadableDataSource {
     /**
      * Stores multiple data sources and considers them as one.
      *
@@ -125,5 +133,5 @@ class MashupDataSource extends DataSource implements ReadableDataSource {
     }
 }
 
-interface MashupDataSourceOptions extends DataSourceOptions {
+export interface MashupDataSourceOptions extends DataSourceOptions {
 }

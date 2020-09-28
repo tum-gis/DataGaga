@@ -1,8 +1,18 @@
-///<reference path="../core/NonFirstNormalFormDataSource.ts"/>
+import {NonFirstNormalFormDataSource, NonFirstNormalFormDataSourceOptions} from "../core/NonFirstNormalFormDataSource";
+import {FetchResultSet} from "../core/FetchResultSet";
+import {WebUtil} from "../util/WebUtil";
+import {DataSourceCapabilities} from "../util/DataSourceCapabilities";
+import {ReadableDataSource} from "../definition/ReadableDataSource";
+import {JSONObject} from "../util/JSONObject";
+import {KVP} from "../util/KVP";
+import {QBE} from "../util/QBE";
+import {AggregateOperator} from "../util/AggregateOperator";
+import {ProxyDataSource} from "../definition/ProxyDataSource";
+
 /**
  * Defines attribute names in KML that can be queried using QBE expressions.
  */
-const enum QueryableAttributeNamesKML {
+export const enum QueryableAttributeNamesKML {
     /**
      * Placemark ID
      */
@@ -34,7 +44,7 @@ const enum QueryableAttributeNamesKML {
 /**
  * Implementation for KML as data source.
  */
-class KML extends NonFirstNormalFormDataSource implements ReadableDataSource, ProxyDataSource {
+export class KML extends NonFirstNormalFormDataSource implements ReadableDataSource, ProxyDataSource {
 
     proxyPrefix: string;
 
@@ -363,6 +373,6 @@ class KML extends NonFirstNormalFormDataSource implements ReadableDataSource, Pr
     }
 }
 
-interface KMLOptions extends NonFirstNormalFormDataSourceOptions {
+export interface KMLOptions extends NonFirstNormalFormDataSourceOptions {
     proxyPrefix: string;
 }

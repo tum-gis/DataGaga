@@ -1,9 +1,20 @@
-///<reference path="../core/FirstNormalFormDataSource.ts"/>
+import {FirstNormalFormDataSource, FirstNormalFormDataSourceOptions} from "../core/FirstNormalFormDataSource";
+import {WritableDataSource} from "../definition/WritableDataSource";
+import {KVP} from "../util/KVP";
+import {FetchResultSet} from "../core/FetchResultSet";
+import {WebUtil} from "../util/WebUtil";
+import {DataSourceCapabilities} from "../util/DataSourceCapabilities";
+import {ReadableDataSource} from "../definition/ReadableDataSource";
+import {JSONObject} from "../util/JSONObject";
+import {QBE} from "../util/QBE";
+import {SecuredDataSource} from "../definition/SecuredDataSource";
+import {AggregateOperator} from "../util/AggregateOperator";
+import {DataSourceType} from "../controller/DataGaga";
 
 /**
  * Implementation for GoogleSheets as data source.
  */
-class GoogleSheets extends FirstNormalFormDataSource implements ReadableDataSource, WritableDataSource, SecuredDataSource {
+export class GoogleSheets extends FirstNormalFormDataSource implements ReadableDataSource, WritableDataSource, SecuredDataSource {
     private static apiUrlPrefix: string = "https://sheets.googleapis.com/v4/spreadsheets/";
 
     /**
@@ -260,7 +271,7 @@ class GoogleSheets extends FirstNormalFormDataSource implements ReadableDataSour
     }
 }
 
-interface GoogleSheetsOptions extends FirstNormalFormDataSourceOptions {
+export interface GoogleSheetsOptions extends FirstNormalFormDataSourceOptions {
     spreadsheetId: string;
     a1Notation: string;
 }

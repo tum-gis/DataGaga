@@ -1,3 +1,6 @@
+import {ComparisonOperator} from "./ComparisonOperator";
+import {KVP} from "./KVP";
+
 /**
  * Represents Query By Example (QBE) expressions.
  * Each QBE expression consists of three components:
@@ -14,7 +17,7 @@
  * }
  * indicates all height values greater than or equal to 10.
  */
-class QBE {
+export class QBE {
     private _attributeName: string;
     private _comparisonOperator: ComparisonOperator;
     private _value: string;

@@ -1,4 +1,4 @@
-interface ProxyDataSource {
+export interface ProxyDataSource {
     /**
      * A prefix for loading via proxy.
      *

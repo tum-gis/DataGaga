@@ -1,10 +1,10 @@
-///<reference path="UnitDataSource.ts"/>
+import {UnitDataSource, UnitDataSourceOptions} from "./UnitDataSource";
 
-abstract class NonFirstNormalFormDataSource extends UnitDataSource {
+export abstract class NonFirstNormalFormDataSource extends UnitDataSource {
     protected constructor(options: UnitDataSourceOptions) {
         super(options);
     }
 }
 
-interface NonFirstNormalFormDataSourceOptions extends UnitDataSourceOptions {
+export interface NonFirstNormalFormDataSourceOptions extends UnitDataSourceOptions {
 }
