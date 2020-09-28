@@ -2,7 +2,6 @@ import {WritableDataSource} from "../definition/WritableDataSource";
 import {KVP} from "../util/KVP";
 import {FirstNormalFormDataSource, FirstNormalFormDataSourceOptions} from "../core/FirstNormalFormDataSource";
 import {FetchResultSet} from "../core/FetchResultSet";
-import {WebUtil} from "../util/WebUtil";
 import {DataSourceCapabilities} from "../util/DataSourceCapabilities";
 import {ReadableDataSource} from "../definition/ReadableDataSource";
 import {JSONObject} from "../util/JSONObject";
@@ -10,6 +9,7 @@ import {QBE} from "../util/QBE";
 import {SecuredDataSource} from "../definition/SecuredDataSource";
 import {AggregateOperator} from "../util/AggregateOperator";
 import {DataSourceType} from "../controller/DataGaga";
+import axios from "axios";
 
 /**
  * Implementation for PostgreSQL as data source.
@@ -113,8 +113,8 @@ export class PostgreSQL extends FirstNormalFormDataSource implements ReadableDat
     public fetchAttributeValuesFromId(id: string): Promise<FetchResultSet> {
         let scope = this;
         return new Promise(function (resolve, reject) {
-            WebUtil.httpGet(scope._uri + "?" + scope._idColName + "=eq." + id).then(function (result) {
-                let fetchResultSet = new FetchResultSet(result);
+            axios.get(scope._uri + "?" + scope._idColName + "=eq." + id).then(function (result) {
+                let fetchResultSet = new FetchResultSet(result.data);
                 resolve(fetchResultSet);
             }).catch(function (error) {
                 reject(error);

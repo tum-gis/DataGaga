@@ -33,4 +33,3 @@ export {JSONObject} from "./util/JSONObject";
 export {JsonCompatible} from "./util/JSONObject";
 export {KVP} from "./util/KVP";
 export {QBE} from "./util/QBE";
-export {WebUtil} from "./util/WebUtil";

@@ -1,11 +1,9 @@
 {
   "compilerOptions": {
-    "module": "umd",
-    "moduleResolution": "node",
-    "esModuleInterop": true,
+    "module": "commonjs",
+    "declaration": true,
     "removeComments": true,
-    "target": "es5",
-    "sourceMap": true,
+    "target": "es2015",
     "outDir": "dist",
     // "outFile": "build/DataGaga.js",
     "lib": [

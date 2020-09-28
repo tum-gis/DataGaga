@@ -2,7 +2,6 @@ import {FirstNormalFormDataSource, FirstNormalFormDataSourceOptions} from "../co
 import {WritableDataSource} from "../definition/WritableDataSource";
 import {KVP} from "../util/KVP";
 import {FetchResultSet} from "../core/FetchResultSet";
-import {WebUtil} from "../util/WebUtil";
 import {DataSourceCapabilities} from "../util/DataSourceCapabilities";
 import {ReadableDataSource} from "../definition/ReadableDataSource";
 import {JSONObject} from "../util/JSONObject";
@@ -10,6 +9,7 @@ import {QBE} from "../util/QBE";
 import {SecuredDataSource} from "../definition/SecuredDataSource";
 import {AggregateOperator} from "../util/AggregateOperator";
 import {DataSourceType} from "../controller/DataGaga";
+import axios from "axios";
 
 /**
  * Implementation for GoogleSheets as data source.
@@ -80,8 +80,8 @@ export class GoogleSheets extends FirstNormalFormDataSource implements ReadableD
         // TODO
         let scope = this;
         return new Promise(function (resolve, reject) {
-            WebUtil.httpGet(GoogleSheets.apiUrlPrefix + scope._spreadsheetId + "?&fields=sheets.properties").then(function (result) {
-                resolve(result);
+            axios.get(GoogleSheets.apiUrlPrefix + scope._spreadsheetId + "?&fields=sheets.properties").then(function (result) {
+                resolve(result.data);
             }).catch(function (error) {
                 reject(error);
             })
@@ -93,13 +93,13 @@ export class GoogleSheets extends FirstNormalFormDataSource implements ReadableD
         return new Promise(function (resolve, reject) {
             let baseUrl = "https://docs.google.com/spreadsheets/d/";
             let sql = "SELECT * WHERE A='" + id + "'"; // TODO
-            WebUtil.httpGet(baseUrl + scope._spreadsheetId + "/gviz/tq?tq=" + encodeURI(sql)).then(function (result) {
+            axios.get(baseUrl + scope._spreadsheetId + "/gviz/tq?tq=" + encodeURI(sql)).then(function (result) {
                 // The response is in JSON but contains the following string:
                 // "/*O_o*/google.visualization.Query.setResponse({status:ok, ...})"
                 // https://developers.google.com/chart/interactive/docs/dev/implementing_data_source#jsondatatable
                 // The Google Visualization API is used here for querying data from Google Spreadsheets
                 // https://developers.google.com/chart/interactive/docs/querylanguage#setting-the-query-in-the-data-source-url
-                let jsonResult = JSON.parse(result.replace("/*O_o*/", "").replace(/(google\.visualization\.Query\.setResponse\(|\);$)/g, ""));
+                let jsonResult = JSON.parse(JSON.stringify(result.data).replace("/*O_o*/", "").replace(/(google\.visualization\.Query\.setResponse\(|\);$)/g, ""));
 
                 // cols[i].label contain all values of each column (incl. column names)
                 // these are separated by space, which makes it hard to parse a column that has space in its name

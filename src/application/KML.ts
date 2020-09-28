@@ -1,6 +1,5 @@
 import {NonFirstNormalFormDataSource, NonFirstNormalFormDataSourceOptions} from "../core/NonFirstNormalFormDataSource";
 import {FetchResultSet} from "../core/FetchResultSet";
-import {WebUtil} from "../util/WebUtil";
 import {DataSourceCapabilities} from "../util/DataSourceCapabilities";
 import {ReadableDataSource} from "../definition/ReadableDataSource";
 import {JSONObject} from "../util/JSONObject";
@@ -8,6 +7,7 @@ import {KVP} from "../util/KVP";
 import {QBE} from "../util/QBE";
 import {AggregateOperator} from "../util/AggregateOperator";
 import {ProxyDataSource} from "../definition/ProxyDataSource";
+import axios from "axios";
 
 /**
  * Defines attribute names in KML that can be queried using QBE expressions.
@@ -105,9 +105,9 @@ export class KML extends NonFirstNormalFormDataSource implements ReadableDataSou
     public fetchAttributeValuesFromId(id: string): Promise<FetchResultSet> {
         let scope = this;
         return new Promise(function (resolve, reject) {
-            WebUtil.httpGet((scope._uri.indexOf(scope.proxyPrefix) >= 0 ? "" : scope.proxyPrefix) + scope._uri).then(function (result) {
+            axios.get((scope._uri.indexOf(scope.proxyPrefix) >= 0 ? "" : scope.proxyPrefix) + scope._uri).then(function (result) {
                 let xmlParser = new DOMParser();
-                let xmlDoc = xmlParser.parseFromString(result, "text/xml");
+                let xmlDoc = xmlParser.parseFromString(JSON.stringify(result.data), "text/xml");
                 let placemark: HTMLElement | null = xmlDoc.getElementById(id);
                 if (placemark == null) {
                     reject("KML Placemark with ID = " + id + " does not exist!");
@@ -156,9 +156,9 @@ export class KML extends NonFirstNormalFormDataSource implements ReadableDataSou
     public fetchAttributeValuesFromName(name: string): Promise<FetchResultSet> {
         let scope = this;
         return new Promise(function (resolve, reject) {
-            WebUtil.httpGet((scope._uri.indexOf(scope.proxyPrefix) >= 0 ? "" : scope.proxyPrefix) + scope._uri).then(function (result) {
+            axios.get((scope._uri.indexOf(scope.proxyPrefix) >= 0 ? "" : scope.proxyPrefix) + scope._uri).then(function (result) {
                 let xmlParser = new DOMParser();
-                let xmlDoc = xmlParser.parseFromString(result, "text/xml");
+                let xmlDoc = xmlParser.parseFromString(JSON.stringify(result), "text/xml");
                 let placemarks = xmlDoc.getElementsByTagName("Placemark");
                 for (let i = 0; i < placemarks.length; i++) {
                     let iPlacemark = placemarks[i];
@@ -210,9 +210,9 @@ export class KML extends NonFirstNormalFormDataSource implements ReadableDataSou
     public fetchIdsFromQBE(qbe: QBE, limit?: number): Promise<Set<string>> {
         let scope = this;
         return new Promise(function (resolve, reject) {
-            WebUtil.httpGet((scope._uri.indexOf(scope.proxyPrefix) >= 0 ? "" : scope.proxyPrefix) + scope._uri).then(function (result) {
+            axios.get((scope._uri.indexOf(scope.proxyPrefix) >= 0 ? "" : scope.proxyPrefix) + scope._uri).then(function (result) {
                 let xmlParser = new DOMParser();
-                let xmlDoc = xmlParser.parseFromString(result, "text/xml");
+                let xmlDoc = xmlParser.parseFromString(JSON.stringify(result.data), "text/xml");
 
                 if (limit == null) {
                     limit = Number.MAX_VALUE;
