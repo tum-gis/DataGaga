@@ -2,6 +2,8 @@
 
 <img src="resources/DataGaga.png" alt="DataGaga first look" width="100%"/>
 
+![npm](https://img.shields.io/npm/v/datagaga)
+
 All data sources unite! 
 A uniform JavaScript API for processing multiple data sources across the web.
 The included data sources can be "fused" together to become one single mashup data source!
