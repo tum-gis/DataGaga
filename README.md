@@ -64,8 +64,11 @@ Alternatively, the entire source codes are built into one single JavaScript file
 and can be imported to your web projects with ease. (We are working on providing an import link such as or similar to CDN.)
 
 ### :hammer: Build manually
-Simply compile the all the TypeScript files in folder [ts](src/ts). 
+Simply compile the all the TypeScript files in folder [src](src). 
 This will generate one single JavaScript file [DataGaga.js](build/DataGaga.js) located in the folder [build](build). 
+
+**Note**: You must use the option ``"outFile": "build/DataGaga.js"`` (instead of `outDir`) in [`tsconfig.json`](tsconfig.json).
+Also use either ``"module": "amd"`` or ``"module": "system"`` instead.
 
 [comment]: <> (TODO Provide a CDN link.)
 
