@@ -17,6 +17,8 @@ class QBE {
             switch (this._comparisonOperator) {
                 case "==":
                     return otherNumValue == thisNumValue;
+                case "!=":
+                    return otherNumValue != thisNumValue;
                 case ">":
                     return otherNumValue > thisNumValue;
                 case ">=":
@@ -39,6 +41,8 @@ class QBE {
             switch (this._comparisonOperator) {
                 case "==":
                     return otherTextValue.localeCompare(thisTextValue) === 0;
+                case "!=":
+                    return otherTextValue.localeCompare(thisTextValue) !== 0;
                 case ">":
                     return otherTextValue.localeCompare(thisTextValue) > 0;
                 case ">=":
