@@ -48,6 +48,9 @@ export class QBE {
             switch (this._comparisonOperator) {
                 case ComparisonOperator.EQ:
                     return otherNumValue == thisNumValue;
+                case ComparisonOperator.NEQ:
+                    // NEQ check must appear before GT, GEQ, LT and LEQ, since these are also NEQ
+                    return otherNumValue != thisNumValue;
                 case ComparisonOperator.GT:
                     return otherNumValue > thisNumValue;
                 case ComparisonOperator.GEQ:
@@ -69,6 +72,9 @@ export class QBE {
             switch (this._comparisonOperator) {
                 case ComparisonOperator.EQ:
                     return otherTextValue.localeCompare(thisTextValue) === 0;
+                case ComparisonOperator.NEQ:
+                    // NEQ check must appear before GT, GEQ, LT and LEQ, since these are also NEQ
+                    return otherTextValue.localeCompare(thisTextValue) !== 0;
                 case ComparisonOperator.GT:
                     return otherTextValue.localeCompare(thisTextValue) > 0;
                 case ComparisonOperator.GEQ:

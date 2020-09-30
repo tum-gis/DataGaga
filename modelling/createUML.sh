@@ -1,1 +1,1 @@
-tplant --input ../src/**/*.ts --output modelling/UML_auto.svg
+tplant --input ../src/**/*.ts --output UML_auto.svg
