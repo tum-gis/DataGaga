@@ -5,7 +5,6 @@ import {JSONObject} from "../util/JSONObject";
 import {QBE} from "../util/QBE";
 import {AggregateOperator} from "../util/AggregateOperator";
 import {DataSource, DataSourceOptions} from "./DataSource";
-import {DataSourceCapabilities, DataSourceType} from "..";
 
 /**
  * A mashup storing multiple data sources as one.
