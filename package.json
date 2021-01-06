@@ -6,7 +6,7 @@
   "types": "dist/index.d.ts",
   "dependencies": {
     "@types/gapi": "0.0.39",
-    "axios": "^0.20.0",
+    "axios": "^0.21.1",
     "jsdom": "^16.4.0",
     "winston": "^3.3.3",
     "yargs": "^16.0.3"
